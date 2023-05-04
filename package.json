@@ -23,7 +23,8 @@
     "applicationinsights": "2.5.1",
     "ffc-messaging": "2.6.4",
     "joi": "17.7.1",
-    "log-timestamp": "0.3.0"
+    "log-timestamp": "0.3.0",
+    "notifications-node-client": "7.0.0"
   },
   "devDependencies": {
     "jest": "29.2.2",

@@ -30,7 +30,7 @@ container:
   limitMemory: 100Mi
   limitCpu: 100m
   messageQueueHost: namespace.servicebus.windows.net
-  alertTopicAddress: ffc-pay-alerts
+  alertTopicAddress: ffc-pay-alert
   alertSubscriptionAddress: ffc-pay-alerting
 
 aadPodIdentity: true

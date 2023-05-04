@@ -32,6 +32,9 @@ container:
   messageQueueHost: namespace.servicebus.windows.net
   alertTopicAddress: ffc-pay-alert
   alertSubscriptionAddress: ffc-pay-alerting
+  notifyApiKey:
+  notifyEmailTemplateKey:
+
 
 aadPodIdentity: true
 

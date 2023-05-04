@@ -1,5 +1,5 @@
 apiVersion: v2
-description: Publish alerts from Payment Hub warnings
+description: Event hub
 name: ffc-pay-alerting
 # this version is automatically updated in the build pipeline
 version: 1.0.0

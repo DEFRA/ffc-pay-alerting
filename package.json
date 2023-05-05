@@ -24,6 +24,7 @@
     "ffc-messaging": "2.6.4",
     "joi": "17.7.1",
     "log-timestamp": "0.3.0",
+    "moment": "2.29.4",
     "notifications-node-client": "7.0.0"
   },
   "devDependencies": {

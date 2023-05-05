@@ -6,7 +6,8 @@ const schema = Joi.object({
   devTeamEmails: Joi.string().optional(),
   debtEnrichmentEmails: Joi.string().optional(),
   invalidBankDetailsEmails: Joi.string().optional(),
-  coreSolutionsTeamEmails: Joi.string().optional()
+  coreSolutionsTeamEmails: Joi.string().optional(),
+  environment: Joi.string().default('local')
 })
 
 const config = {
@@ -15,7 +16,8 @@ const config = {
   devTeamEmails: process.env.DEV_TEAM_EMAILS,
   debtEnrichmentEmails: process.env.DEBT_ENRICHMENT_EMAILS,
   invalidBankDetailsEmails: process.env.INVALID_BANK_DETAILS_EMAILS,
-  coreSolutionsTeamEmails: process.env.CORE_SOLUTIONS_TEAM_EMAILS
+  coreSolutionsTeamEmails: process.env.CORE_SOLUTIONS_TEAM_EMAILS,
+  environment: process.env.FFC_ENVIRONMENT
 }
 
 const result = schema.validate(config, {

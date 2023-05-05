@@ -1,11 +1,13 @@
 const { getRecipients } = require('./get-recipients')
-const { getTemplateId } = require('./get-template-id')
+const templateMap = require('../constants/template-map')
 const { sendAlerts } = require('./send-alerts')
 
 const processEvent = async (event) => {
   const recipients = getRecipients(event)
-  const templateId = getTemplateId(event)
-  await sendAlerts(recipients, templateId, event)
+  const templateId = templateMap[event.type]
+  if (templateId) {
+    await sendAlerts(recipients, templateId, event)
+  }
 }
 
 module.exports = {

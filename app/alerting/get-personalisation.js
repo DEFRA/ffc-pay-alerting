@@ -1,13 +1,21 @@
 const moment = require('moment')
 const { getEnvironment } = require('./get-environment')
 const { DATE } = require('../constants/date-format')
+const { UNKNOWN } = require('../constants/unknown')
+const { getScheme } = require('./get-scheme')
 
 const getPersonalisation = (event) => {
   return {
+    ...event.data,
     environment: getEnvironment(),
     eventId: event.id,
+    source: event.source,
     timestamp: moment(event.time).format(DATE),
-    ...event.data
+    frn: event.data?.frn ?? UNKNOWN,
+    invoiceNumber: event.data?.invoiceNumber ?? UNKNOWN,
+    contractNumber: event.data?.contractNumber ?? UNKNOWN,
+    paymentRequestNumber: event.data?.paymentRequestNumber ?? UNKNOWN,
+    scheme: getScheme(event.data?.schemeId)
   }
 }
 

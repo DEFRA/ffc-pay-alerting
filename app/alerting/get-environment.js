@@ -1,5 +1,6 @@
 const { alertConfig } = require('../config')
-const { LOCAL, DEVELOPMENT, TEST, PRE_PRODUCTION, PRODUCTION, UNKNOWN } = require('../constants/environment-codes')
+const { LOCAL, DEVELOPMENT, TEST, PRE_PRODUCTION, PRODUCTION } = require('../constants/environment-codes')
+const { UNKNOWN } = require('../constants/unknown')
 
 const getEnvironment = () => {
   switch (alertConfig.environment) {

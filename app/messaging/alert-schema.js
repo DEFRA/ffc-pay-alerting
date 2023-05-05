@@ -6,5 +6,5 @@ module.exports = Joi.object({
   time: Joi.date().required(),
   data: Joi.object({
     message: Joi.string().required()
-  })
+  }).required()
 }).required()

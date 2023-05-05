@@ -1,7 +1,7 @@
-const schema = require('./event-schema')
+const schema = require('./alert-schema')
 const { VALIDATION } = require('../constants/errors')
 
-const validateEvent = (event) => {
+const validateAlert = (event) => {
   const validationResult = schema.validate(event, { abortEarly: false, allowUnknown: true })
   if (validationResult.error) {
     const error = new Error(`Event is invalid, ${validationResult.error.message}`)
@@ -11,5 +11,5 @@ const validateEvent = (event) => {
 }
 
 module.exports = {
-  validateEvent
+  validateAlert
 }

@@ -8,7 +8,7 @@ const {
   PAYMENT_SETTLEMENT_UNMATCHED,
   RESPONSE_REJECTED,
   PAYMENT_REQUEST_BLOCKED
-} = require('./events')
+} = require('../constants/events')
 
 const { BATCH_PROCESSOR } = require('../constants/sources')
 

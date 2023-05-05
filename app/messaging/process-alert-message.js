@@ -1,13 +1,13 @@
 const util = require('util')
 const { VALIDATION } = require('../constants/errors')
-const { validateEvent } = require('./validate-event')
+const { validateAlert } = require('./validate-alert')
 const { processAlert } = require('../alerting')
 
-const processEventMessage = async (message, receiver) => {
+const processAlertMessage = async (message, receiver) => {
   try {
     const alert = message.body
     console.log('Alert received:', util.inspect(alert, false, null, true))
-    validateEvent(alert)
+    validateAlert(alert)
     await processAlert(alert)
     await receiver.completeMessage(message)
   } catch (err) {
@@ -19,5 +19,5 @@ const processEventMessage = async (message, receiver) => {
 }
 
 module.exports = {
-  processEventMessage
+  processAlertMessage
 }

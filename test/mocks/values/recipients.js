@@ -1,3 +1,5 @@
+const { EMAIL } = require('./email')
+
 module.exports = {
-  RECIPIENTS: ['test@test.com', 'test@test.com']
+  RECIPIENTS: [EMAIL, EMAIL]
 }

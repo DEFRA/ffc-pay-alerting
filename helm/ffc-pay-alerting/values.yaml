@@ -34,7 +34,10 @@ container:
   alertSubscriptionAddress: ffc-pay-alerting
   notifyApiKey:
   notifyEmailTemplateKey:
-
+  devTeamEmails:
+  debtEnrichmentEmails:
+  invalidBankDetailsEmails:
+  coreSolutionsTeamEmails:
 
 aadPodIdentity: true
 

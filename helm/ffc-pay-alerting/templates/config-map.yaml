@@ -10,4 +10,8 @@ data:
   ALERT_TOPIC_ADDRESS: {{ quote .Values.container.alertTopicAddress }}
   {{- end }}
   ALERT_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.alertSubscriptionAddress }}
+  DEV_TEAM_EMAILS: {{ quote .Values.container.devTeamEmails }}
+  DEBT_ENRICHMENT_EMAILS: {{ quote .Values.container.debtEnrichmentEmails }}
+  INVALID_BANK_DETAILS_EMAILS: {{ quote .Values.container.invalidBankDetailsEmails }}
+  CORE_SOLUTIONS_TEAM_EMAILS: {{ quote .Values.container.coreSolutionsTeamEmails }}
 {{- end -}}

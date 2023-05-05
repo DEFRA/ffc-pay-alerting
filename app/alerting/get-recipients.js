@@ -1,5 +1,5 @@
-const getRecipients = (emailAddresses) => {
-
+const getRecipients = (event) => {
+  
 }
 
 module.exports = {

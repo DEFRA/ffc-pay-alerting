@@ -33,7 +33,6 @@ container:
   alertTopicAddress: ffc-pay-alert
   alertSubscriptionAddress: ffc-pay-alerting
   notifyApiKey:
-  notifyEmailTemplateKey:
   devTeamEmails:
   debtEnrichmentEmails:
   invalidBankDetailsEmails:

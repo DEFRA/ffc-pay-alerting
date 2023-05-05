@@ -2,7 +2,6 @@ const Joi = require('joi')
 
 const schema = Joi.object({
   notifyApiKey: Joi.string().required(),
-  notifyEmailTemplateKey: Joi.string().required(),
   devTeamEmails: Joi.string().optional(),
   debtEnrichmentEmails: Joi.string().optional(),
   invalidBankDetailsEmails: Joi.string().optional(),
@@ -12,7 +11,6 @@ const schema = Joi.object({
 
 const config = {
   notifyApiKey: process.env.NOTIFY_API_KEY,
-  notifyEmailTemplateKey: process.env.NOTIFY_EMAIL_TEMPLATE_KEY,
   devTeamEmails: process.env.DEV_TEAM_EMAILS,
   debtEnrichmentEmails: process.env.DEBT_ENRICHMENT_EMAILS,
   invalidBankDetailsEmails: process.env.INVALID_BANK_DETAILS_EMAILS,

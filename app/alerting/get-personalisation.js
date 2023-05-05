@@ -1,8 +1,8 @@
 const moment = require('moment')
 const { getEnvironment } = require('./get-environment')
+const { getScheme } = require('./get-scheme')
 const { DATE } = require('../constants/date-format')
 const { UNKNOWN } = require('../constants/unknown')
-const { getScheme } = require('./get-scheme')
 
 const getPersonalisation = (event) => {
   return {

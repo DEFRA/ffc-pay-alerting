@@ -1,19 +1,20 @@
 const { alertConfig } = require('../config')
 const { LOCAL, DEVELOPMENT, TEST, PRE_PRODUCTION, PRODUCTION } = require('../constants/environment-codes')
+const { LOCAL_NAME, DEVELOPMENT_NAME, TEST_NAME, PRE_PRODUCTION_NAME, PRODUCTION_NAME } = require('../constants/environment-names')
 const { UNKNOWN } = require('../constants/unknown')
 
 const getEnvironment = () => {
   switch (alertConfig.environment) {
     case LOCAL:
-      return 'Local'
+      return LOCAL_NAME
     case DEVELOPMENT:
-      return 'Development'
+      return DEVELOPMENT_NAME
     case TEST:
-      return 'Test'
+      return TEST_NAME
     case PRE_PRODUCTION:
-      return 'Pre-Production'
+      return PRE_PRODUCTION_NAME
     case PRODUCTION:
-      return 'Production'
+      return PRODUCTION_NAME
     default:
       return UNKNOWN
   }

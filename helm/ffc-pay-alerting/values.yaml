@@ -37,6 +37,7 @@ container:
   debtEnrichmentEmails:
   invalidBankDetailsEmails:
   coreSolutionsTeamEmails:
+  sendAlerts: true
 
 aadPodIdentity: true
 

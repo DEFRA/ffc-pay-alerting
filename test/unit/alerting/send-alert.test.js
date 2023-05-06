@@ -1,6 +1,9 @@
 jest.mock('notifications-node-client')
 const { NotifyClient: MockNotifyClient } = require('notifications-node-client')
 
+jest.mock('../../../app/config')
+const { alertConfig: mockAlertConfig } = require('../../../app/config')
+
 jest.mock('../../../app/alerting/get-personalisation')
 const { getPersonalisation: mockGetPersonalisation } = require('../../../app/alerting/get-personalisation')
 
@@ -14,6 +17,7 @@ const { sendAlert } = require('../../../app/alerting/send-alert')
 describe('send alert', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockAlertConfig.sendAlerts = true
     mockGetPersonalisation.mockReturnValue({ test: 'value' })
   })
 
@@ -34,5 +38,11 @@ describe('send alert', () => {
       EMAIL,
       { personalisation: { test: 'value' } }
     )
+  })
+
+  test('should not send alert if sending disabled', async () => {
+    mockAlertConfig.sendAlerts = false
+    await sendAlert(EMAIL, PAYMENT_REJECTED, event)
+    expect(MockNotifyClient.prototype.sendEmail).not.toHaveBeenCalled()
   })
 })

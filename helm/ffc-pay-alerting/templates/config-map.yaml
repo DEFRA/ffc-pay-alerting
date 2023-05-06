@@ -16,4 +16,5 @@ data:
   CORE_SOLUTIONS_TEAM_EMAILS: {{ quote .Values.container.coreSolutionsTeamEmails }}
   FFC_ENVIRONMENT: {{ quote .Values.environmentCode }}
   NOTIFY_API_KEY: {{ quote .Values.container.notifyApiKey }}
+  SEND_ALERTS: {{ quote .Values.container.sendAlerts }}
 {{- end -}}

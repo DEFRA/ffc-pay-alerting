@@ -6,7 +6,7 @@ const { processAlert: mockProcessAlert } = require('../../../app/alerting')
 jest.mock('../../../app/messaging/validate-alert')
 const { validateAlert: mockValidateAlert } = require('../../../app/messaging/validate-alert')
 
-const message = require('../../mocks/events/event')
+const message = require('../../mocks/event')
 
 const { processAlertMessage } = require('../../../app/messaging/process-alert-message')
 

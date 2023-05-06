@@ -2,7 +2,7 @@ jest.mock('../../../app/alerting/get-email-addresses')
 const { getEmailAddresses: mockGetEmailAddresses } = require('../../../app/alerting/get-email-addresses')
 
 const { EMAIL } = require('../../mocks/values/email')
-const event = require('../../mocks/events/event')
+const event = require('../../mocks/event')
 
 const { getRecipients } = require('../../../app/alerting/get-recipients')
 

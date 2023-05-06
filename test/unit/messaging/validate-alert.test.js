@@ -3,7 +3,7 @@ const { VALIDATION } = require('../../../app/constants/errors')
 jest.mock('../../../app/messaging/alert-schema')
 const mockSchema = require('../../../app/messaging/alert-schema')
 
-const event = require('../../mocks/events/event')
+const event = require('../../mocks/event')
 
 const { validateAlert } = require('../../../app/messaging/validate-alert')
 

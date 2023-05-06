@@ -2,7 +2,7 @@ jest.mock('../../../app/alerting/send-alert')
 const { sendAlert: mockSendAlert } = require('../../../app/alerting/send-alert')
 
 const { EMAIL } = require('../../mocks/values/email')
-const event = require('../../mocks/events/event')
+const event = require('../../mocks/event')
 
 const { PAYMENT_REJECTED } = require('../../../app/constants/templates')
 

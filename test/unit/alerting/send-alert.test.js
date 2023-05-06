@@ -8,7 +8,7 @@ jest.mock('../../../app/alerting/get-personalisation')
 const { getPersonalisation: mockGetPersonalisation } = require('../../../app/alerting/get-personalisation')
 
 const { EMAIL } = require('../../mocks/values/email')
-const event = require('../../mocks/events/event')
+const event = require('../../mocks/event')
 
 const { PAYMENT_REJECTED } = require('../../../app/constants/templates')
 

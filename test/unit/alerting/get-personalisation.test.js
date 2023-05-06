@@ -19,7 +19,7 @@ describe('get personalisation', () => {
     mockGetEnvironment.mockReturnValue(TEST_NAME)
     mockGetScheme.mockReturnValue(schemeNames[SFI])
 
-    event = JSON.parse(JSON.stringify(require('../../mocks/events/event')))
+    event = JSON.parse(JSON.stringify(require('../../mocks/event')))
   })
 
   test('should return message from event data', () => {

@@ -17,7 +17,7 @@ describe('process alert', () => {
     jest.resetAllMocks()
     mockGetRecipients.mockReturnValue(RECIPIENTS)
 
-    event = JSON.parse(JSON.stringify(require('../../mocks/events/event')))
+    event = JSON.parse(JSON.stringify(require('../../mocks/event')))
   })
 
   test('should get the recipients from the event', async () => {

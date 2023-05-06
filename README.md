@@ -1,74 +1,119 @@
 # Payment Hub Alerting
 
-Publish alerts from Payment Hub warnings
+Microservice to publish alerts from Payment Hub events via GOV.UK Notify.
+
+This service is part of the [Payment Hub](https://github.com/DEFRA/ffc-pay-core).
 
 ## Prerequisites
 
-- Docker
-- Docker Compose
+- [Azure Service Bus](https://docs.microsoft.com/en-us/azure/service-bus-messaging/)
+- [Docker](https://www.docker.com/)
+- Either:
+  - [Docker Compose](https://docs.docker.com/compose/install/linux/#install-the-plugin-manually)
+  - [Docker-Compose (standalone)](https://docs.docker.com/compose/install/other/)
 
 Optional:
-- Kubernetes
-- Helm
+- [Kubernetes](https://kubernetes.io/)
+- [Helm](https://helm.sh/)
 
-## Running the application
+### Configuration
 
-The application is designed to run in containerised environments, using Docker Compose in development and Kubernetes in production.
+#### Azure Service Bus
 
-- A Helm chart is provided for production deployments to Kubernetes.
+This service publishes responses as messages to Azure Service Bus topics.
 
-### Build container image
+| Name | Description |
+| ---| --- |
+| `MESSAGE_QUEUE_HOST` | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net` |
+| `MESSAGE_QUEUE_USER` | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey` |
+| `MESSAGE_QUEUE_PASSWORD` | Azure Service Bus SAS policy key |
+| `MESSAGE_QUEUE_SUFFIX` | Developer initials, optional, will be automatically added to topic names, e.g. `-jw `|
+| `ALERT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `ffc-pay-alert` |
+| `ALERT_SUBSCRIPTION_ADDRESS` | Azure Service Bus subscription name for events, e.g. `ffc-pay-alerting` |
 
-Container images are built using Docker Compose, with the same images used to run the service with either Docker Compose or Kubernetes.
+##### Message schemas
 
-When using the Docker Compose files in development the local `app` folder will
-be mounted on top of the `app` folder within the Docker container, hiding the CSS files that were generated during the Docker build.  For the site to render correctly locally `npm run build` must be run on the host system.
+All message schemas are fully documented in an [AsyncAPI specification](docs/asyncapi.yaml).
 
+## Setup
 
-By default, the start script will build (or rebuild) images so there will
-rarely be a need to build images manually. However, this can be achieved
-through the Docker Compose
-[build](https://docs.docker.com/compose/reference/build/) command:
+### Configuration
+
+These configuration values should be set in the [docker-compose.yaml](docker-compose.yaml) file or Helm [values file](helm/ffc-pay-alerting/values.yaml) if running Kubernetes.
+
+| Name | Description |
+| ---| --- |
+| `APPINSIGHTS_CLOUDROLE` | Azure App Insights cloud role |
+| `APPINSIGHTS_CONNECTIONSTRING` | Azure App Insights connection string |
+| `DEV_TEAM_EMAILS` | `;` separated list of developer email addresses, receives all system issue alerts |
+| `DEBT_ENRICHMENT_EMAILS` | `;` separated list of debt enrichment email addresses, receives all debt enrichment alerts |
+| `INVALID_BANK_DETAILS_EMAILS` | `;` separated list of invalid bank details email addresses, receives all invalid bank details alerts |
+| `CORE_SOLUTIONS_TEAM_EMAILS` | `;` separated list of core solutions team email addresses, receives all Siti Agri alerts |
+| `FFC_ENVIRONMENT` | Environment code; `local`, `dev`, `test`, `pre` or `prod`.  Defaults to `local` |
+| `NOTIFY_API_KEY` | GOV.UK Notify API key |
+| `SEND_ALERTS` | `true` to send alerts, `false` to log alerts only. Defaults to `true` |
+
+#### Docker
+
+Docker Compose can be used to build the container image.
 
 ```
-# Build container images
 docker-compose build
 ```
 
-### Start
+The service will file watch application and test files so no need to rebuild the container unless a change to an npm package is made.
 
-Use Docker Compose to run service locally.
+## How to start the service
 
+The service can be run using the [start](scripts/start) script.
 ```
-docker-compose up
+./scripts/start
 ```
 
-## Test structure
+This script accepts any Docker Compose [Up](https://docs.docker.com/engine/reference/commandline/compose_up/) argument.
 
-The tests have been structured into subfolders of `./test` as per the
-[Microservice test approach and repository structure](https://eaflood.atlassian.net/wiki/spaces/FPS/pages/1845396477/Microservice+test+approach+and+repository+structure)
+### Debugging
 
-### Running tests
+A debugger can be attached to the running application using port `9329`.
 
-A convenience script is provided to run automated tests in a containerised
-environment. This will rebuild images before running tests via docker-compose,
-using a combination of `docker-compose.yaml` and `docker-compose.test.yaml`.
-The command given to `docker-compose run` may be customised by passing
-arguments to the test script.
+## How to get an output
 
-Examples:
+The output of this service is an email following receipt of a valid
+event received from the Azure Service Bus subscription.
 
+Use the [AsyncAPI specification](docs/asyncapi.yaml) to obtain a test input and submit to the Azure Service Bus topic, `ffc-pay-alert`.
+
+You can use the [Azure Storage Explorer](https://azure.microsoft.com/en-gb/features/storage-explorer/) to view the contents of the Azure Table Storage tables.
+
+## How to stop the service
+
+The service can be stopped using the [stop](scripts/stop) script.
 ```
-# Run all tests
-scripts/test
-
-# Run tests with file watch
-scripts/test -w
+./scripts/stop
 ```
+
+The script accepts any Docker Compose [Down](https://docs.docker.com/engine/reference/commandline/compose_down/) argument.
+
+For example, to stop the service and clear all data volumes.
+```
+./scripts/stop -v
+```
+
+## How to test the service
+
+The service can be tested using the [test](scripts/test) script.
+```
+./scripts/test
+```
+
+The script accepts the following arguments:
+
+- `--watch/-w` - run tests with file watching to support Test Driven Development scenarios (TDD)
+- `--debug/-d` - run tests in debug mode. Same as watch mode but will wait for a debugger to be attached before running tests.
 
 ## CI pipeline
 
-This service uses the [FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library)
+This service uses the [FFC CI pipeline](https://github.com/DEFRA/ffc-jenkins-pipeline-library).
 
 ## Licence
 

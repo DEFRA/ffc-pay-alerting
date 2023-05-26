@@ -1,8 +1,8 @@
 jest.mock('../../../app/config')
 const { alertConfig: mockAlertConfig } = require('../../../app/config')
 
-const { LOCAL, DEVELOPMENT, TEST, PRE_PRODUCTION, PRODUCTION } = require('../../../app/constants/environment-codes')
-const { LOCAL_NAME, DEVELOPMENT_NAME, TEST_NAME, PRE_PRODUCTION_NAME, PRODUCTION_NAME } = require('../../../app/constants/environment-names')
+const { LOCAL, SANDPIT, DEVELOPMENT, TEST, PRE_PRODUCTION, PRODUCTION } = require('../../../app/constants/environment-codes')
+const { LOCAL_NAME, SANDPIT_NAME, DEVELOPMENT_NAME, TEST_NAME, PRE_PRODUCTION_NAME, PRODUCTION_NAME } = require('../../../app/constants/environment-names')
 const { UNKNOWN } = require('../../../app/constants/unknown')
 
 const { getEnvironment } = require('../../../app/alerting/get-environment')
@@ -12,6 +12,12 @@ describe('get environment', () => {
     mockAlertConfig.environment = LOCAL
     const result = getEnvironment()
     expect(result).toBe(LOCAL_NAME)
+  })
+
+  test('should return sandpit name for sandpit environment', () => {
+    mockAlertConfig.environment = SANDPIT
+    const result = getEnvironment()
+    expect(result).toBe(SANDPIT_NAME)
   })
 
   test('should return development name for development environment', () => {

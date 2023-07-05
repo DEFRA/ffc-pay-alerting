@@ -6,7 +6,10 @@ const {
   CS,
   BPS,
   FDMR,
-  MANUAL
+  MANUAL,
+  ES,
+  FC,
+  IMPS
 } = require('./schemes')
 
 module.exports = {
@@ -17,5 +20,8 @@ module.exports = {
   [CS]: 'Countryside Stewardship',
   [BPS]: 'BPS',
   [FDMR]: 'FDMR',
-  [MANUAL]: 'Manual Invoice'
+  [MANUAL]: 'Manual Invoice',
+  [ES]: 'Environmental Stewardship',
+  [FC]: 'Forestry Commission',
+  [IMPS]: 'IMPS'
 }

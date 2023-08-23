@@ -6,7 +6,8 @@ const {
   CS,
   BPS,
   FDMR,
-  MANUAL
+  MANUAL,
+  SFI23
 } = require('../../../app/constants/schemes')
 
 const { getScheme } = require('../../../app/alerting/get-scheme')
@@ -50,6 +51,11 @@ describe('get scheme', () => {
   test('should return Manual Invoice name for Manual Invoice scheme', () => {
     const result = getScheme(MANUAL)
     expect(result).toBe('Manual Invoice')
+  })
+
+  test('should return SFI 23 name for SFI23 scheme', () => {
+    const result = getScheme(SFI23)
+    expect(result).toBe('SFI 23')
   })
 
   test('should return unknown for unknown scheme', () => {

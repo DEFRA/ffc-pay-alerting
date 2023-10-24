@@ -6,6 +6,9 @@ const schema = Joi.object({
   debtEnrichmentEmails: Joi.string().optional(),
   invalidBankDetailsEmails: Joi.string().optional(),
   coreSolutionsTeamEmails: Joi.string().optional(),
+  esEmails: Joi.string().optional(),
+  fcEmails: Joi.string().optional(),
+  traderEmails: Joi.string().optional(),
   environment: Joi.string().default('local'),
   sendAlerts: Joi.boolean().default(true)
 })
@@ -16,6 +19,9 @@ const config = {
   debtEnrichmentEmails: process.env.DEBT_ENRICHMENT_EMAILS,
   invalidBankDetailsEmails: process.env.INVALID_BANK_DETAILS_EMAILS,
   coreSolutionsTeamEmails: process.env.CORE_SOLUTIONS_TEAM_EMAILS,
+  esEmails: process.env.ES_EMAILS,
+  fcEmails: process.env.FC_EMAILS,
+  traderEmails: process.env.TRADER_EMAILS,
   environment: process.env.FFC_ENVIRONMENT,
   sendAlerts: process.env.SEND_ALERTS
 }

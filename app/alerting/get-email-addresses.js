@@ -10,19 +10,50 @@ const {
   PAYMENT_REQUEST_BLOCKED
 } = require('../constants/events')
 
-const { BATCH_PROCESSOR } = require('../constants/sources')
+const {
+  SFI,
+  SFIP,
+  LUMP_SUMS,
+  CS,
+  BPS,
+  FDMR,
+  ES,
+  FC,
+  IMPS
+} = require('../constants/source-systems')
 
 const { alertConfig } = require('../config')
 
-const getEmailAddresses = (eventType, eventSource) => {
+const getEmailAddresses = (eventType, sourceSystem) => {
   switch (eventType) {
     case BATCH_REJECTED:
-      return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.devTeamEmails}`
+      if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR].includes(sourceSystem)) {
+        return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.devTeamEmails}`
+      }
+      if (sourceSystem === ES) {
+        return `${alertConfig.esEmails};${alertConfig.devTeamEmails}`
+      }
+      if (sourceSystem === FC) {
+        return `${alertConfig.fcEmails};${alertConfig.devTeamEmails}`
+      }
+      if (sourceSystem === IMPS) {
+        return `${alertConfig.traderEmails};${alertConfig.devTeamEmails}`
+      }
+      return alertConfig.devTeamEmails
     case BATCH_QUARANTINED:
       return alertConfig.devTeamEmails
     case PAYMENT_REJECTED:
-      if (eventSource === BATCH_PROCESSOR) {
+      if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR].includes(sourceSystem)) {
         return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.devTeamEmails}`
+      }
+      if (sourceSystem === ES) {
+        return `${alertConfig.esEmails};${alertConfig.devTeamEmails}`
+      }
+      if (sourceSystem === FC) {
+        return `${alertConfig.fcEmails};${alertConfig.devTeamEmails}`
+      }
+      if (sourceSystem === IMPS) {
+        return `${alertConfig.traderEmails};${alertConfig.devTeamEmails}`
       }
       return alertConfig.devTeamEmails
     case PAYMENT_DAX_REJECTED:

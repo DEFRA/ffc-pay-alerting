@@ -14,6 +14,9 @@ data:
   DEBT_ENRICHMENT_EMAILS: {{ quote .Values.container.debtEnrichmentEmails }}
   INVALID_BANK_DETAILS_EMAILS: {{ quote .Values.container.invalidBankDetailsEmails }}
   CORE_SOLUTIONS_TEAM_EMAILS: {{ quote .Values.container.coreSolutionsTeamEmails }}
+  ES_EMAILS: {{ quote .Values.container.esEmails }}
+  FC_EMAILS: {{ quote .Values.container.fcEmails }}
+  TRADER_EMAILS: {{ quote .Values.container.traderEmails }}
   FFC_ENVIRONMENT: {{ quote .Values.environmentCode }}
   NOTIFY_API_KEY: {{ quote .Values.container.notifyApiKey }}
   SEND_ALERTS: {{ quote .Values.container.sendAlerts }}

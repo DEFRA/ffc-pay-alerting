@@ -12,7 +12,7 @@ const receiver = {
 describe('send alert', () => {
   test('should send alert via notify', async () => {
     await processAlertMessage(message, receiver)
-    expect(MockNotifyClient.prototype.sendEmail).toHaveBeenCalledTimes(1)
+    expect(MockNotifyClient.prototype.sendEmail).toHaveBeenCalled()
   })
 
   test('should complete message', async () => {

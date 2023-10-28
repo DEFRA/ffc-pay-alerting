@@ -10,7 +10,7 @@ const {
   PAYMENT_REQUEST_BLOCKED
 } = require('../../../app/constants/events')
 
-const { SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR, ES, FC, IMPS } = require('../../../app/constants/source-systems')
+const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS } = require('../../../app/constants/source-systems')
 
 const { alertConfig } = require('../../../app/config')
 
@@ -59,6 +59,11 @@ describe('get email addresses', () => {
   ])('should return core solutions and dev emails for payment rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(PAYMENT_REJECTED, sourceSystem)
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return vet visits and dev emails for payment rejected warning if vet visits', () => {
+    const result = getEmailAddresses(PAYMENT_REJECTED, VET_VISITS)
+    expect(result).toBe(`${alertConfig.vetVisitsEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return ES and dev emails for payment rejected warning if ES', () => {

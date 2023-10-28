@@ -14,6 +14,7 @@ const {
   SFI,
   SFIP,
   LUMP_SUMS,
+  VET_VISITS,
   CS,
   BPS,
   FDMR,
@@ -45,6 +46,9 @@ const getEmailAddresses = (eventType, sourceSystem) => {
     case PAYMENT_REJECTED:
       if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR].includes(sourceSystem)) {
         return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.devTeamEmails}`
+      }
+      if (sourceSystem === VET_VISITS) {
+        return `${alertConfig.vetVisitsEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === ES) {
         return `${alertConfig.esEmails};${alertConfig.devTeamEmails}`

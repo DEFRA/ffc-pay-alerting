@@ -41,6 +41,7 @@ container:
   fcEmails:
   traderEmails:
   vetVisitsEmails:
+  financeEmails:
   sendAlerts: true
 
 aadPodIdentity: true

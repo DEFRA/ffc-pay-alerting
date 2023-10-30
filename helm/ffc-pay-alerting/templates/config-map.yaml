@@ -18,6 +18,7 @@ data:
   FC_EMAILS: {{ quote .Values.container.fcEmails }}
   TRADER_EMAILS: {{ quote .Values.container.traderEmails }}
   VET_VISITS_EMAILS: {{ quote .Values.container.vetVisitsEmails }}
+  FINANCE_EMAILS: {{ quote .Values.container.financeEmails }}
   FFC_ENVIRONMENT: {{ quote .Values.environmentCode }}
   NOTIFY_API_KEY: {{ quote .Values.container.notifyApiKey }}
   SEND_ALERTS: {{ quote .Values.container.sendAlerts }}

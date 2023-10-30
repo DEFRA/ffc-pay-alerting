@@ -24,24 +24,24 @@ describe('get email addresses', () => {
     CS,
     BPS,
     FDMR
-  ])('should return core solutions and dev emails for batch rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
+  ])('should return core solutions, finance and dev emails for batch rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(BATCH_REJECTED, sourceSystem)
-    expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return ES and dev emails for batch rejected warning if ES', () => {
+  test('should return ES, finance and dev emails for batch rejected warning if ES', () => {
     const result = getEmailAddresses(BATCH_REJECTED, ES)
-    expect(result).toBe(`${alertConfig.esEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return FC and dev emails for batch rejected warning if FC', () => {
+  test('should return FC, finance and dev emails for batch rejected warning if FC', () => {
     const result = getEmailAddresses(BATCH_REJECTED, FC)
-    expect(result).toBe(`${alertConfig.fcEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return Trader and dev emails for batch rejected warning if IMPS', () => {
+  test('should return Trader, finance and dev emails for batch rejected warning if IMPS', () => {
     const result = getEmailAddresses(BATCH_REJECTED, IMPS)
-    expect(result).toBe(`${alertConfig.traderEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return dev emails for batch quarantined warning', () => {
@@ -56,29 +56,29 @@ describe('get email addresses', () => {
     CS,
     BPS,
     FDMR
-  ])('should return core solutions and dev emails for payment rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
+  ])('should return core solutions, finance and dev emails for payment rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(PAYMENT_REJECTED, sourceSystem)
-    expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return vet visits and dev emails for payment rejected warning if vet visits', () => {
+  test('should return vet visits, finance and dev emails for payment rejected warning if vet visits', () => {
     const result = getEmailAddresses(PAYMENT_REJECTED, VET_VISITS)
-    expect(result).toBe(`${alertConfig.vetVisitsEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.vetVisitsEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return ES and dev emails for payment rejected warning if ES', () => {
+  test('should return ES, finance and dev emails for payment rejected warning if ES', () => {
     const result = getEmailAddresses(PAYMENT_REJECTED, ES)
-    expect(result).toBe(`${alertConfig.esEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return FC and dev emails for payment rejected warning if FC', () => {
+  test('should return FC, finance and dev emails for payment rejected warning if FC', () => {
     const result = getEmailAddresses(PAYMENT_REJECTED, FC)
-    expect(result).toBe(`${alertConfig.fcEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return Trader and dev emails for payment rejected warning if IMPS', () => {
+  test('should return Trader, finance and dev emails for payment rejected warning if IMPS', () => {
     const result = getEmailAddresses(PAYMENT_REJECTED, IMPS)
-    expect(result).toBe(`${alertConfig.traderEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return dev emails for payment dax rejected warning', () => {
@@ -109,5 +109,13 @@ describe('get email addresses', () => {
   test('should return debt enrichment emails for payment request blocked warning', () => {
     const result = getEmailAddresses(PAYMENT_REQUEST_BLOCKED)
     expect(result).toBe(alertConfig.debtEnrichmentEmails)
+  })
+
+  test('should not return any emails not set', () => {
+    alertConfig.esEmails = ''
+    alertConfig.financeEmails = ''
+    alertConfig.devTeamEmails = ''
+    const result = getEmailAddresses(BATCH_REJECTED, ES)
+    expect(result).toBe(';;')
   })
 })

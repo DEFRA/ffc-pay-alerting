@@ -29,35 +29,35 @@ const getEmailAddresses = (eventType, sourceSystem) => {
   switch (eventType) {
     case BATCH_REJECTED:
       if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR].includes(sourceSystem)) {
-        return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.devTeamEmails}`
+        return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === ES) {
-        return `${alertConfig.esEmails};${alertConfig.devTeamEmails}`
+        return `${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === FC) {
-        return `${alertConfig.fcEmails};${alertConfig.devTeamEmails}`
+        return `${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === IMPS) {
-        return `${alertConfig.traderEmails};${alertConfig.devTeamEmails}`
+        return `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       return alertConfig.devTeamEmails
     case BATCH_QUARANTINED:
       return alertConfig.devTeamEmails
     case PAYMENT_REJECTED:
       if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR].includes(sourceSystem)) {
-        return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.devTeamEmails}`
+        return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === VET_VISITS) {
-        return `${alertConfig.vetVisitsEmails};${alertConfig.devTeamEmails}`
+        return `${alertConfig.vetVisitsEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === ES) {
-        return `${alertConfig.esEmails};${alertConfig.devTeamEmails}`
+        return `${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === FC) {
-        return `${alertConfig.fcEmails};${alertConfig.devTeamEmails}`
+        return `${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === IMPS) {
-        return `${alertConfig.traderEmails};${alertConfig.devTeamEmails}`
+        return `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       return alertConfig.devTeamEmails
     case PAYMENT_DAX_REJECTED:

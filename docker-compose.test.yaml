@@ -24,3 +24,4 @@ services:
       FC_EMAILS: testFC@test.com
       TRADER_EMAILS: testTrader@test.com
       VET_VISITS_EMAILS: testVets@test.com
+      FINANCE_EMAILS: testFinance@test.com

@@ -10,16 +10,34 @@ data:
   ALERT_TOPIC_ADDRESS: {{ quote .Values.container.alertTopicAddress }}
   {{- end }}
   ALERT_SUBSCRIPTION_ADDRESS: {{ quote .Values.container.alertSubscriptionAddress }}
-  DEV_TEAM_EMAILS: {{ .Values.container.devTeamEmails }}
-  DEBT_ENRICHMENT_EMAILS: {{ .Values.container.debtEnrichmentEmails }}
-  INVALID_BANK_DETAILS_EMAILS: {{ .Values.container.invalidBankDetailsEmails }}
-  CORE_SOLUTIONS_TEAM_EMAILS: {{ .Values.container.coreSolutionsTeamEmails }}
-  ES_EMAILS: {{ .Values.container.esEmails }}
-  FC_EMAILS: {{ .Values.container.fcEmails }}
-  TRADER_EMAILS: {{ .Values.container.traderEmails }}
-  VET_VISITS_EMAILS: {{ .Values.container.vetVisitsEmails }}
-  FINANCE_EMAILS: {{ .Values.container.financeEmails }}
-  FFC_ENVIRONMENT: {{ .Values.environmentCode }}
+  {{ - if .Values.container.devTeamEmails }}
+  DEV_TEAM_EMAILS: {{ quote .Values.container.devTeamEmails }}
+  {{- end }}
+  {{ - if .Values.container.debtEnrichmentEmails }}
+  DEBT_ENRICHMENT_EMAILS: {{ quote .Values.container.debtEnrichmentEmails }}
+  {{- end }}
+  {{ - if .Values.container.invalidBankDetailsEmails }}
+  INVALID_BANK_DETAILS_EMAILS: {{ quote .Values.container.invalidBankDetailsEmails }}
+  {{- end }}
+  {{ - if .Values.container.coreSolutionsTeamEmails }}
+  CORE_SOLUTIONS_TEAM_EMAILS: {{ quote .Values.container.coreSolutionsTeamEmails }}
+  {{- end }}
+  {{ - if .Values.container.esEmails }}
+  ES_EMAILS: {{ quote .Values.container.esEmails }}
+  {{- end }}
+  {{ - if .Values.container.fcEmails }}
+  FC_EMAILS: {{ quote .Values.container.fcEmails }}
+  {{- end }}
+  {{ - if .Values.container.traderEmails }}
+  TRADER_EMAILS: {{ quote .Values.container.traderEmails }}
+  {{- end }}
+  {{ - if .Values.container.vetVisitsEmails }}
+  VET_VISITS_EMAILS: {{ quote .Values.container.vetVisitsEmails }}
+  {{- end }}
+  {{ - if .Values.container.financeEmails }}
+  FINANCE_EMAILS: {{ quote .Values.container.financeEmails }}
+  {{- end }}
+  FFC_ENVIRONMENT: {{ quote .Values.environmentCode }}
   NOTIFY_API_KEY: {{ quote .Values.container.notifyApiKey }}
   SEND_ALERTS: {{ quote .Values.container.sendAlerts }}
 {{- end -}}

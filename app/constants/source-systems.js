@@ -9,5 +9,5 @@ module.exports = {
   ES: 'Genesis',
   FC: 'GLOS',
   IMPS: 'IMPS',
-  SIF23: 'SFIA'
+  SFI23: 'SFIA'
 }

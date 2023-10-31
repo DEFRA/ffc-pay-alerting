@@ -10,7 +10,7 @@ const {
   PAYMENT_REQUEST_BLOCKED
 } = require('../../../app/constants/events')
 
-const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS } = require('../../../app/constants/source-systems')
+const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23 } = require('../../../app/constants/source-systems')
 
 const { alertConfig } = require('../../../app/config')
 
@@ -23,7 +23,8 @@ describe('get email addresses', () => {
     LUMP_SUMS,
     CS,
     BPS,
-    FDMR
+    FDMR,
+    SFI23
   ])('should return core solutions, finance and dev emails for batch rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(BATCH_REJECTED, sourceSystem)
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
@@ -55,7 +56,8 @@ describe('get email addresses', () => {
     LUMP_SUMS,
     CS,
     BPS,
-    FDMR
+    FDMR,
+    SFI23
   ])('should return core solutions, finance and dev emails for payment rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(PAYMENT_REJECTED, sourceSystem)
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)

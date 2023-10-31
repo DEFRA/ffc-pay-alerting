@@ -20,7 +20,8 @@ const {
   FDMR,
   ES,
   FC,
-  IMPS
+  IMPS,
+  SFI23
 } = require('../constants/source-systems')
 
 const { alertConfig } = require('../config')
@@ -28,7 +29,7 @@ const { alertConfig } = require('../config')
 const getEmailAddresses = (eventType, sourceSystem) => {
   switch (eventType) {
     case BATCH_REJECTED:
-      if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR].includes(sourceSystem)) {
+      if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR, SFI23].includes(sourceSystem)) {
         return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === ES) {
@@ -44,7 +45,7 @@ const getEmailAddresses = (eventType, sourceSystem) => {
     case BATCH_QUARANTINED:
       return alertConfig.devTeamEmails
     case PAYMENT_REJECTED:
-      if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR].includes(sourceSystem)) {
+      if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR, SFI23].includes(sourceSystem)) {
         return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === VET_VISITS) {

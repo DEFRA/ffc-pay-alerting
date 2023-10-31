@@ -4,6 +4,7 @@ const { INVOICE_NUMBER } = require('./invoice-number')
 const { MESSAGE } = require('./message')
 const { PAYMENT_REQUEST_NUMBER } = require('./payment-request-number')
 const { SCHEME_ID } = require('./scheme-id')
+const { SFI } = require('../../../app/constants/source-systems')
 
 module.exports = {
   DATA: {
@@ -12,6 +13,7 @@ module.exports = {
     invoiceNumber: INVOICE_NUMBER,
     schemeId: SCHEME_ID,
     contractNumber: CONTRACT_NUMBER,
-    paymentRequestNumber: PAYMENT_REQUEST_NUMBER
+    paymentRequestNumber: PAYMENT_REQUEST_NUMBER,
+    sourceSystem: SFI
   }
 }

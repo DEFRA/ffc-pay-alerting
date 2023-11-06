@@ -7,5 +7,6 @@ module.exports = {
   PAYMENT_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.processing.failed',
   PAYMENT_SETTLEMENT_UNMATCHED: 'uk.gov.defra.ffc.pay.warning.settlement.unmatched',
   RESPONSE_REJECTED: 'uk.gov.defra.ffc.pay.warning.response.rejected',
-  PAYMENT_REQUEST_BLOCKED: 'uk.gov.defra.ffc.pay.warning.payment.debt.missing'
+  PAYMENT_REQUEST_BLOCKED: 'uk.gov.defra.ffc.pay.warning.payment.debt.missing',
+  PAYMENT_DAX_UNAVAILABLE: 'uk.gov.defra.ffc.pay.warning.payment.dax.unavailable'
 }

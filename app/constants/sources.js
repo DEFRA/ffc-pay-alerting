@@ -4,5 +4,6 @@ module.exports = {
   PROCESSING: 'ffc-pay-processing',
   SUBMISSION: 'ffc-pay-submission',
   RESPONSES: 'ffc-pay-responses',
-  REQUEST_EDITOR: 'ffc-pay-request-editor'
+  REQUEST_EDITOR: 'ffc-pay-request-editor',
+  FILE_PUBLISHER: 'ffc-pay-file-publisher'
 }

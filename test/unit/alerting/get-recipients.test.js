@@ -19,7 +19,7 @@ describe('get recipients', () => {
 
   test('should get email addresses from event type and source', () => {
     getRecipients(event)
-    expect(mockGetEmailAddresses).toHaveBeenCalledWith(event.type, event.source)
+    expect(mockGetEmailAddresses).toHaveBeenCalledWith(event.type, event.data.sourceSystem)
   })
 
   test('should return email addresses as array', () => {

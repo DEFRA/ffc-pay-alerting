@@ -16,7 +16,12 @@ services:
       - ./package.json:/home/node/package.json
     environment:
       NOTIFY_API_KEY: A_TEST_KEY
-      DEV_TEAM_EMAILS: test@test.com
-      DEBT_ENRICHMENT_EMAILS: test@test.com
-      INVALID_BANK_DETAILS_EMAILS: test@test.com
-      CORE_SOLUTIONS_TEAM_EMAILS: test@test.com
+      DEV_TEAM_EMAILS: testDev@test.com
+      DEBT_ENRICHMENT_EMAILS: testDebt@test.com
+      INVALID_BANK_DETAILS_EMAILS: testBank@test.com
+      CORE_SOLUTIONS_TEAM_EMAILS: testCore@test.com
+      ES_EMAILS: testES@test.com
+      FC_EMAILS: testFC@test.com
+      TRADER_EMAILS: testTrader@test.com
+      VET_VISITS_EMAILS: testVets@test.com
+      FINANCE_EMAILS: testFinance@test.com

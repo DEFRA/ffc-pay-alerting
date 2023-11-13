@@ -7,7 +7,8 @@ const {
   PAYMENT_PROCESSING_FAILED,
   PAYMENT_SETTLEMENT_UNMATCHED,
   RESPONSE_REJECTED,
-  PAYMENT_REQUEST_BLOCKED
+  PAYMENT_REQUEST_BLOCKED,
+  PAYMENT_DAX_UNAVAILABLE
 } = require('../constants/events')
 
 const {
@@ -73,6 +74,8 @@ const getEmailAddresses = (eventType, sourceSystem) => {
       return alertConfig.devTeamEmails
     case PAYMENT_REQUEST_BLOCKED:
       return alertConfig.debtEnrichmentEmails
+    case PAYMENT_DAX_UNAVAILABLE:
+      return alertConfig.devTeamEmails
     default:
       return undefined
   }

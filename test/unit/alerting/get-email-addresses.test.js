@@ -7,7 +7,8 @@ const {
   PAYMENT_PROCESSING_FAILED,
   PAYMENT_SETTLEMENT_UNMATCHED,
   RESPONSE_REJECTED,
-  PAYMENT_REQUEST_BLOCKED
+  PAYMENT_REQUEST_BLOCKED,
+  PAYMENT_DAX_UNAVAILABLE
 } = require('../../../app/constants/events')
 
 const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23 } = require('../../../app/constants/source-systems')
@@ -119,5 +120,10 @@ describe('get email addresses', () => {
     alertConfig.devTeamEmails = ''
     const result = getEmailAddresses(BATCH_REJECTED, ES)
     expect(result).toBe(';;')
+  })
+
+  test('should return dev emails for dax unavailable warning', () => {
+    const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE)
+    expect(result).toBe(alertConfig.devTeamEmails)
   })
 })

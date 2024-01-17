@@ -9,6 +9,7 @@ const {
   RESPONSE_REJECTED,
   PAYMENT_REQUEST_BLOCKED,
   PAYMENT_DAX_UNAVAILABLE,
+  RECEIVER_CONNECTION_FAILED,
   DEMOGRAPHICS_UPDATE_FAILED
 } = require('../../../app/constants/events')
 
@@ -130,6 +131,11 @@ describe('get email addresses', () => {
 
   test('should return dev emails for dax unavailable warning', () => {
     const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE)
+    expect(result).toBe(alertConfig.devTeamEmails)
+  })
+
+  test('should return dev emails for receiver connection failed warning', () => {
+    const result = getEmailAddresses(RECEIVER_CONNECTION_FAILED)
     expect(result).toBe(alertConfig.devTeamEmails)
   })
 })

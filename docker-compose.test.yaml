@@ -25,3 +25,4 @@ services:
       TRADER_EMAILS: testTrader@test.com
       VET_VISITS_EMAILS: testVets@test.com
       FINANCE_EMAILS: testFinance@test.com
+      DEMOGRAPHICS_EMAILS: testDemographics@test.com

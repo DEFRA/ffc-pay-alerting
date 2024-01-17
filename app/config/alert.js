@@ -11,6 +11,7 @@ const schema = Joi.object({
   traderEmails: Joi.string().default(''),
   vetVisitsEmails: Joi.string().default(''),
   financeEmails: Joi.string().default(''),
+  demographicsEmails: Joi.string().default(''),
   environment: Joi.string().default('local'),
   sendAlerts: Joi.boolean().default(true)
 })
@@ -26,6 +27,7 @@ const config = {
   traderEmails: process.env.TRADER_EMAILS,
   vetVisitsEmails: process.env.VET_VISITS_EMAILS,
   financeEmails: process.env.FINANCE_EMAILS,
+  demographicsEmails: process.env.DEMOGAPHICS_EMAILS,
   environment: process.env.FFC_ENVIRONMENT,
   sendAlerts: process.env.SEND_ALERTS
 }

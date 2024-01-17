@@ -8,7 +8,8 @@ const {
   PAYMENT_SETTLEMENT_UNMATCHED,
   RESPONSE_REJECTED,
   PAYMENT_REQUEST_BLOCKED,
-  PAYMENT_DAX_UNAVAILABLE
+  PAYMENT_DAX_UNAVAILABLE,
+  DEMOGRAPHICS_UPDATE_FAILED
 } = require('../../../app/constants/events')
 
 const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23 } = require('../../../app/constants/source-systems')
@@ -112,6 +113,11 @@ describe('get email addresses', () => {
   test('should return debt enrichment emails for payment request blocked warning', () => {
     const result = getEmailAddresses(PAYMENT_REQUEST_BLOCKED)
     expect(result).toBe(alertConfig.debtEnrichmentEmails)
+  })
+
+  test('should return demographics emails for demographics updates failed warning', () => {
+    const result = getEmailAddresses(DEMOGRAPHICS_UPDATE_FAILED)
+    expect(result).toBe(alertConfig.demographicsEmails)
   })
 
   test('should not return any emails not set', () => {

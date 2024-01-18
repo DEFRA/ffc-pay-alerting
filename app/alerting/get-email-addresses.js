@@ -10,6 +10,7 @@ const {
   PAYMENT_REQUEST_BLOCKED,
   PAYMENT_DAX_UNAVAILABLE,
   RECEIVER_CONNECTION_FAILED,
+  DEMOGRAPHICS_PROCESSING_FAILED,
   DEMOGRAPHICS_UPDATE_FAILED
 } = require('../constants/events')
 
@@ -77,10 +78,13 @@ const getEmailAddresses = (eventType, sourceSystem) => {
     case PAYMENT_REQUEST_BLOCKED:
       return alertConfig.debtEnrichmentEmails
     case PAYMENT_DAX_UNAVAILABLE:
+      return alertConfig.devTeamEmails
     case RECEIVER_CONNECTION_FAILED:
       return alertConfig.devTeamEmails
+    case DEMOGRAPHICS_PROCESSING_FAILED:
+      return `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
     case DEMOGRAPHICS_UPDATE_FAILED:
-      return alertConfig.demographicsEmails
+      return `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
     default:
       return undefined
   }

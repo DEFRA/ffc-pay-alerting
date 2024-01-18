@@ -10,6 +10,7 @@ const {
   PAYMENT_REQUEST_BLOCKED,
   PAYMENT_DAX_UNAVAILABLE,
   RECEIVER_CONNECTION_FAILED,
+  DEMOGRAPHICS_PROCESSING_FAILED,
   DEMOGRAPHICS_UPDATE_FAILED
 } = require('../../../app/constants/events')
 
@@ -116,9 +117,14 @@ describe('get email addresses', () => {
     expect(result).toBe(alertConfig.debtEnrichmentEmails)
   })
 
-  test('should return demographics emails for demographics updates failed warning', () => {
+  test('should return demographics emails and dev emails for demographics processing failed warning', () => {
+    const result = getEmailAddresses(DEMOGRAPHICS_PROCESSING_FAILED)
+    expect(result).toBe(`${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return demographics emails and dev emails for demographics updates failed warning', () => {
     const result = getEmailAddresses(DEMOGRAPHICS_UPDATE_FAILED)
-    expect(result).toBe(alertConfig.demographicsEmails)
+    expect(result).toBe(`${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should not return any emails not set', () => {

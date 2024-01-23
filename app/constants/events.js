@@ -8,5 +8,8 @@ module.exports = {
   PAYMENT_SETTLEMENT_UNMATCHED: 'uk.gov.defra.ffc.pay.warning.settlement.unmatched',
   RESPONSE_REJECTED: 'uk.gov.defra.ffc.pay.warning.response.rejected',
   PAYMENT_REQUEST_BLOCKED: 'uk.gov.defra.ffc.pay.warning.payment.debt.missing',
-  PAYMENT_DAX_UNAVAILABLE: 'uk.gov.defra.ffc.pay.warning.dax.unavailable'
+  PAYMENT_DAX_UNAVAILABLE: 'uk.gov.defra.ffc.pay.warning.dax.unavailable',
+  RECEIVER_CONNECTION_FAILED: 'uk.gov.defra.ffc.pay.warning.receiver.connection.failed',
+  DEMOGRAPHICS_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.demographics.processing.failed',
+  DEMOGRAPHICS_UPDATE_FAILED: 'uk.gov.defra.ffc.pay.warning.demographics.update.failed'
 }

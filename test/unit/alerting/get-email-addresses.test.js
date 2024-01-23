@@ -8,7 +8,10 @@ const {
   PAYMENT_SETTLEMENT_UNMATCHED,
   RESPONSE_REJECTED,
   PAYMENT_REQUEST_BLOCKED,
-  PAYMENT_DAX_UNAVAILABLE
+  PAYMENT_DAX_UNAVAILABLE,
+  RECEIVER_CONNECTION_FAILED,
+  DEMOGRAPHICS_PROCESSING_FAILED,
+  DEMOGRAPHICS_UPDATE_FAILED
 } = require('../../../app/constants/events')
 
 const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23 } = require('../../../app/constants/source-systems')
@@ -114,6 +117,16 @@ describe('get email addresses', () => {
     expect(result).toBe(alertConfig.debtEnrichmentEmails)
   })
 
+  test('should return demographics emails and dev emails for demographics processing failed warning', () => {
+    const result = getEmailAddresses(DEMOGRAPHICS_PROCESSING_FAILED)
+    expect(result).toBe(`${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return demographics emails and dev emails for demographics updates failed warning', () => {
+    const result = getEmailAddresses(DEMOGRAPHICS_UPDATE_FAILED)
+    expect(result).toBe(`${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
+  })
+
   test('should not return any emails not set', () => {
     alertConfig.esEmails = ''
     alertConfig.financeEmails = ''
@@ -124,6 +137,11 @@ describe('get email addresses', () => {
 
   test('should return dev emails for dax unavailable warning', () => {
     const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE)
+    expect(result).toBe(alertConfig.devTeamEmails)
+  })
+
+  test('should return dev emails for receiver connection failed warning', () => {
+    const result = getEmailAddresses(RECEIVER_CONNECTION_FAILED)
     expect(result).toBe(alertConfig.devTeamEmails)
   })
 })

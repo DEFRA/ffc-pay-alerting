@@ -40,6 +40,9 @@ data:
   {{- if .Values.container.demographicsEmails }}
   DEMOGRAPHICS_EMAILS: {{ quote .Values.container.demographicsEmails }}
   {{- end }}
+  {{- if .Values.container.daxUnavailableEmails }}
+  DAX_UNAVAILABLE_EMAILS: {{ quote .Values.container.daxUnavailableEmails }}
+  {{- end }}
   FFC_ENVIRONMENT: {{ quote .Values.environmentCode }}
   NOTIFY_API_KEY: {{ quote .Values.container.notifyApiKey }}
   SEND_ALERTS: {{ quote .Values.container.sendAlerts }}

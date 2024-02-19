@@ -42,6 +42,8 @@ container:
   traderEmails:
   vetVisitsEmails:
   financeEmails:
+  demographicsEmails:
+  daxUnavailableEmails:
   sendAlerts: true
 
 aadPodIdentity: true

@@ -78,7 +78,7 @@ const getEmailAddresses = (eventType, sourceSystem) => {
     case PAYMENT_REQUEST_BLOCKED:
       return alertConfig.debtEnrichmentEmails
     case PAYMENT_DAX_UNAVAILABLE:
-      return alertConfig.devTeamEmails
+      return `${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`
     case RECEIVER_CONNECTION_FAILED:
       return alertConfig.devTeamEmails
     case DEMOGRAPHICS_PROCESSING_FAILED:

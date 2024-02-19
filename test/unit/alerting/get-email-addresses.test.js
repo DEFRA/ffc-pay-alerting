@@ -135,9 +135,9 @@ describe('get email addresses', () => {
     expect(result).toBe(';;')
   })
 
-  test('should return dev emails for dax unavailable warning', () => {
+  test('should return dev emails and dax unavailable emails for dax unavailable warning', () => {
     const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE)
-    expect(result).toBe(alertConfig.devTeamEmails)
+    expect(result).toBe(`${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)
   })
 
   test('should return dev emails for receiver connection failed warning', () => {

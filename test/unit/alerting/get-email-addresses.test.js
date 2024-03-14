@@ -24,11 +24,17 @@ describe('get email addresses', () => {
   test.each([
     SFI,
     SFIP,
+    SFI23
+  ])('should return sfi emails, core solutions, finance and dev emails for batch rejected warning if SFI', (sourceSystem) => {
+    const result = getEmailAddresses(BATCH_REJECTED, sourceSystem)
+    expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test.each([
     LUMP_SUMS,
     CS,
     BPS,
-    FDMR,
-    SFI23
+    FDMR
   ])('should return core solutions, finance and dev emails for batch rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(BATCH_REJECTED, sourceSystem)
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)

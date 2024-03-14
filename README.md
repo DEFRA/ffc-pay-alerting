@@ -49,6 +49,7 @@ These configuration values should be set in the [docker-compose.yaml](docker-com
 | `DEBT_ENRICHMENT_EMAILS` | `;` separated list of debt enrichment email addresses, receives all debt enrichment alerts |
 | `INVALID_BANK_DETAILS_EMAILS` | `;` separated list of invalid bank details email addresses, receives all invalid bank details alerts |
 | `CORE_SOLUTIONS_TEAM_EMAILS` | `;` separated list of core solutions team email addresses, receives all Siti Agri alerts |
+| `SFI_EMAILS` | `;` separated list of SFI email addresses, receives SFI alerts |
 | `ES_EMAILS` | `;` separated list of ES email addresses, receives all ES alerts |
 | `FC_EMAILS` | `;` separated list of FC email addresses, receives all FC alerts |
 | `TRADER_EMAILS` | `;` separated list of trader email addresses, receives all trader alerts |

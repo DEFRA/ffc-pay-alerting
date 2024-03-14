@@ -22,6 +22,9 @@ data:
   {{- if .Values.container.coreSolutionsTeamEmails }}
   CORE_SOLUTIONS_TEAM_EMAILS: {{ quote .Values.container.coreSolutionsTeamEmails }}
   {{- end }}
+  {{- if .Values.container.sfiEmails }}
+  SFI_EMAILS: {{ quote .Values.container.sfiEmails }}
+  {{- end }}
   {{- if .Values.container.esEmails }}
   ES_EMAILS: {{ quote .Values.container.esEmails }}
   {{- end }}

@@ -33,7 +33,10 @@ const { alertConfig } = require('../config')
 const getEmailAddresses = (eventType, sourceSystem) => {
   switch (eventType) {
     case BATCH_REJECTED:
-      if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR, SFI23].includes(sourceSystem)) {
+      if ([SFI, SFIP, SFI23].includes(sourceSystem)) {
+        return `${alertConfig.sfiEmails};${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
+      }
+      if ([LUMP_SUMS, CS, BPS, FDMR].includes(sourceSystem)) {
         return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === ES) {

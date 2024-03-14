@@ -20,6 +20,7 @@ services:
       DEBT_ENRICHMENT_EMAILS: testDebt@test.com
       INVALID_BANK_DETAILS_EMAILS: testBank@test.com
       CORE_SOLUTIONS_TEAM_EMAILS: testCore@test.com
+      SFI_EMAILS: testSFI@test.com
       ES_EMAILS: testES@test.com
       FC_EMAILS: testFC@test.com
       TRADER_EMAILS: testTrader@test.com

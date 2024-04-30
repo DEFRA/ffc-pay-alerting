@@ -7,7 +7,8 @@ const {
   BPS,
   FDMR,
   MANUAL,
-  SFI23
+  SFI23,
+  DELINKED
 } = require('../../../app/constants/schemes')
 
 const { getScheme } = require('../../../app/alerting/get-scheme')
@@ -56,6 +57,11 @@ describe('get scheme', () => {
   test('should return SFI 23 name for SFI23 scheme', () => {
     const result = getScheme(SFI23)
     expect(result).toBe('SFI 23')
+  })
+
+  test('should return Delinked Payments name for Delinked scheme', () => {
+    const result = getScheme(DELINKED)
+    expect(result).toBe('Delinked Payments')
   })
 
   test('should return unknown for unknown scheme', () => {

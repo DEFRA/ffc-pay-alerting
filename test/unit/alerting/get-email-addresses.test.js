@@ -14,7 +14,7 @@ const {
   DEMOGRAPHICS_UPDATE_FAILED
 } = require('../../../app/constants/events')
 
-const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23 } = require('../../../app/constants/source-systems')
+const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23, DELINKED } = require('../../../app/constants/source-systems')
 
 const { alertConfig } = require('../../../app/config')
 
@@ -34,7 +34,8 @@ describe('get email addresses', () => {
     LUMP_SUMS,
     CS,
     BPS,
-    FDMR
+    FDMR,
+    DELINKED
   ])('should return core solutions, finance and dev emails for batch rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(BATCH_REJECTED, sourceSystem)
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
@@ -67,7 +68,8 @@ describe('get email addresses', () => {
     CS,
     BPS,
     FDMR,
-    SFI23
+    SFI23,
+    DELINKED
   ])('should return core solutions, finance and dev emails for payment rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(PAYMENT_REJECTED, sourceSystem)
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)

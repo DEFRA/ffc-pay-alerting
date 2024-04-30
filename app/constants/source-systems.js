@@ -9,5 +9,6 @@ module.exports = {
   ES: 'Genesis',
   FC: 'GLOS',
   IMPS: 'IMPS',
-  SFI23: 'SFIA'
+  SFI23: 'SFIA',
+  DELINKED: 'DP'
 }

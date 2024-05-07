@@ -14,7 +14,7 @@ const {
   DEMOGRAPHICS_UPDATE_FAILED
 } = require('../../../app/constants/events')
 
-const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23 } = require('../../../app/constants/source-systems')
+const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23, DELINKED } = require('../../../app/constants/source-systems')
 
 const { alertConfig } = require('../../../app/config')
 
@@ -40,6 +40,11 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
+  test('should return delinked and dev emails for batch rejected warning if DELINKED', () => {
+    const result = getEmailAddresses(BATCH_REJECTED, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+  })
+
   test('should return ES, finance and dev emails for batch rejected warning if ES', () => {
     const result = getEmailAddresses(BATCH_REJECTED, ES)
     expect(result).toBe(`${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
@@ -55,7 +60,12 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return dev emails for batch quarantined warning', () => {
+  test('should return delinked and dev emails for batch quarantined warning for delinked', () => {
+    const result = getEmailAddresses(BATCH_QUARANTINED, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return dev emails for batch quarantined warning if not Delinked', () => {
     const result = getEmailAddresses(BATCH_QUARANTINED)
     expect(result).toBe(alertConfig.devTeamEmails)
   })
@@ -71,6 +81,11 @@ describe('get email addresses', () => {
   ])('should return core solutions, finance and dev emails for payment rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(PAYMENT_REJECTED, sourceSystem)
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return delinked and dev emails for payment rejected warning if delinked', () => {
+    const result = getEmailAddresses(PAYMENT_REJECTED, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return vet visits, finance and dev emails for payment rejected warning if vet visits', () => {
@@ -93,9 +108,19 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
+  test('should return delinked and dev emails for payment dax rejected warning if delinked', () => {
+    const result = getEmailAddresses(PAYMENT_DAX_REJECTED, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+  })
+
   test('should return dev emails for payment dax rejected warning', () => {
     const result = getEmailAddresses(PAYMENT_DAX_REJECTED)
     expect(result).toBe(alertConfig.devTeamEmails)
+  })
+
+  test('should return delinked and invalid bank details emails for payment dax rejected warning if delinked', () => {
+    const result = getEmailAddresses(PAYMENT_INVALID_BANK, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.invalidBankDetailsEmails}`)
   })
 
   test('should return invalid bank details emails for payment invalid bank warning', () => {
@@ -103,9 +128,19 @@ describe('get email addresses', () => {
     expect(result).toBe(alertConfig.invalidBankDetailsEmails)
   })
 
+  test('should return delinked and dev emails for payment processing failed warning if delinked', () => {
+    const result = getEmailAddresses(PAYMENT_PROCESSING_FAILED, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+  })
+
   test('should return dev emails for payment processing failed warning', () => {
     const result = getEmailAddresses(PAYMENT_PROCESSING_FAILED)
     expect(result).toBe(alertConfig.devTeamEmails)
+  })
+
+  test('should return delinked and dev emails for payment settlement umatched warning if delinked', () => {
+    const result = getEmailAddresses(PAYMENT_SETTLEMENT_UNMATCHED, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return dev emails for payment settlement unmatched warning', () => {
@@ -113,9 +148,19 @@ describe('get email addresses', () => {
     expect(result).toBe(alertConfig.devTeamEmails)
   })
 
+  test('should return delinked and dev emails for response rejected warning if delinked', () => {
+    const result = getEmailAddresses(RESPONSE_REJECTED, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+  })
+
   test('should return dev emails for response rejected warning', () => {
     const result = getEmailAddresses(RESPONSE_REJECTED)
     expect(result).toBe(alertConfig.devTeamEmails)
+  })
+
+  test('should return delinked and debt enrichment emails for payment request blocked warning if delinked', () => {
+    const result = getEmailAddresses(PAYMENT_REQUEST_BLOCKED, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.debtEnrichmentEmails}`)
   })
 
   test('should return debt enrichment emails for payment request blocked warning', () => {
@@ -141,9 +186,19 @@ describe('get email addresses', () => {
     expect(result).toBe(';;')
   })
 
+  test('should return delinked and dev and dax unavaialble emails for dax unavailable warning if delinked', () => {
+    const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)
+  })
+
   test('should return dev emails and dax unavailable emails for dax unavailable warning', () => {
     const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE)
     expect(result).toBe(`${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)
+  })
+
+  test('should return delinked and dev emails for receiver connection failed warning if delinked', () => {
+    const result = getEmailAddresses(RECEIVER_CONNECTION_FAILED, DELINKED)
+    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return dev emails for receiver connection failed warning', () => {

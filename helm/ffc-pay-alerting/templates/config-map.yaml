@@ -37,6 +37,9 @@ data:
   {{- if .Values.container.vetVisitsEmails }}
   VET_VISITS_EMAILS: {{ quote .Values.container.vetVisitsEmails }}
   {{- end }}
+  {{- if .Values.container.delinkedEmails }}
+  DELINKED_EMAILS: {{ quote .Values.container.delinkedEmails }}
+  {{- end }}
   {{- if .Values.container.financeEmails }}
   FINANCE_EMAILS: {{ quote .Values.container.financeEmails }}
   {{- end }}

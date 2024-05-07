@@ -53,6 +53,8 @@ These configuration values should be set in the [docker-compose.yaml](docker-com
 | `ES_EMAILS` | `;` separated list of ES email addresses, receives all ES alerts |
 | `FC_EMAILS` | `;` separated list of FC email addresses, receives all FC alerts |
 | `TRADER_EMAILS` | `;` separated list of trader email addresses, receives all trader alerts |
+| `VET_VISITS_EMAILS` | `;` separated list of vet visits email addresses, receives all vet visits alerts |
+| `DELINKED_EMAILS` | `;` separated list of Delinked email addresses, receives all Delinked alerts |
 | `FFC_ENVIRONMENT` | Environment code; `local`, `dev`, `test`, `pre` or `prod`.  Defaults to `local` |
 | `NOTIFY_API_KEY` | GOV.UK Notify API key |
 | `SEND_ALERTS` | `true` to send alerts, `false` to log alerts only. Defaults to `true` |

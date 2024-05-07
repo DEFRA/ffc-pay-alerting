@@ -42,6 +42,7 @@ container:
   fcEmails:
   traderEmails:
   vetVisitsEmails:
+  delinkedEmails:
   financeEmails:
   demographicsEmails:
   daxUnavailableEmails:

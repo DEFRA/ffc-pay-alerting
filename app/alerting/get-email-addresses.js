@@ -37,7 +37,7 @@ const getEmailAddresses = (eventType, sourceSystem) => {
       if ([SFI, SFIP, SFI23].includes(sourceSystem)) {
         return `${alertConfig.sfiEmails};${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
-      if ([LUMP_SUMS, CS, BPS, FDMR, DELINKED].includes(sourceSystem)) {
+      if ([LUMP_SUMS, CS, BPS, FDMR].includes(sourceSystem)) {
         return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === ES) {
@@ -49,11 +49,17 @@ const getEmailAddresses = (eventType, sourceSystem) => {
       if (sourceSystem === IMPS) {
         return `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
+      }
       return alertConfig.devTeamEmails
     case BATCH_QUARANTINED:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
+      }
       return alertConfig.devTeamEmails
     case PAYMENT_REJECTED:
-      if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR, SFI23, DELINKED].includes(sourceSystem)) {
+      if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR, SFI23].includes(sourceSystem)) {
         return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
       if (sourceSystem === VET_VISITS) {
@@ -68,26 +74,59 @@ const getEmailAddresses = (eventType, sourceSystem) => {
       if (sourceSystem === IMPS) {
         return `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
       }
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
+      }
       return alertConfig.devTeamEmails
     case PAYMENT_DAX_REJECTED:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
+      }
       return alertConfig.devTeamEmails
     case PAYMENT_INVALID_BANK:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.invalidBankDetailsEmails}`
+      }
       return alertConfig.invalidBankDetailsEmails
     case PAYMENT_PROCESSING_FAILED:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
+      }
       return alertConfig.devTeamEmails
     case PAYMENT_SETTLEMENT_UNMATCHED:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
+      }
       return alertConfig.devTeamEmails
     case RESPONSE_REJECTED:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
+      }
       return alertConfig.devTeamEmails
     case PAYMENT_REQUEST_BLOCKED:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.debtEnrichmentEmails}`
+      }
       return alertConfig.debtEnrichmentEmails
     case PAYMENT_DAX_UNAVAILABLE:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`
+      }
       return `${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`
     case RECEIVER_CONNECTION_FAILED:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
+      }
       return alertConfig.devTeamEmails
     case DEMOGRAPHICS_PROCESSING_FAILED:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
+      }
       return `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
     case DEMOGRAPHICS_UPDATE_FAILED:
+      if (sourceSystem === DELINKED) {
+        return `${alertConfig.delinkedEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
+      }
       return `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
     default:
       return undefined

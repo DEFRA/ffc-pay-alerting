@@ -87,6 +87,9 @@ const getEmailAddresses = (eventType, sourceSystem) => {
       if (sourceSystem === DELINKED) {
         return `${alertConfig.delinkedEmails};${alertConfig.invalidBankDetailsEmails}`
       }
+      if (sourceSystem === FC) {
+        return `${alertConfig.fcEmails};${alertConfig.invalidBankDetailsEmails}`
+      }
       return alertConfig.invalidBankDetailsEmails
     case PAYMENT_PROCESSING_FAILED:
       if (sourceSystem === DELINKED) {

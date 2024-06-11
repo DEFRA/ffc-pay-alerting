@@ -123,6 +123,11 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.invalidBankDetailsEmails}`)
   })
 
+  test('should return FC and invalid bank details emails for payment dax rejected warning if delinked', () => {
+    const result = getEmailAddresses(PAYMENT_INVALID_BANK, FC)
+    expect(result).toBe(`${alertConfig.fcEmails};${alertConfig.invalidBankDetailsEmails}`)
+  })
+
   test('should return invalid bank details emails for payment invalid bank warning', () => {
     const result = getEmailAddresses(PAYMENT_INVALID_BANK)
     expect(result).toBe(alertConfig.invalidBankDetailsEmails)

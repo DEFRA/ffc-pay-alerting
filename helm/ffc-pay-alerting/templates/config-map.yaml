@@ -37,8 +37,8 @@ data:
   {{- if .Values.container.vetVisitsEmails }}
   VET_VISITS_EMAILS: {{ quote .Values.container.vetVisitsEmails }}
   {{- end }}
-  {{- if .Values.container.delinkedEmails }}
-  DELINKED_EMAILS: {{ quote .Values.container.delinkedEmails }}
+  {{- if .Values.container.opsAnalysisEmails }}
+  OPS_ANALYSIS_EMAILS: {{ quote .Values.container.opsAnalysisEmails }}
   {{- end }}
   {{- if .Values.container.financeEmails }}
   FINANCE_EMAILS: {{ quote .Values.container.financeEmails }}
@@ -48,6 +48,9 @@ data:
   {{- end }}
   {{- if .Values.container.daxUnavailableEmails }}
   DAX_UNAVAILABLE_EMAILS: {{ quote .Values.container.daxUnavailableEmails }}
+  {{- end }}
+  {{- if .Values.container.esfioDAXEmails }}
+  ESFIO_DAX_EMAILS: {{ quote .Values.container.esfioDAXEmails }}
   {{- end }}
   FFC_ENVIRONMENT: {{ quote .Values.environmentCode }}
   NOTIFY_API_KEY: {{ quote .Values.container.notifyApiKey }}

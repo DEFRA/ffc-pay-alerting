@@ -10,5 +10,6 @@ module.exports = {
   FC: 'GLOS',
   IMPS: 'IMPS',
   SFI23: 'SFIA',
-  DELINKED: 'DP'
+  DELINKED: 'DP',
+  SFI_EXPANDED: 'ESFIO'
 }

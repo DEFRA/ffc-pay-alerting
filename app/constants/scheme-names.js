@@ -11,7 +11,8 @@ const {
   FC,
   IMPS,
   SFI23,
-  DELINKED
+  DELINKED,
+  SFI_EXPANDED
 } = require('./schemes')
 
 module.exports = {
@@ -27,5 +28,6 @@ module.exports = {
   [FC]: 'Forestry Commission',
   [IMPS]: 'IMPS',
   [SFI23]: 'SFI 23',
-  [DELINKED]: 'Delinked Payments'
+  [DELINKED]: 'Delinked Payments',
+  [SFI_EXPANDED]: 'Expanded SFI Offer'
 }

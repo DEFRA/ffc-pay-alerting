@@ -13,6 +13,7 @@ This service is part of the [Payment Hub](https://github.com/DEFRA/ffc-pay-core)
   - [Docker-Compose (standalone)](https://docs.docker.com/compose/install/other/)
 
 Optional:
+
 - [Kubernetes](https://kubernetes.io/)
 - [Helm](https://helm.sh/)
 
@@ -22,14 +23,14 @@ Optional:
 
 This service publishes responses as messages to Azure Service Bus topics.
 
-| Name | Description |
-| ---| --- |
-| `MESSAGE_QUEUE_HOST` | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net` |
-| `MESSAGE_QUEUE_USER` | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey` |
-| `MESSAGE_QUEUE_PASSWORD` | Azure Service Bus SAS policy key |
-| `MESSAGE_QUEUE_SUFFIX` | Developer initials, optional, will be automatically added to topic names, e.g. `-jw `|
-| `ALERT_TOPIC_ADDRESS` | Azure Service Bus topic name for events, e.g. `ffc-pay-alert` |
-| `ALERT_SUBSCRIPTION_ADDRESS` | Azure Service Bus subscription name for events, e.g. `ffc-pay-alerting` |
+| Name                         | Description                                                                           |
+| ---------------------------- | ------------------------------------------------------------------------------------- |
+| `MESSAGE_QUEUE_HOST`         | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net`                |
+| `MESSAGE_QUEUE_USER`         | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey`                   |
+| `MESSAGE_QUEUE_PASSWORD`     | Azure Service Bus SAS policy key                                                      |
+| `MESSAGE_QUEUE_SUFFIX`       | Developer initials, optional, will be automatically added to topic names, e.g. `-jw ` |
+| `ALERT_TOPIC_ADDRESS`        | Azure Service Bus topic name for events, e.g. `ffc-pay-alert`                         |
+| `ALERT_SUBSCRIPTION_ADDRESS` | Azure Service Bus subscription name for events, e.g. `ffc-pay-alerting`               |
 
 ##### Message schemas
 
@@ -41,23 +42,24 @@ All message schemas are fully documented in an [AsyncAPI specification](docs/asy
 
 These configuration values should be set in the [docker-compose.yaml](docker-compose.yaml) file or Helm [values file](helm/ffc-pay-alerting/values.yaml) if running Kubernetes.
 
-| Name | Description |
-| ---| --- |
-| `APPINSIGHTS_CLOUDROLE` | Azure App Insights cloud role |
-| `APPINSIGHTS_CONNECTIONSTRING` | Azure App Insights connection string |
-| `DEV_TEAM_EMAILS` | `;` separated list of developer email addresses, receives all system issue alerts |
-| `DEBT_ENRICHMENT_EMAILS` | `;` separated list of debt enrichment email addresses, receives all debt enrichment alerts |
-| `INVALID_BANK_DETAILS_EMAILS` | `;` separated list of invalid bank details email addresses, receives all invalid bank details alerts |
-| `CORE_SOLUTIONS_TEAM_EMAILS` | `;` separated list of core solutions team email addresses, receives all Siti Agri alerts |
-| `SFI_EMAILS` | `;` separated list of SFI email addresses, receives SFI alerts |
-| `ES_EMAILS` | `;` separated list of ES email addresses, receives all ES alerts |
-| `FC_EMAILS` | `;` separated list of FC email addresses, receives all FC alerts |
-| `TRADER_EMAILS` | `;` separated list of trader email addresses, receives all trader alerts |
-| `VET_VISITS_EMAILS` | `;` separated list of vet visits email addresses, receives all vet visits alerts |
-| `DELINKED_EMAILS` | `;` separated list of Delinked email addresses, receives all Delinked alerts |
-| `FFC_ENVIRONMENT` | Environment code; `local`, `dev`, `test`, `pre` or `prod`.  Defaults to `local` |
-| `NOTIFY_API_KEY` | GOV.UK Notify API key |
-| `SEND_ALERTS` | `true` to send alerts, `false` to log alerts only. Defaults to `true` |
+| Name                           | Description                                                                                          |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| `APPINSIGHTS_CLOUDROLE`        | Azure App Insights cloud role                                                                        |
+| `APPINSIGHTS_CONNECTIONSTRING` | Azure App Insights connection string                                                                 |
+| `DEV_TEAM_EMAILS`              | `;` separated list of developer email addresses, receives all system issue alerts                    |
+| `DEBT_ENRICHMENT_EMAILS`       | `;` separated list of debt enrichment email addresses, receives all debt enrichment alerts           |
+| `INVALID_BANK_DETAILS_EMAILS`  | `;` separated list of invalid bank details email addresses, receives all invalid bank details alerts |
+| `CORE_SOLUTIONS_TEAM_EMAILS`   | `;` separated list of core solutions team email addresses, receives all Siti Agri alerts             |
+| `SFI_EMAILS`                   | `;` separated list of SFI email addresses, receives SFI alerts                                       |
+| `ES_EMAILS`                    | `;` separated list of ES email addresses, receives all ES alerts                                     |
+| `FC_EMAILS`                    | `;` separated list of FC email addresses, receives all FC alerts                                     |
+| `TRADER_EMAILS`                | `;` separated list of trader email addresses, receives all trader alerts                             |
+| `VET_VISITS_EMAILS`            | `;` separated list of vet visits email addresses, receives all vet visits alerts                     |
+| `OPS_ANALYSIS_EMAILS`          | `;` separated list of operations analysis email addresses, receives all operations analysis related alerts                         |
+| `SFI_EXPANDED_EMAILS`          | `;` separated list of Expanded SFI Offer email addresses, receives all Expanded SFI Offer alerts     |
+| `FFC_ENVIRONMENT`              | Environment code; `local`, `dev`, `test`, `pre` or `prod`. Defaults to `local`                       |
+| `NOTIFY_API_KEY`               | GOV.UK Notify API key                                                                                |
+| `SEND_ALERTS`                  | `true` to send alerts, `false` to log alerts only. Defaults to `true`                                |
 
 #### Docker
 
@@ -72,6 +74,7 @@ The service will file watch application and test files so no need to rebuild the
 ## How to start the service
 
 The service can be run using the [start](scripts/start) script.
+
 ```
 ./scripts/start
 ```
@@ -94,6 +97,7 @@ You can use the [Azure Storage Explorer](https://azure.microsoft.com/en-gb/featu
 ## How to stop the service
 
 The service can be stopped using the [stop](scripts/stop) script.
+
 ```
 ./scripts/stop
 ```
@@ -101,6 +105,7 @@ The service can be stopped using the [stop](scripts/stop) script.
 The script accepts any Docker Compose [Down](https://docs.docker.com/engine/reference/commandline/compose_down/) argument.
 
 For example, to stop the service and clear all data volumes.
+
 ```
 ./scripts/stop -v
 ```
@@ -108,6 +113,7 @@ For example, to stop the service and clear all data volumes.
 ## How to test the service
 
 The service can be tested using the [test](scripts/test) script.
+
 ```
 ./scripts/test
 ```

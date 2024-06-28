@@ -26,6 +26,7 @@ services:
       TRADER_EMAILS: testTrader@test.com
       VET_VISITS_EMAILS: testVets@test.com
       FINANCE_EMAILS: testFinance@test.com
-      DELINKED_EMAILS: testDelinked@test.com
+      OPS_ANALYSIS_EMAILS: testOps@test.com
       DEMOGRAPHICS_EMAILS: testDemographics@test.com
       DAX_UNAVAILABLE_EMAILS: testDAX@test.com
+      ESFIO_DAX_EMAILS: testESFIO@test.com

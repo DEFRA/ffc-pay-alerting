@@ -1,139 +1,100 @@
-const {
-  BATCH_REJECTED,
-  BATCH_QUARANTINED,
-  PAYMENT_REJECTED,
-  PAYMENT_DAX_REJECTED,
-  PAYMENT_INVALID_BANK,
-  PAYMENT_PROCESSING_FAILED,
-  PAYMENT_SETTLEMENT_UNMATCHED,
-  RESPONSE_REJECTED,
-  PAYMENT_REQUEST_BLOCKED,
-  PAYMENT_DAX_UNAVAILABLE,
-  RECEIVER_CONNECTION_FAILED,
-  DEMOGRAPHICS_PROCESSING_FAILED,
-  DEMOGRAPHICS_UPDATE_FAILED
-} = require('../constants/events')
-
-const {
-  SFI,
-  SFIP,
-  LUMP_SUMS,
-  VET_VISITS,
-  CS,
-  BPS,
-  FDMR,
-  ES,
-  FC,
-  IMPS,
-  SFI23,
-  DELINKED
-} = require('../constants/source-systems')
-
-const { alertConfig } = require('../config')
+const alertConfig = require('../config/alert')
+const events = require('../constants/events')
+const sourceSystems = require('../constants/source-systems')
 
 const getEmailAddresses = (eventType, sourceSystem) => {
-  switch (eventType) {
-    case BATCH_REJECTED:
-      if ([SFI, SFIP, SFI23].includes(sourceSystem)) {
-        return `${alertConfig.sfiEmails};${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
-      }
-      if ([LUMP_SUMS, CS, BPS, FDMR].includes(sourceSystem)) {
-        return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
-      }
-      if (sourceSystem === ES) {
-        return `${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
-      }
-      if (sourceSystem === FC) {
-        return `${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
-      }
-      if (sourceSystem === IMPS) {
-        return `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
-      }
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
-      }
-      return alertConfig.devTeamEmails
-    case BATCH_QUARANTINED:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
-      }
-      return alertConfig.devTeamEmails
-    case PAYMENT_REJECTED:
-      if ([SFI, SFIP, LUMP_SUMS, CS, BPS, FDMR, SFI23].includes(sourceSystem)) {
-        return `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
-      }
-      if (sourceSystem === VET_VISITS) {
-        return `${alertConfig.vetVisitsEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
-      }
-      if (sourceSystem === ES) {
-        return `${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
-      }
-      if (sourceSystem === FC) {
-        return `${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
-      }
-      if (sourceSystem === IMPS) {
-        return `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`
-      }
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
-      }
-      return alertConfig.devTeamEmails
-    case PAYMENT_DAX_REJECTED:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
-      }
-      return alertConfig.devTeamEmails
-    case PAYMENT_INVALID_BANK:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.invalidBankDetailsEmails}`
-      }
-      if (sourceSystem === FC) {
-        return `${alertConfig.fcEmails};${alertConfig.invalidBankDetailsEmails}`
-      }
-      return alertConfig.invalidBankDetailsEmails
-    case PAYMENT_PROCESSING_FAILED:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
-      }
-      return alertConfig.devTeamEmails
-    case PAYMENT_SETTLEMENT_UNMATCHED:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
-      }
-      return alertConfig.devTeamEmails
-    case RESPONSE_REJECTED:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
-      }
-      return alertConfig.devTeamEmails
-    case PAYMENT_REQUEST_BLOCKED:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.debtEnrichmentEmails}`
-      }
-      return alertConfig.debtEnrichmentEmails
-    case PAYMENT_DAX_UNAVAILABLE:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`
-      }
-      return `${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`
-    case RECEIVER_CONNECTION_FAILED:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`
-      }
-      return alertConfig.devTeamEmails
-    case DEMOGRAPHICS_PROCESSING_FAILED:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
-      }
-      return `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
-    case DEMOGRAPHICS_UPDATE_FAILED:
-      if (sourceSystem === DELINKED) {
-        return `${alertConfig.delinkedEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
-      }
-      return `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
-    default:
-      return undefined
+  const lookupTable = {
+    [events.BATCH_REJECTED]: {
+      [sourceSystems.SFI]: `${alertConfig.sfiEmails};${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFIP]: `${alertConfig.sfiEmails};${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI23]: `${alertConfig.sfiEmails};${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.LUMP_SUMS]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.CS]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.BPS]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.FDMR]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.ES]: `${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.FC]: `${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.IMPS]: `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      default: alertConfig.devTeamEmails
+    },
+    [events.BATCH_QUARANTINED]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      default: alertConfig.devTeamEmails
+    },
+    [events.PAYMENT_REJECTED]: {
+      [sourceSystems.SFI]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFIP]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.LUMP_SUMS]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.CS]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.BPS]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.FDMR]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI23]: `${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.VET_VISITS]: `${alertConfig.vetVisitsEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.ES]: `${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.FC]: `${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.IMPS]: `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      default: alertConfig.devTeamEmails
+    },
+    [events.PAYMENT_DAX_REJECTED]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails};${alertConfig.devTeamEmails}`,
+      default: alertConfig.devTeamEmails
+    },
+    [events.PAYMENT_INVALID_BANK]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails}`,
+      [sourceSystems.FC]: `${alertConfig.fcEmails};${alertConfig.invalidBankDetailsEmails}`,
+      default: alertConfig.invalidBankDetailsEmails
+    },
+    [events.PAYMENT_PROCESSING_FAILED]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      default: alertConfig.devTeamEmails
+    },
+    [events.PAYMENT_SETTLEMENT_UNMATCHED]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      default: alertConfig.devTeamEmails
+    },
+    [events.RESPONSE_REJECTED]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      default: alertConfig.devTeamEmails
+    },
+    [events.PAYMENT_REQUEST_BLOCKED]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`,
+      default: alertConfig.debtEnrichmentEmails
+    },
+    [events.PAYMENT_DAX_UNAVAILABLE]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails}`,
+      default: `${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`
+    },
+    [events.RECEIVER_CONNECTION_FAILED]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails}`,
+      default: alertConfig.devTeamEmails
+    },
+    [events.DEMOGRAPHICS_PROCESSING_FAILED]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`,
+      default: `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
+    },
+    [events.DEMOGRAPHICS_UPDATE_FAILED]: {
+      [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`,
+      default: `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
+    }
   }
+
+  const emailAddresses = lookupTable[eventType]?.[sourceSystem] || lookupTable[eventType]?.default
+  return emailAddresses
 }
 
 module.exports = {

@@ -22,7 +22,7 @@ deployment:
   minReplicas: 1
   maxReplicas: 1
   cpuThreshold: 80
-  memoryThreshold: 80 
+  memoryThreshold: 80
 
 container:
   requestMemory: 100Mi
@@ -42,10 +42,11 @@ container:
   fcEmails:
   traderEmails:
   vetVisitsEmails:
-  delinkedEmails:
+  opsAnalysisEmails:
   financeEmails:
   demographicsEmails:
   daxUnavailableEmails:
+  esfioDAXEmails:
   sendAlerts: true
 
 aadPodIdentity: true

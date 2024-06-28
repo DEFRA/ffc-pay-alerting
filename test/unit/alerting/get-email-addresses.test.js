@@ -14,7 +14,7 @@ const {
   DEMOGRAPHICS_UPDATE_FAILED
 } = require('../../../app/constants/events')
 
-const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23, DELINKED } = require('../../../app/constants/source-systems')
+const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23, DELINKED, SFI_EXPANDED } = require('../../../app/constants/source-systems')
 
 const { alertConfig } = require('../../../app/config')
 
@@ -40,9 +40,14 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return delinked and dev emails for batch rejected warning if DELINKED', () => {
+  test('should return ops analysis and dev emails for batch rejected warning if DELINKED', () => {
     const result = getEmailAddresses(BATCH_REJECTED, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return sfi, ops analysis and dev emails for batch rejected warning if SFI Expanded', () => {
+    const result = getEmailAddresses(BATCH_REJECTED, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return ES, finance and dev emails for batch rejected warning if ES', () => {
@@ -60,12 +65,17 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return delinked and dev emails for batch quarantined warning for delinked', () => {
+  test('should return ops analysis and dev emails for batch quarantined warning for delinked', () => {
     const result = getEmailAddresses(BATCH_QUARANTINED, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return dev emails for batch quarantined warning if not Delinked', () => {
+  test('should return ops analysis and dev emails for batch quarantined warning for sfi expanded', () => {
+    const result = getEmailAddresses(BATCH_QUARANTINED, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return dev emails for batch quarantined warning if not Delinked or SFI expanded', () => {
     const result = getEmailAddresses(BATCH_QUARANTINED)
     expect(result).toBe(alertConfig.devTeamEmails)
   })
@@ -83,9 +93,14 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return delinked and dev emails for payment rejected warning if delinked', () => {
+  test('should return ops analysis and dev emails for payment rejected warning if delinked', () => {
     const result = getEmailAddresses(PAYMENT_REJECTED, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return ops analysis and dev emails for payment rejected warning if sfi expanded', () => {
+    const result = getEmailAddresses(PAYMENT_REJECTED, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return vet visits, finance and dev emails for payment rejected warning if vet visits', () => {
@@ -108,9 +123,14 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should return delinked and dev emails for payment dax rejected warning if delinked', () => {
+  test('should return ops analysis and dev emails for payment dax rejected warning if delinked', () => {
     const result = getEmailAddresses(PAYMENT_DAX_REJECTED, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return ops analysis, esfio DAX, and dev emails for payment dax rejected warning if sfi expanded', () => {
+    const result = getEmailAddresses(PAYMENT_DAX_REJECTED, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return dev emails for payment dax rejected warning', () => {
@@ -118,12 +138,17 @@ describe('get email addresses', () => {
     expect(result).toBe(alertConfig.devTeamEmails)
   })
 
-  test('should return delinked and invalid bank details emails for payment dax rejected warning if delinked', () => {
+  test('should return ops analysis and invalid bank details emails for payment dax rejected warning if delinked', () => {
     const result = getEmailAddresses(PAYMENT_INVALID_BANK, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.invalidBankDetailsEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)
   })
 
-  test('should return FC and invalid bank details emails for payment dax rejected warning if delinked', () => {
+  test('should return ops analysis and esfio dax details emails for payment dax rejected warning if sfi expanded', () => {
+    const result = getEmailAddresses(PAYMENT_INVALID_BANK, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails}`)
+  })
+
+  test('should return FC and invalid bank details emails for payment dax rejected warning if FC', () => {
     const result = getEmailAddresses(PAYMENT_INVALID_BANK, FC)
     expect(result).toBe(`${alertConfig.fcEmails};${alertConfig.invalidBankDetailsEmails}`)
   })
@@ -133,9 +158,14 @@ describe('get email addresses', () => {
     expect(result).toBe(alertConfig.invalidBankDetailsEmails)
   })
 
-  test('should return delinked and dev emails for payment processing failed warning if delinked', () => {
+  test('should return ops analysis and dev emails for payment processing failed warning if delinked', () => {
     const result = getEmailAddresses(PAYMENT_PROCESSING_FAILED, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return sfi, ops analysis and dev emails for payment processing failed warning if sfi expanded', () => {
+    const result = getEmailAddresses(PAYMENT_PROCESSING_FAILED, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return dev emails for payment processing failed warning', () => {
@@ -143,9 +173,14 @@ describe('get email addresses', () => {
     expect(result).toBe(alertConfig.devTeamEmails)
   })
 
-  test('should return delinked and dev emails for payment settlement umatched warning if delinked', () => {
+  test('should return ops analysis and dev emails for payment settlement umatched warning if delinked', () => {
     const result = getEmailAddresses(PAYMENT_SETTLEMENT_UNMATCHED, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return sfi, ops analysis and dev emails for payment settlement umatched warning if sfi expanded', () => {
+    const result = getEmailAddresses(PAYMENT_SETTLEMENT_UNMATCHED, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return dev emails for payment settlement unmatched warning', () => {
@@ -153,9 +188,14 @@ describe('get email addresses', () => {
     expect(result).toBe(alertConfig.devTeamEmails)
   })
 
-  test('should return delinked and dev emails for response rejected warning if delinked', () => {
+  test('should return ops analysis and dev emails for response rejected warning if delinked', () => {
     const result = getEmailAddresses(RESPONSE_REJECTED, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return ops analysis and dev emails for response rejected warning if sfi expanded', () => {
+    const result = getEmailAddresses(RESPONSE_REJECTED, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return dev emails for response rejected warning', () => {
@@ -163,9 +203,14 @@ describe('get email addresses', () => {
     expect(result).toBe(alertConfig.devTeamEmails)
   })
 
-  test('should return delinked and debt enrichment emails for payment request blocked warning if delinked', () => {
+  test('should return ops analysis and debt enrichment emails for payment request blocked warning if delinked', () => {
     const result = getEmailAddresses(PAYMENT_REQUEST_BLOCKED, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.debtEnrichmentEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`)
+  })
+
+  test('should return ops analysis and sfi emails for payment request blocked warning if sfi expanded', () => {
+    const result = getEmailAddresses(PAYMENT_REQUEST_BLOCKED, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`)
   })
 
   test('should return debt enrichment emails for payment request blocked warning', () => {
@@ -191,9 +236,14 @@ describe('get email addresses', () => {
     expect(result).toBe(';;')
   })
 
-  test('should return delinked and dev and dax unavaialble emails for dax unavailable warning if delinked', () => {
+  test('should return ops analysis, dev and dax unavaialable emails for dax unavailable warning if delinked', () => {
     const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)
+  })
+
+  test('should return ops analysis, dev and esfio dax emails for dax unavailable warning if sfi expanded', () => {
+    const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails}`)
   })
 
   test('should return dev emails and dax unavailable emails for dax unavailable warning', () => {
@@ -201,9 +251,14 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)
   })
 
-  test('should return delinked and dev emails for receiver connection failed warning if delinked', () => {
+  test('should return ops analysis, dev emails and esfio DAX for receiver connection failed warning if sfi expanded', () => {
+    const result = getEmailAddresses(RECEIVER_CONNECTION_FAILED, SFI_EXPANDED)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails}`)
+  })
+
+  test('should return ops analysis and dev emails for receiver connection failed warning if delinked', () => {
     const result = getEmailAddresses(RECEIVER_CONNECTION_FAILED, DELINKED)
-    expect(result).toBe(`${alertConfig.delinkedEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
   })
 
   test('should return dev emails for receiver connection failed warning', () => {

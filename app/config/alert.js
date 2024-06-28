@@ -11,10 +11,11 @@ const schema = Joi.object({
   fcEmails: Joi.string().default(''),
   traderEmails: Joi.string().default(''),
   vetVisitsEmails: Joi.string().default(''),
-  delinkedEmails: Joi.string().default(''),
+  opsAnalysisEmails: Joi.string().default(''),
   financeEmails: Joi.string().default(''),
   demographicsEmails: Joi.string().default(''),
   daxUnavailableEmails: Joi.string().default(''),
+  esfioDAXEmails: Joi.string().default(''),
   environment: Joi.string().default('local'),
   sendAlerts: Joi.boolean().default(true)
 })
@@ -30,10 +31,11 @@ const config = {
   fcEmails: process.env.FC_EMAILS,
   traderEmails: process.env.TRADER_EMAILS,
   vetVisitsEmails: process.env.VET_VISITS_EMAILS,
-  delinkedEmails: process.env.DELINKED_EMAILS,
+  opsAnalysisEmails: process.env.OPS_ANALYSIS_EMAILS,
   financeEmails: process.env.FINANCE_EMAILS,
   demographicsEmails: process.env.DEMOGAPHICS_EMAILS,
   daxUnavailableEmails: process.env.DAX_UNAVAILABLE_EMAILS,
+  esfioDAXEmails: process.env.ESFIO_DAX_EMAILS,
   environment: process.env.FFC_ENVIRONMENT,
   sendAlerts: process.env.SEND_ALERTS
 }

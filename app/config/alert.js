@@ -16,6 +16,7 @@ const schema = Joi.object({
   demographicsEmails: Joi.string().default(''),
   daxUnavailableEmails: Joi.string().default(''),
   esfioDAXEmails: Joi.string().default(''),
+  d365UnsettledEmails: Joi.string().default(''),
   environment: Joi.string().default('local'),
   sendAlerts: Joi.boolean().default(true)
 })
@@ -36,6 +37,7 @@ const config = {
   demographicsEmails: process.env.DEMOGAPHICS_EMAILS,
   daxUnavailableEmails: process.env.DAX_UNAVAILABLE_EMAILS,
   esfioDAXEmails: process.env.ESFIO_DAX_EMAILS,
+  d365UnsettledEmails: process.env.D365_UNSETTLED_EMAILS,
   environment: process.env.FFC_ENVIRONMENT,
   sendAlerts: process.env.SEND_ALERTS
 }

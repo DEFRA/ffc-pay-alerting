@@ -30,3 +30,4 @@ services:
       DEMOGRAPHICS_EMAILS: testDemographics@test.com
       DAX_UNAVAILABLE_EMAILS: testDAX@test.com
       ESFIO_DAX_EMAILS: testESFIO@test.com
+      D365_UNSETTLED_EMAILS: testUnsettled@test.com

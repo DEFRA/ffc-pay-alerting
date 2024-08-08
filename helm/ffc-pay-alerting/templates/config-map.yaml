@@ -52,6 +52,9 @@ data:
   {{- if .Values.container.esfioDAXEmails }}
   ESFIO_DAX_EMAILS: {{ quote .Values.container.esfioDAXEmails }}
   {{- end }}
+  {{- if .Values.container.d365UnsettledEmails }}
+  D365_UNSETTLED_EMAILS: {{ quote .Values.container.d365UnsettledEmails }}
+  {{- end }}
   FFC_ENVIRONMENT: {{ quote .Values.environmentCode }}
   NOTIFY_API_KEY: {{ quote .Values.container.notifyApiKey }}
   SEND_ALERTS: {{ quote .Values.container.sendAlerts }}

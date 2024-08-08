@@ -47,6 +47,7 @@ container:
   demographicsEmails:
   daxUnavailableEmails:
   esfioDAXEmails:
+  d365UnsettledEmails:
   sendAlerts: true
 
 aadPodIdentity: true

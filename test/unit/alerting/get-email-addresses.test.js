@@ -5,6 +5,7 @@ const {
   PAYMENT_DAX_REJECTED,
   PAYMENT_INVALID_BANK,
   PAYMENT_PROCESSING_FAILED,
+  PAYMENT_SETTLEMENT_UNSETTLED,
   PAYMENT_SETTLEMENT_UNMATCHED,
   RESPONSE_REJECTED,
   PAYMENT_REQUEST_BLOCKED,
@@ -171,6 +172,11 @@ describe('get email addresses', () => {
   test('should return dev emails for payment processing failed warning', () => {
     const result = getEmailAddresses(PAYMENT_PROCESSING_FAILED)
     expect(result).toBe(alertConfig.devTeamEmails)
+  })
+
+  test('should return d365 unsettled emails for payment settlement unsettled warning', () => {
+    const result = getEmailAddresses(PAYMENT_SETTLEMENT_UNSETTLED, SFI)
+    expect(result).toBe(`${alertConfig.d365UnsettledEmails}`)
   })
 
   test('should return ops analysis and dev emails for payment settlement umatched warning if delinked', () => {

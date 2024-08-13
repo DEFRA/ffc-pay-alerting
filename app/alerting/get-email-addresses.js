@@ -56,6 +56,9 @@ const getEmailAddresses = (eventType, sourceSystem) => {
       [sourceSystems.SFI_EXPANDED]: `${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
       default: alertConfig.devTeamEmails
     },
+    [events.PAYMENT_SETTLEMENT_UNSETTLED]: {
+      default: alertConfig.d365UnsettledEmails
+    },
     [events.PAYMENT_SETTLEMENT_UNMATCHED]: {
       [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
       [sourceSystems.SFI_EXPANDED]: `${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,

@@ -20,12 +20,12 @@
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
-    "@azure/identity": "4.3.0",
-    "applicationinsights": "2.5.1",
+    "@azure/identity": "4.4.1",
+    "applicationinsights": "2.9.6",
     "ffc-messaging": "2.9.1",
     "joi": "17.7.1",
     "log-timestamp": "0.3.0",
-    "moment": "2.29.4",
+    "moment": "2.30.1",
     "notifications-node-client": "8.0.0"
   },
   "devDependencies": {

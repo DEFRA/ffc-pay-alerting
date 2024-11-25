@@ -30,3 +30,12 @@ services:
       ESFIO_DAX_EMAILS: ${ESFIO_DAX_EMAILS}
       D365_UNSETTLED_EMAILS: ${D365_UNSETTLED_EMAILS}
       FFC_ENVIRONMENT: local
+      AZURE_STORAGE_ACCOUNT_NAME: ${AZURE_STORAGE_ACCOUNT_NAME:-devstoreaccount1}
+      AZURE_STORAGE_USE_CONNECTION_STRING: "true"
+      AZURE_STORAGE_CREATE_CONTAINERS: "true"
+
+  ffc-pay-responses-azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.32.0
+    command: "azurite-blob --skipApiVersionCheck --loose --blobHost 0.0.0.0"
+    labels:
+      com.docker.compose.pay.role: ffc-pay-responses-azurite

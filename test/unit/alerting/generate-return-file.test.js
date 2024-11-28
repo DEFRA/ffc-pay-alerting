@@ -15,7 +15,20 @@ describe('generateReturnFile', () => {
   })
 
   test('should generate return file and publish it', async () => {
-    const mockEvent = { some: 'data' }
+    const mockEvent = {
+      data: {
+        sbi: 'sbiTest',
+        frn: 'frnTest',
+        caseNumber: 'caseNumberTest',
+        claimNumber: 'claimNumberTest',
+        claimFileData: 'claimFileDataTest',
+        amount: 'amountTest',
+        inboundFileNumber: 'inboundFileNumberTest',
+        errorCode: 'errorCodeTest',
+        errorMessage: 'errorMessageTest'
+      }
+    }
+    const expectedContent = 'sbiTest,frnTest,caseNumberTest,claimNumberTest,claimFileDataTest,amountTest,,,inboundFileNumberTest,errorCodeTest,errorMessageTest'
     const mockBlobClient = {
       upload: jest.fn().mockResolvedValue()
     }
@@ -28,8 +41,8 @@ describe('generateReturnFile', () => {
 
     await generateReturnFile(mockEvent)
 
-    expect(getInboundBlobClient).toHaveBeenCalledWith('FCAP_123_RPA_240101010101_NO_RETURN_FILE.dat')
-    expect(mockBlobClient.upload).toHaveBeenCalledWith(mockEvent, mockEvent.length)
-    expect(console.info).toHaveBeenCalledWith('Published FCAP_123_RPA_240101010101_NO_RETURN_FILE.dat')
+    expect(getInboundBlobClient).toHaveBeenCalledWith('FCAP_XXXX_RPA_240101010101_NO_RETURN_FILE.dat')
+    expect(mockBlobClient.upload).toHaveBeenCalledWith(expectedContent, expectedContent.length)
+    expect(console.info).toHaveBeenCalledWith('Published FCAP_XXXX_RPA_240101010101_NO_RETURN_FILE.dat')
   })
 })

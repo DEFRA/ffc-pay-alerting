@@ -8,11 +8,13 @@ jest.mock('../../../app/alerting/send-alerts')
 const { sendAlerts: mockSendAlerts } = require('../../../app/alerting/send-alerts')
 
 const { RECIPIENTS } = require('../../mocks/values/recipients')
-
-const { PAYMENT_REJECTED } = require('../../../app/constants/templates')
-
+const { PAYMENT_REJECTED: PAYMENT_REJECTED_TEMPLATE } = require('../../../app/constants/templates')
 const { processAlert } = require('../../../app/alerting/process-alert')
 const sourceSystems = require('../../../app/constants/source-systems')
+const {
+  BATCH_REJECTED,
+  DEMOGRAPHICS_UPDATE_FAILED
+} = require('../../../app/constants/events')
 
 let event
 
@@ -32,7 +34,7 @@ describe('process alert', () => {
 
   test('should send the alerts if template found', async () => {
     await processAlert(event)
-    expect(mockSendAlerts).toHaveBeenCalledWith(RECIPIENTS, PAYMENT_REJECTED, event)
+    expect(mockSendAlerts).toHaveBeenCalledWith(RECIPIENTS, PAYMENT_REJECTED_TEMPLATE, event)
     expect(mockGenerateReturnFile).not.toHaveBeenCalled()
   })
 
@@ -43,10 +45,27 @@ describe('process alert', () => {
     expect(mockGenerateReturnFile).not.toHaveBeenCalled()
   })
 
-  test('should generate return file if FC', async () => {
+  test('should generate return file if FC and event type matches', async () => {
     event.data.sourceSystem = sourceSystems.FC
+    event.type = BATCH_REJECTED
     await processAlert(event)
     expect(mockSendAlerts).toHaveBeenCalled()
     expect(mockGenerateReturnFile).toHaveBeenCalledWith(event)
+  })
+
+  test('should not generate return file if source system is not FC', async () => {
+    event.data.sourceSystem = 'OTHER_SYSTEM'
+    event.type = BATCH_REJECTED
+    await processAlert(event)
+    expect(mockSendAlerts).toHaveBeenCalled()
+    expect(mockGenerateReturnFile).not.toHaveBeenCalled()
+  })
+
+  test('should not generate return file if event type does not match', async () => {
+    event.data.sourceSystem = sourceSystems.FC
+    event.type = DEMOGRAPHICS_UPDATE_FAILED
+    await processAlert(event)
+    expect(mockSendAlerts).toHaveBeenCalled()
+    expect(mockGenerateReturnFile).not.toHaveBeenCalled()
   })
 })

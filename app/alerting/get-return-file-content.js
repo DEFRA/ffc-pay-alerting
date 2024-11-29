@@ -1,15 +1,20 @@
 const { UNKNOWN } = require('../constants/unknown')
+const { ERROR_CODE } = require('../constants/return-file')
 
 const getCSVString = (data) => {
   const csvString = `${data.sbi},${data.frn},${data.agreementNumber},${data.claimNumber},${data.claimDate},${data.amount},,,${data.inboundFileNumber},${data.errorCode},${data.errorMessage}`
   return csvString
 }
 
-const getReturnFileContent = (event) => {
+const getInboundFileNumber = (batch) => {
   const regex = /(?<=^[A-Z]{4}_)\d{4}/
-  const batch = event.data?.batch || UNKNOWN
   const match = batch.match(regex)
-  const inboundFileNumber = match ? match[0] : UNKNOWN
+  return match ? match[0] : UNKNOWN
+}
+
+const getReturnFileContent = (event) => {
+  const batch = event.data?.batch || UNKNOWN
+  const inboundFileNumber = getInboundFileNumber(batch)
   return getCSVString({
     sbi: event.data?.sbi ?? UNKNOWN,
     frn: event.data?.frn ?? UNKNOWN,
@@ -18,7 +23,7 @@ const getReturnFileContent = (event) => {
     claimDate: event.data?.claimDate ?? UNKNOWN,
     amount: event.data?.value ?? UNKNOWN,
     inboundFileNumber,
-    errorCode: 'F',
+    errorCode: ERROR_CODE,
     errorMessage: event.data?.message ?? UNKNOWN
   })
 }

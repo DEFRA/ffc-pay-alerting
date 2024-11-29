@@ -7,17 +7,17 @@ describe('getReturnFileContent', () => {
       data: {
         sbi: '123456',
         frn: '654321',
-        caseNumber: 'CASE123',
+        agreementNumber: 'CASE123',
         claimNumber: 'CLAIM456',
-        claimFileData: 'FileData',
-        amount: '1000',
-        inboundFileNumber: 'INBOUND789',
+        claimDate: '01/02/2003',
+        value: '1000',
+        batch: 'FCAP_5678_1234555.dat',
         errorCode: 'ERR001',
-        errorMessage: 'Error message'
+        message: 'Error message'
       }
     }
 
-    const expectedCSV = '123456,654321,CASE123,CLAIM456,FileData,1000,,,INBOUND789,ERR001,Error message'
+    const expectedCSV = '123456,654321,CASE123,CLAIM456,01/02/2003,1000,,,5678,F,Error message'
     const result = getReturnFileContent(event)
     expect(result).toBe(expectedCSV)
   })
@@ -27,7 +27,7 @@ describe('getReturnFileContent', () => {
       data: {}
     }
 
-    const expectedCSV = `${UNKNOWN},${UNKNOWN},${UNKNOWN},${UNKNOWN},${UNKNOWN},${UNKNOWN},,,${UNKNOWN},${UNKNOWN},${UNKNOWN}`
+    const expectedCSV = `${UNKNOWN},${UNKNOWN},${UNKNOWN},${UNKNOWN},${UNKNOWN},${UNKNOWN},,,${UNKNOWN},F,${UNKNOWN}`
     const result = getReturnFileContent(event)
     expect(result).toBe(expectedCSV)
   })

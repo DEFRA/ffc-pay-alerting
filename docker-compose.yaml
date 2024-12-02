@@ -5,6 +5,8 @@ services:
       target: production
     image: ffc-pay-alerting
     container_name: ffc-pay-alerting
+    depends_on:
+      - ffc-pay-responses-azurite
     environment:
       APPINSIGHTS_CLOUDROLE: ffc-pay-alerting-local
       APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
@@ -33,9 +35,10 @@ services:
       AZURE_STORAGE_ACCOUNT_NAME: ${AZURE_STORAGE_ACCOUNT_NAME:-devstoreaccount1}
       AZURE_STORAGE_USE_CONNECTION_STRING: "true"
       AZURE_STORAGE_CREATE_CONTAINERS: "true"
+      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://ffc-pay-responses-azurite:10000/devstoreaccount1;
 
   ffc-pay-responses-azurite:
     image: mcr.microsoft.com/azure-storage/azurite:3.32.0
-    command: "azurite-blob --skipApiVersionCheck --loose --blobHost 0.0.0.0"
+    command: "azurite-blob --loose --blobHost 0.0.0.0"
     labels:
       com.docker.compose.pay.role: ffc-pay-responses-azurite

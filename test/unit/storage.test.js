@@ -10,7 +10,7 @@ jest.mock('@azure/storage-blob', () => {
   }
   return {
     BlobServiceClient: {
-        fromConnectionString: jest.fn(() => mBlobServiceClient)
+      fromConnectionString: jest.fn(() => mBlobServiceClient)
     },
     ContainerClient: jest.fn(() => mBlobServiceClient),
     BlockBlobClient: jest.fn(() => mBlobServiceClient)

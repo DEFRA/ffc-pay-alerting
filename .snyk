@@ -8,3 +8,8 @@ ignore:
         reason: None Given
         expires: 2023-11-28T17:23:12.472Z
         created: 2023-10-29T17:23:12.474Z
+  SNYK-JS-AXIOS-6671926:
+    - '*':
+        reason: Updated all relevant pacakages but no current fix available
+        expires: 2024-12-17T13:17:30.469Z
+        created: 2024-12-02T13:17:30.473Z

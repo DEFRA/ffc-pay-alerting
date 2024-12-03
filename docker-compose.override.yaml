@@ -17,11 +17,5 @@ services:
     depends_on:
       - ffc-pay-responses-azurite
 
-  ffc-pay-responses-azurite:
-    volumes:
-      - azurite_data:/data
-    ports:
-      - "10000:10000"
-
 volumes:
   azurite_data:

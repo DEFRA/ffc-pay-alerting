@@ -40,8 +40,8 @@ describe('generateReturnFile', () => {
 
     await generateReturnFile(mockEvent)
 
-    expect(getInboundBlobClient).toHaveBeenCalledWith('FCAP_XXXX_RPA_240101010101_NO_RETURN_FILE.dat')
+    expect(getInboundBlobClient).toHaveBeenCalledWith('FCAP_XXXX_RPA_240101010101_NO_RETURN_MESSAGE.dat')
     expect(mockBlobClient.upload).toHaveBeenCalledWith(expectedContent, expectedContent.length)
-    expect(console.info).toHaveBeenCalledWith('Published FCAP_XXXX_RPA_240101010101_NO_RETURN_FILE.dat')
+    expect(console.info).toHaveBeenCalledWith('Published FCAP_XXXX_RPA_240101010101_NO_RETURN_MESSAGE.dat')
   })
 })

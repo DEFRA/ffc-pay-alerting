@@ -49,6 +49,15 @@ container:
   esfioDAXEmails:
   d365UnsettledEmails:
   sendAlerts: true
+  azureStorageConnectionString: dummy
+  azureStorageAccountName: ffcpay
+  storageContainer: dax
+  inboundFolder: inbound
+  archiveFolder: archive
+  quarantineFolder: quarantine
+  returnFolder: return
+  azureStorageUseConnectionString: false
+  azureStorageCreateContainers: false
 
 aadPodIdentity: true
 

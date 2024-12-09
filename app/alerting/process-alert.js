@@ -7,7 +7,9 @@ const {
   BATCH_REJECTED,
   BATCH_QUARANTINED,
   PAYMENT_REJECTED,
-  PAYMENT_PROCESSING_FAILED
+  PAYMENT_PROCESSING_FAILED,
+  PAYMENT_DAX_REJECTED,
+  PAYMENT_INVALID_BANK
 } = require('../constants/events')
 
 const processAlert = async (event) => {
@@ -24,7 +26,9 @@ const processAlert = async (event) => {
       BATCH_REJECTED,
       BATCH_QUARANTINED,
       PAYMENT_REJECTED,
-      PAYMENT_PROCESSING_FAILED
+      PAYMENT_PROCESSING_FAILED,
+      PAYMENT_DAX_REJECTED,
+      PAYMENT_INVALID_BANK
     ].includes(event.type)
   ) {
     await generateReturnFile(event)

@@ -20,14 +20,14 @@ describe('generateReturnFile', () => {
         sbi: 'sbiTest',
         frn: 'frnTest',
         agreementNumber: 'agreementNumberTest',
-        claimNumber: 'claimNumberTest',
+        contractNumber: 'claimNumberTest',
         claimDate: 'claimDateTest',
         value: 'amountTest',
         batch: 'FCAP_1234_567890123456.dat',
         message: 'errorMessageTest'
       }
     }
-    const expectedContent = 'sbiTest,frnTest,agreementNumberTest,claimNumberTest,claimDateTest,amountTest,,,1234,F,errorMessageTest'
+    const expectedContent = 'XXXX\r\n1\r\namountTest\r\nsbiTest,frnTest,agreementNumberTest,claimNumberTest,claimDateTest,amountTest,,,1234,F,"errorMessageTest"'
     const mockBlobClient = {
       upload: jest.fn().mockResolvedValue()
     }

@@ -1,31 +1,32 @@
-const { UNKNOWN } = require('../constants/unknown')
 const { ERROR_CODE } = require('../constants/return-file')
 
 const getCSVString = (data) => {
-  const csvString = `${data.sbi},${data.frn},${data.agreementNumber},${data.claimNumber},${data.claimDate},${data.amount},,,${data.inboundFileNumber},${data.errorCode},${data.errorMessage}`
+  const csvString = `${data.sbi},${data.frn},${data.agreementNumber},${data.claimNumber},${data.claimDate},${data.amount},,,${data.inboundFileNumber},${data.errorCode},"${data.errorMessage}"`
   return csvString
 }
 
 const getInboundFileNumber = (batch) => {
   const regex = /(?<=^[A-Z]{4}_)\d{4}/
   const match = batch.match(regex)
-  return match ? match[0] : UNKNOWN
+  return match ? match[0] : ''
 }
 
 const getReturnFileContent = (event) => {
-  const batch = event.data?.batch || UNKNOWN
+  const batch = event.data?.batch || ''
   const inboundFileNumber = getInboundFileNumber(batch)
-  return getCSVString({
-    sbi: event.data?.sbi ?? UNKNOWN,
-    frn: event.data?.frn ?? UNKNOWN,
-    agreementNumber: event.data?.agreementNumber ?? UNKNOWN,
-    claimNumber: event.data?.claimNumber ?? UNKNOWN,
-    claimDate: event.data?.claimDate ?? UNKNOWN,
-    amount: event.data?.value ?? UNKNOWN,
+  const amount = event.data?.value || ''
+  const content = getCSVString({
+    sbi: event.data?.sbi ?? '',
+    frn: event.data?.frn ?? '',
+    agreementNumber: event.data?.agreementNumber ?? '',
+    claimNumber: event.data?.contractNumber ?? '',
+    claimDate: event.data?.claimDate ?? '',
+    amount,
     inboundFileNumber,
     errorCode: ERROR_CODE,
-    errorMessage: event.data?.message ?? UNKNOWN
+    errorMessage: event.data?.message ?? ''
   })
+  return ['XXXX', 1, amount, content].join('\r\n')
 }
 
 module.exports = {

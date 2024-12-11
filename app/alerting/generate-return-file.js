@@ -3,7 +3,6 @@ const { getInboundBlobClient } = require('../storage')
 const { getReturnFileContent } = require('./get-return-file-content')
 
 const publishReturnFile = async (returnFilename, returnFileContent) => {
-  console.log('content:', returnFileContent.length)
   const blobClient = await getInboundBlobClient(returnFilename)
   await blobClient.upload(returnFileContent, returnFileContent.length)
   console.info(`Published ${returnFilename}`)

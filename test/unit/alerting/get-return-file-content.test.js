@@ -9,14 +9,14 @@ describe('getReturnFileContent', () => {
         agreementNumber: 'CASE123',
         contractNumber: 'CLAIM456',
         claimDate: '01/02/2003',
-        value: '1000',
+        value: 1000,
         batch: 'FCAP_5678_1234555.dat',
         errorCode: 'ERR001',
         message: 'Error message'
       }
     }
 
-    const expectedCSV = 'XXXX\r\n1\r\n1000\r\n123456,654321,CASE123,CLAIM456,01/02/2003,1000,,,5678,F,"Error message"'
+    const expectedCSV = 'XXXX\r\n1\r\n10\r\n123456,654321,CASE123,CLAIM456,01/02/2003,10,,,5678,F,"Error message"'
     const result = getReturnFileContent(event)
     expect(result).toBe(expectedCSV)
   })
@@ -27,6 +27,30 @@ describe('getReturnFileContent', () => {
     }
 
     const expectedCSV = 'XXXX\r\n1\r\n\r\n,,,,,,,,,F,""'
+    const result = getReturnFileContent(event)
+    expect(result).toBe(expectedCSV)
+  })
+
+  test('should handle non-integer amount correctly', () => {
+    const event = {
+      data: {
+        value: '1000.50'
+      }
+    }
+
+    const expectedCSV = 'XXXX\r\n1\r\n1000.50\r\n,,,,,1000.50,,,,F,""'
+    const result = getReturnFileContent(event)
+    expect(result).toBe(expectedCSV)
+  })
+
+  test('should handle integer amount correctly', () => {
+    const event = {
+      data: {
+        value: 1000
+      }
+    }
+
+    const expectedCSV = 'XXXX\r\n1\r\n10\r\n,,,,,10,,,,F,""'
     const result = getReturnFileContent(event)
     expect(result).toBe(expectedCSV)
   })

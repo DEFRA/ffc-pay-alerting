@@ -5,8 +5,8 @@ const { generateReturnFile } = require('../../../app/alerting/generate-return-fi
 const { UNKNOWN } = require('../../../app/constants/unknown')
 
 jest.mock('moment')
-jest.mock('../storage')
-jest.mock('./get-return-file-content')
+jest.mock('../../../app/storage')
+jest.mock('../../../app/alerting/get-return-file-content')
 
 describe('generateReturnFile', () => {
   beforeEach(() => {

@@ -14,7 +14,10 @@ const getInboundFileNumber = (batch) => {
 const getReturnFileContent = (event) => {
   const batch = event.data?.batch || ''
   const inboundFileNumber = getInboundFileNumber(batch)
-  const amount = event.data?.value || ''
+  let amount = event.data?.value || ''
+  if (typeof amount === 'number' && Number.isInteger(amount)) {
+    amount = amount / 100
+  }
   const content = getCSVString({
     sbi: event.data?.sbi ?? '',
     frn: event.data?.frn ?? '',

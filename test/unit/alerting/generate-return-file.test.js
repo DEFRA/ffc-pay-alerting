@@ -11,6 +11,7 @@ jest.mock('../../../app/alerting/get-return-file-content')
 describe('generateReturnFile', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    console.info = jest.fn()
   })
 
   test('should generate and publish return file with correct content', async () => {

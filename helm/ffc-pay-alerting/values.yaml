@@ -48,6 +48,8 @@ container:
   daxUnavailableEmails:
   esfioDAXEmails:
   d365UnsettledEmails:
+  bpsEmails:
+  csEmails:
   sendAlerts: true
   azureStorageConnectionString: dummy
   azureStorageAccountName: ffcpay

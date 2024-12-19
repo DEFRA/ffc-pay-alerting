@@ -55,6 +55,12 @@ data:
   {{- if .Values.container.d365UnsettledEmails }}
   D365_UNSETTLED_EMAILS: {{ quote .Values.container.d365UnsettledEmails }}
   {{- end }}
+  {{- if .Values.container.bpsEmails }}
+  BPS_EMAILS: {{ quote .Values.container.bpsEmails }}
+  {{- end }}
+  {{- if .Values.container.csEmails }}
+  CS_EMAILS: {{ quote .Values.container.csEmails }}
+  {{- end }}
   FFC_ENVIRONMENT: {{ quote .Values.environmentCode }}
   NOTIFY_API_KEY: {{ quote .Values.container.notifyApiKey }}
   SEND_ALERTS: {{ quote .Values.container.sendAlerts }}

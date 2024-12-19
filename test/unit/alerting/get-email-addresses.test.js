@@ -33,10 +33,8 @@ describe('get email addresses', () => {
 
   test.each([
     LUMP_SUMS,
-    CS,
-    BPS,
     FDMR
-  ])('should return core solutions, finance and dev emails for batch rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
+  ])('should return core solutions, finance and dev emails for batch rejected warning if non-BPS and CS Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(BATCH_REJECTED, sourceSystem)
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
@@ -85,11 +83,9 @@ describe('get email addresses', () => {
     SFI,
     SFIP,
     LUMP_SUMS,
-    CS,
-    BPS,
     FDMR,
     SFI23
-  ])('should return core solutions, finance and dev emails for payment rejected warning if Siti agri scheme or FDMR', (sourceSystem) => {
+  ])('should return core solutions, finance and dev emails for payment rejected warning if non-BPS and CS Siti agri scheme or FDMR', (sourceSystem) => {
     const result = getEmailAddresses(PAYMENT_REJECTED, sourceSystem)
     expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
   })
@@ -270,5 +266,145 @@ describe('get email addresses', () => {
   test('should return dev emails for receiver connection failed warning', () => {
     const result = getEmailAddresses(RECEIVER_CONNECTION_FAILED)
     expect(result).toBe(alertConfig.devTeamEmails)
+  })
+
+  test('should return BPS emails for batch rejected event', () => {
+    const result = getEmailAddresses(BATCH_REJECTED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for batch rejected event', () => {
+    const result = getEmailAddresses(BATCH_REJECTED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for batch quarantined event', () => {
+    const result = getEmailAddresses(BATCH_QUARANTINED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for batch quarantined event', () => {
+    const result = getEmailAddresses(BATCH_QUARANTINED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for payment rejected event', () => {
+    const result = getEmailAddresses(PAYMENT_REJECTED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for payment rejected event', () => {
+    const result = getEmailAddresses(PAYMENT_REJECTED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for payment dax rejected event', () => {
+    const result = getEmailAddresses(PAYMENT_DAX_REJECTED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for payment dax rejected event', () => {
+    const result = getEmailAddresses(PAYMENT_DAX_REJECTED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for payment invalid bank event', () => {
+    const result = getEmailAddresses(PAYMENT_INVALID_BANK, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for payment invalid bank event', () => {
+    const result = getEmailAddresses(PAYMENT_INVALID_BANK, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for payment processing failed event', () => {
+    const result = getEmailAddresses(PAYMENT_PROCESSING_FAILED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for payment processing failed event', () => {
+    const result = getEmailAddresses(PAYMENT_PROCESSING_FAILED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for payment settlement unsettled event', () => {
+    const result = getEmailAddresses(PAYMENT_SETTLEMENT_UNSETTLED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for payment settlement unsettled event', () => {
+    const result = getEmailAddresses(PAYMENT_SETTLEMENT_UNSETTLED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for payment settlement unmatched event', () => {
+    const result = getEmailAddresses(PAYMENT_SETTLEMENT_UNMATCHED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for payment settlement unmatched event', () => {
+    const result = getEmailAddresses(PAYMENT_SETTLEMENT_UNMATCHED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for response rejected event', () => {
+    const result = getEmailAddresses(RESPONSE_REJECTED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for response rejected event', () => {
+    const result = getEmailAddresses(RESPONSE_REJECTED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for payment request blocked event', () => {
+    const result = getEmailAddresses(PAYMENT_REQUEST_BLOCKED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for payment request blocked event', () => {
+    const result = getEmailAddresses(PAYMENT_REQUEST_BLOCKED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for payment dax unavailable event', () => {
+    const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for payment dax unavailable event', () => {
+    const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for receiver connection failed event', () => {
+    const result = getEmailAddresses(RECEIVER_CONNECTION_FAILED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for receiver connection failed event', () => {
+    const result = getEmailAddresses(RECEIVER_CONNECTION_FAILED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for demographics processing failed event', () => {
+    const result = getEmailAddresses(DEMOGRAPHICS_PROCESSING_FAILED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for demographics processing failed event', () => {
+    const result = getEmailAddresses(DEMOGRAPHICS_PROCESSING_FAILED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return BPS emails for demographics update failed event', () => {
+    const result = getEmailAddresses(DEMOGRAPHICS_UPDATE_FAILED, BPS)
+    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+  })
+
+  test('should return CS emails for demographics update failed event', () => {
+    const result = getEmailAddresses(DEMOGRAPHICS_UPDATE_FAILED, CS)
+    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
   })
 })

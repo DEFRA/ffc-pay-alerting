@@ -53,8 +53,8 @@ const getEmailAddresses = (eventType, sourceSystem) => {
       [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`,
       [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails}`,
       [sourceSystems.FC]: `${alertConfig.fcEmails};${alertConfig.invalidBankDetailsEmails}`,
-      [sourceSystems.CS]: `${alertConfig.csEmails};${alertConfig.devTeamEmails}`,
-      [sourceSystems.BPS]: `${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.CS]: `${alertConfig.csEmails}`,
+      [sourceSystems.BPS]: `${alertConfig.bpsEmails}`,
       default: alertConfig.invalidBankDetailsEmails
     },
     [events.PAYMENT_PROCESSING_FAILED]: {
@@ -65,8 +65,8 @@ const getEmailAddresses = (eventType, sourceSystem) => {
       default: alertConfig.devTeamEmails
     },
     [events.PAYMENT_SETTLEMENT_UNSETTLED]: {
-      [sourceSystems.CS]: `${alertConfig.csEmails};${alertConfig.devTeamEmails}`,
-      [sourceSystems.BPS]: `${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.CS]: `${alertConfig.csEmails}`,
+      [sourceSystems.BPS]: `${alertConfig.bpsEmails}`,
       default: alertConfig.d365UnsettledEmails
     },
     [events.PAYMENT_SETTLEMENT_UNMATCHED]: {
@@ -86,8 +86,8 @@ const getEmailAddresses = (eventType, sourceSystem) => {
     [events.PAYMENT_REQUEST_BLOCKED]: {
       [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`,
       [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`,
-      [sourceSystems.CS]: `${alertConfig.csEmails};${alertConfig.devTeamEmails}`,
-      [sourceSystems.BPS]: `${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`,
+      [sourceSystems.CS]: `${alertConfig.csEmails}`,
+      [sourceSystems.BPS]: `${alertConfig.bpsEmails}`,
       default: alertConfig.debtEnrichmentEmails
     },
     [events.PAYMENT_DAX_UNAVAILABLE]: {

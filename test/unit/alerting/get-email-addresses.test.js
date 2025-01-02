@@ -310,12 +310,12 @@ describe('get email addresses', () => {
 
   test('should return BPS emails for payment invalid bank event', () => {
     const result = getEmailAddresses(PAYMENT_INVALID_BANK, BPS)
-    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.bpsEmails}`)
   })
 
   test('should return CS emails for payment invalid bank event', () => {
     const result = getEmailAddresses(PAYMENT_INVALID_BANK, CS)
-    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.csEmails}`)
   })
 
   test('should return BPS emails for payment processing failed event', () => {
@@ -330,12 +330,12 @@ describe('get email addresses', () => {
 
   test('should return BPS emails for payment settlement unsettled event', () => {
     const result = getEmailAddresses(PAYMENT_SETTLEMENT_UNSETTLED, BPS)
-    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.bpsEmails}`)
   })
 
   test('should return CS emails for payment settlement unsettled event', () => {
     const result = getEmailAddresses(PAYMENT_SETTLEMENT_UNSETTLED, CS)
-    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.csEmails}`)
   })
 
   test('should return BPS emails for payment settlement unmatched event', () => {
@@ -360,12 +360,12 @@ describe('get email addresses', () => {
 
   test('should return BPS emails for payment request blocked event', () => {
     const result = getEmailAddresses(PAYMENT_REQUEST_BLOCKED, BPS)
-    expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.bpsEmails}`)
   })
 
   test('should return CS emails for payment request blocked event', () => {
     const result = getEmailAddresses(PAYMENT_REQUEST_BLOCKED, CS)
-    expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
+    expect(result).toBe(`${alertConfig.csEmails}`)
   })
 
   test('should return BPS emails for payment dax unavailable event', () => {

@@ -53,9 +53,9 @@ const getEmailAddresses = (eventType, sourceSystem) => {
       [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`,
       [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails}`,
       [sourceSystems.FC]: `${alertConfig.fcEmails};${alertConfig.invalidBankDetailsEmails}`,
-      [sourceSystems.CS]: `${alertConfig.csEmails}`,
-      [sourceSystems.BPS]: `${alertConfig.bpsEmails}`,
-      default: alertConfig.invalidBankDetailsEmails
+      [sourceSystems.CS]: `${alertConfig.opsAnalysisEmails};${alertConfig.csEmails}`,
+      [sourceSystems.BPS]: `${alertConfig.opsAnalysisEmails};${alertConfig.bpsEmails}`,
+      default: `${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`
     },
     [events.PAYMENT_PROCESSING_FAILED]: {
       [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,

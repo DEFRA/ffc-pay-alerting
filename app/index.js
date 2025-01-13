@@ -3,7 +3,7 @@ require('log-timestamp')
 const { start, stop } = require('./messaging')
 
 process.on(['SIGTERM', 'SIGINT'], async () => {
-  await stop()
+  await stop() //testing
   process.exit(0)
 })
 

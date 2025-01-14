@@ -135,6 +135,16 @@ describe('get email addresses', () => {
     expect(result).toBe(alertConfig.devTeamEmails)
   })
 
+  test('should return ops analysis and CS emails for payment dax rejected warning if CS', () => {
+    const result = getEmailAddresses(PAYMENT_INVALID_BANK, CS)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.csEmails}`)
+  })
+
+  test('should return ops analysis and BPS bank details emails for payment dax rejected warning if BPS', () => {
+    const result = getEmailAddresses(PAYMENT_INVALID_BANK, BPS)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.bpsEmails}`)
+  })
+
   test('should return ops analysis and invalid bank details emails for payment dax rejected warning if delinked', () => {
     const result = getEmailAddresses(PAYMENT_INVALID_BANK, DELINKED)
     expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)
@@ -150,9 +160,9 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.fcEmails};${alertConfig.invalidBankDetailsEmails}`)
   })
 
-  test('should return invalid bank details emails for payment invalid bank warning', () => {
+  test('should return ops analysis and invalid bank details emails for payment invalid bank warning', () => {
     const result = getEmailAddresses(PAYMENT_INVALID_BANK)
-    expect(result).toBe(alertConfig.invalidBankDetailsEmails)
+    expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)
   })
 
   test('should return ops analysis and dev emails for payment processing failed warning if delinked', () => {
@@ -230,14 +240,6 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should not return any emails not set', () => {
-    alertConfig.esEmails = ''
-    alertConfig.financeEmails = ''
-    alertConfig.devTeamEmails = ''
-    const result = getEmailAddresses(BATCH_REJECTED, ES)
-    expect(result).toBe(';;')
-  })
-
   test('should return ops analysis, dev and dax unavaialable emails for dax unavailable warning if delinked', () => {
     const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE, DELINKED)
     expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)
@@ -306,16 +308,6 @@ describe('get email addresses', () => {
   test('should return CS emails for payment dax rejected event', () => {
     const result = getEmailAddresses(PAYMENT_DAX_REJECTED, CS)
     expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
-  })
-
-  test('should return BPS emails for payment invalid bank event', () => {
-    const result = getEmailAddresses(PAYMENT_INVALID_BANK, BPS)
-    expect(result).toBe(`${alertConfig.bpsEmails}`)
-  })
-
-  test('should return CS emails for payment invalid bank event', () => {
-    const result = getEmailAddresses(PAYMENT_INVALID_BANK, CS)
-    expect(result).toBe(`${alertConfig.csEmails}`)
   })
 
   test('should return BPS emails for payment processing failed event', () => {

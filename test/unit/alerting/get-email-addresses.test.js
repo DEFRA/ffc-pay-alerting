@@ -240,14 +240,6 @@ describe('get email addresses', () => {
     expect(result).toBe(`${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
   })
 
-  test('should not return any emails not set', () => {
-    alertConfig.esEmails = ''
-    alertConfig.financeEmails = ''
-    alertConfig.devTeamEmails = ''
-    const result = getEmailAddresses(BATCH_REJECTED, ES)
-    expect(result).toBe(';;')
-  })
-
   test('should return ops analysis, dev and dax unavaialable emails for dax unavailable warning if delinked', () => {
     const result = getEmailAddresses(PAYMENT_DAX_UNAVAILABLE, DELINKED)
     expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)

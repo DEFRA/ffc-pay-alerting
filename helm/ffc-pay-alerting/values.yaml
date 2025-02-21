@@ -61,7 +61,7 @@ container:
   azureStorageUseConnectionString: false
   azureStorageCreateContainers: false
 
-aadPodIdentity: true
+workloadIdentity: true
 
 azureIdentity:
   clientID: not-a-real-clientID

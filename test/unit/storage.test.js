@@ -46,7 +46,6 @@ describe('storage', () => {
     storage = require('../../app/storage')
   })
 
-
   test('uses connection string when config.useConnectionStr is true', async () => {
     expect(require('@azure/storage-blob').BlobServiceClient.fromConnectionString)
       .toHaveBeenCalledWith(mockStorageConfig.connectionStr)

@@ -1,3 +1,7 @@
 resources:
+  identity: pay-alerting
   topics:
-    - name: alert
+    - name: ffc-pay-alert
+      role: receiver
+      subscriptions:
+        - name: ffc-pay-alerting

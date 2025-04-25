@@ -45,7 +45,7 @@ module.exports = {
     [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`,
     default: alertConfig.devTeamEmails
   },
-  [events.PAYMENT_DAX_REJECTED]: {    
+  [events.PAYMENT_DAX_REJECTED]: {
     [sourceSystems.BPS]: `${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.CS]: `${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.SFI]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,

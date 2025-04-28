@@ -50,6 +50,7 @@ container:
   d365UnsettledEmails:
   bpsEmails:
   csEmails:
+  pdsTeamEmails:
   sendAlerts: true
   azureStorageConnectionString: dummy
   azureStorageAccountName: ffcpay

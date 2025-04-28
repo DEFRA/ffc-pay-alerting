@@ -61,6 +61,9 @@ data:
   {{- if .Values.container.csEmails }}
   CS_EMAILS: {{ quote .Values.container.csEmails }}
   {{- end }}
+  {{- if .Values.container.pdsTeamEmails }}
+  PDS_TEAM_EMAILS: {{ quote .Values.container.pdsTeamEmails }}
+  {{- end }}
   FFC_ENVIRONMENT: {{ quote .Values.environmentCode }}
   NOTIFY_API_KEY: {{ quote .Values.container.notifyApiKey }}
   SEND_ALERTS: {{ quote .Values.container.sendAlerts }}

@@ -22,6 +22,19 @@ const { alertConfig } = require('../../../app/config')
 const { getEmailAddresses } = require('../../../app/alerting/get-email-addresses')
 
 describe('get email addresses', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    alertConfig.pdsTeamEmails = null
+  })
+
+  test('pdsTeamEmails should be added if not empty', () => {
+    alertConfig.pdsTeamEmails = 'testPDS@test.com'
+
+    const result = getEmailAddresses(BATCH_REJECTED, 'UNKNOWN_SYSTEM')
+
+    expect(result).toContain(alertConfig.pdsTeamEmails)
+  })
+
   describe('getEmailAddresses - BATCH_REJECTED', () => {
     const event = BATCH_REJECTED
 

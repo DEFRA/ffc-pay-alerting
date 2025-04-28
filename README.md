@@ -55,14 +55,15 @@ These configuration values should be set in the [docker-compose.yaml](docker-com
 | `FC_EMAILS`                    | `;` separated list of FC email addresses, receives all FC alerts                                     |
 | `TRADER_EMAILS`                | `;` separated list of trader email addresses, receives all trader alerts                             |
 | `VET_VISITS_EMAILS`            | `;` separated list of vet visits email addresses, receives all vet visits alerts                     |
-| `OPS_ANALYSIS_EMAILS`          | `;` separated list of operations analysis email addresses, receives all operations analysis related alerts                         |
-| `FINANCE_EMAILS`               | `;` separated list of finance email addresses, receives all Expanded SFI Offer alerts     |
-| `DEMOGRAPHICS_EMAILS`          | `;` separated list of demographics email addresses, receives all Expanded SFI Offer alerts     |
-| `DAX_UNAVAILABLE_EMAILS`       | `;` separated list of DAX unavailable email addresses, receives all Expanded SFI Offer alerts     |
-| `ESFIO_DAX_EMAILS`             | `;` separated list of ESFIO DAX email addresses, receives all Expanded SFI Offer alerts     |
-| `D365_UNSETTLED_EMAILS`        | `;` separated list of D365 unsettled email addresses, receives all Expanded SFI Offer alerts     |
-| `BPS_EMAILS`                   | `;` separated list of BPS email addresses, receives all Expanded SFI Offer alerts     |
-| `CS_EMAILS`                    | `;` separated list of CS email addresses, receives all Expanded SFI Offer alerts     |
+| `OPS_ANALYSIS_EMAILS`          | `;` separated list of operations analysis email addresses, receives all operations analysis related alerts |
+| `FINANCE_EMAILS`               | `;` separated list of finance email addresses, receives all Expanded SFI Offer alerts                |
+| `DEMOGRAPHICS_EMAILS`          | `;` separated list of demographics email addresses, receives all Expanded SFI Offer alerts           |
+| `DAX_UNAVAILABLE_EMAILS`       | `;` separated list of DAX unavailable email addresses, receives all Expanded SFI Offer alerts        |
+| `ESFIO_DAX_EMAILS`             | `;` separated list of ESFIO DAX email addresses, receives all Expanded SFI Offer alerts              |
+| `D365_UNSETTLED_EMAILS`        | `;` separated list of D365 unsettled email addresses, receives all Expanded SFI Offer alerts         |
+| `BPS_EMAILS`                   | `;` separated list of BPS email addresses, receives all Expanded SFI Offer alerts                    |
+| `CS_EMAILS`                    | `;` separated list of CS email addresses, receives all Expanded SFI Offer alerts                     |
+| `PDS_TEAM_EMAILS`                   | `;` separated list of Payment and Document Services email addresses, receives all alerts             |
 | `FFC_ENVIRONMENT`              | Environment code; `local`, `dev`, `test`, `pre` or `prod`. Defaults to `local`                       |
 | `NOTIFY_API_KEY`               | GOV.UK Notify API key                                                                                |
 | `SEND_ALERTS`                  | `true` to send alerts, `false` to log alerts only. Defaults to `true`                                |

@@ -33,5 +33,6 @@ services:
       D365_UNSETTLED_EMAILS: testUnsettled@test.com
       BPS_EMAILS: testBPS@test.com
       CS_EMAILS: testCS@test.com
+      PDS_TEAM_EMAILS: testPDS@test.com
       AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://ffc-pay-responses-azurite:10000/devstoreaccount1;
 

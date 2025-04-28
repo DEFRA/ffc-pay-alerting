@@ -41,8 +41,8 @@ module.exports = {
     [sourceSystems.ES]: `${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.FC]: `${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.IMPS]: `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
-    [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`,
-    [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`,
+    [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.devTeamEmails
   },
   [events.PAYMENT_DAX_REJECTED]: {
@@ -154,7 +154,7 @@ module.exports = {
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
-    default: `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails};`
+    default: `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
   },
   [events.DEMOGRAPHICS_UPDATE_FAILED]: {
     [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`,

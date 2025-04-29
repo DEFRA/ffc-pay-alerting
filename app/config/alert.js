@@ -19,6 +19,7 @@ const schema = Joi.object({
   d365UnsettledEmails: Joi.string().default(''),
   bpsEmails: Joi.string().default(''),
   csEmails: Joi.string().default(''),
+  pdsTeamEmails: Joi.string().default(''),
   environment: Joi.string().default('local'),
   sendAlerts: Joi.boolean().default(true)
 })
@@ -42,6 +43,7 @@ const config = {
   d365UnsettledEmails: process.env.D365_UNSETTLED_EMAILS,
   bpsEmails: process.env.BPS_EMAILS,
   csEmails: process.env.CS_EMAILS,
+  pdsTeamEmails: process.env.PDS_TEAM_EMAILS,
   environment: process.env.FFC_ENVIRONMENT,
   sendAlerts: process.env.SEND_ALERTS
 }

@@ -66,6 +66,7 @@ module.exports = {
     [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails}`,
     [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails}`,
+    [sourceSystems.VET_VISITS]: `${alertConfig.vetVisitsEmails};${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`,
     default: `${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`
   },
   [events.PAYMENT_PROCESSING_FAILED]: {

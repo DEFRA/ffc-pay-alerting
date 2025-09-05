@@ -261,6 +261,11 @@ describe('get email addresses', () => {
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)
     })
 
+    test('should return vet visits emails, opsAnalysisEmails and invalidBankDetailsEmails for VV', () => {
+      const result = getEmailAddresses(event, VET_VISITS)
+      expect(result).toBe(`${alertConfig.vetVisitsEmails};${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)
+    })
+
     test('should return opsAnalysisEmails and invalidBankDetailsEmails for unknown sourceSystem (default)', () => {
       const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)

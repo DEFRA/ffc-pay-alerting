@@ -141,4 +141,22 @@ describe('get personalisation', () => {
     const result = getPersonalisation(event)
     expect(result.originalEvent).toBe(UNKNOWN)
   })
+
+  test('should return unknown for empty originalEvent', () => {
+    event.data.originalEvent = {}
+    const result = getPersonalisation(event)
+    expect(result.originalEvent).toBe(UNKNOWN)
+  })
+
+  test('should format nested original event', () => {
+    event.data.originalEvent = { level1: { level2: { key: 'value' } } }
+    const result = getPersonalisation(event)
+    expect(result.originalEvent).toContain('Level1.Level2.Key: value')
+  })
+
+  test('should return unknown for non-object originalEvent', () => {
+    event.data.originalEvent = 12345
+    const result = getPersonalisation(event)
+    expect(result.originalEvent).toBe(UNKNOWN)
+  })
 })

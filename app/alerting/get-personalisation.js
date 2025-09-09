@@ -5,12 +5,16 @@ const { DATE } = require('../constants/date-format')
 const { UNKNOWN } = require('../constants/unknown')
 
 const capitalizeFirstLetter = (string) => {
-  if (typeof string !== 'string') return string
+  if (typeof string !== 'string') {
+    return string
+  }
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
 const formatOriginalEvent = (originalEvent) => {
-  if (typeof originalEvent !== 'object' || originalEvent === null) return UNKNOWN
+  if (typeof originalEvent !== 'object' || originalEvent === null) {
+    return UNKNOWN
+  }
 
   const flattenObject = (obj, prefix = '') => {
     return Object.entries(obj).flatMap(([key, value]) => {

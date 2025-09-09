@@ -12,5 +12,7 @@ module.exports = {
   PAYMENT_DAX_UNAVAILABLE: 'uk.gov.defra.ffc.pay.warning.dax.unavailable',
   RECEIVER_CONNECTION_FAILED: 'uk.gov.defra.ffc.pay.warning.receiver.connection.failed',
   DEMOGRAPHICS_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.demographics.processing.failed',
-  DEMOGRAPHICS_UPDATE_FAILED: 'uk.gov.defra.ffc.pay.warning.demographics.update.failed'
+  DEMOGRAPHICS_UPDATE_FAILED: 'uk.gov.defra.ffc.pay.warning.demographics.update.failed',
+  EVENT_SAVE_ALERT: 'uk.gov.defra.ffc.pay.warning.event.save.alert',
+  TABLE_CREATE_ALERT: 'uk.gov.defra.ffc.pay.warning.event.table.create.alert'
 }

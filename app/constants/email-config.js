@@ -167,5 +167,11 @@ module.exports = {
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
+  },
+  [events.TABLE_CREATE_ALERT]: {
+    default: alertConfig.devTeamEmails
+  },
+  [events.EVENT_SAVE_ALERT]: {
+    default: alertConfig.devTeamEmails
   }
 }

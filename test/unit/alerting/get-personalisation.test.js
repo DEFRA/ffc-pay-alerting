@@ -110,4 +110,53 @@ describe('get personalisation', () => {
     const result = getPersonalisation(event)
     expect(result.scheme).toBe(schemeNames[SFI])
   })
+
+  test('should capitalize context if it exists', () => {
+    event.data.context = 'test context'
+    const result = getPersonalisation(event)
+    expect(result.context).toBe('Test context')
+  })
+
+  test('should return unknown context if context does not exist', () => {
+    delete event.data.context
+    const result = getPersonalisation(event)
+    expect(result.context).toBe(UNKNOWN)
+  })
+
+  test('should format original event if originalEvent exists', () => {
+    event.data.originalEvent = { key1: 'value1', key2: 'value2' }
+    const result = getPersonalisation(event)
+    expect(result.originalEvent).toContain('Key1: value1')
+    expect(result.originalEvent).toContain('Key2: value2')
+  })
+
+  test('should return unknown if originalEvent is not an object', () => {
+    event.data.originalEvent = 'not an object'
+    const result = getPersonalisation(event)
+    expect(result.originalEvent).toBe(UNKNOWN)
+  })
+
+  test('should return unknown if originalEvent is null', () => {
+    event.data.originalEvent = null
+    const result = getPersonalisation(event)
+    expect(result.originalEvent).toBe(UNKNOWN)
+  })
+
+  test('should return unknown for empty originalEvent', () => {
+    event.data.originalEvent = {}
+    const result = getPersonalisation(event)
+    expect(result.originalEvent).toBe(UNKNOWN)
+  })
+
+  test('should format nested original event', () => {
+    event.data.originalEvent = { level1: { level2: { key: 'value' } } }
+    const result = getPersonalisation(event)
+    expect(result.originalEvent).toContain('Level1.Level2.Key: value')
+  })
+
+  test('should return unknown for non-object originalEvent', () => {
+    event.data.originalEvent = 12345
+    const result = getPersonalisation(event)
+    expect(result.originalEvent).toBe(UNKNOWN)
+  })
 })

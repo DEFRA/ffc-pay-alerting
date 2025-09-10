@@ -12,7 +12,9 @@ const {
   PAYMENT_DAX_UNAVAILABLE,
   RECEIVER_CONNECTION_FAILED,
   DEMOGRAPHICS_PROCESSING_FAILED,
-  DEMOGRAPHICS_UPDATE_FAILED
+  DEMOGRAPHICS_UPDATE_FAILED,
+  EVENT_SAVE_ALERT,
+  TABLE_CREATE_ALERT
 } = require('../../../app/constants/events')
 
 const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23, DELINKED, SFI_EXPANDED } = require('../../../app/constants/source-systems')
@@ -259,6 +261,11 @@ describe('get email addresses', () => {
     test('should return opsAnalysisEmails and invalidBankDetailsEmails for DELINKED', () => {
       const result = getEmailAddresses(event, DELINKED)
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)
+    })
+
+    test('should return vet visits emails, opsAnalysisEmails and invalidBankDetailsEmails for VV', () => {
+      const result = getEmailAddresses(event, VET_VISITS)
+      expect(result).toBe(`${alertConfig.vetVisitsEmails};${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)
     })
 
     test('should return opsAnalysisEmails and invalidBankDetailsEmails for unknown sourceSystem (default)', () => {
@@ -599,6 +606,24 @@ describe('get email addresses', () => {
     test('should return demographics and dev emails for unknown sourceSystem (default)', () => {
       const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
       expect(result).toBe(`${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
+    })
+  })
+
+  describe('getEmailAddresses - EVENT_SAVE_ALERT', () => {
+    const event = EVENT_SAVE_ALERT
+
+    test('should return dev emails for any source system', () => {
+      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
+      expect(result).toBe(`${alertConfig.devTeamEmails}`)
+    })
+  })
+
+  describe('getEmailAddresses - TABLE_CREATE_ALERT', () => {
+    const event = TABLE_CREATE_ALERT
+
+    test('should return dev emails for any source system', () => {
+      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
+      expect(result).toBe(`${alertConfig.devTeamEmails}`)
     })
   })
 })

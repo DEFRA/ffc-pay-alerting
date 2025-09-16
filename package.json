@@ -28,7 +28,8 @@
     "joi": "17.7.1",
     "log-timestamp": "0.3.0",
     "moment": "2.29.4",
-    "notifications-node-client": "8.2.1"
+    "notifications-node-client": "8.2.1",
+    "redis": "4.6.5"
   },
   "devDependencies": {
     "jest": "29.6.4",

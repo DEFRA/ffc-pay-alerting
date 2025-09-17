@@ -11,12 +11,14 @@ const processAlertMessage = async (message, receiver) => {
     console.log('Alert received:', util.inspect(alert, false, null, true))
     validateAlert(alert)
 
-    const { type, source, data } = alert
-    const key = getAlertCacheKey(type, source, data)
+    const { type, source, subject, data } = alert
+    const key = getAlertCacheKey(type, source, subject, data)
     const cachedAlert = await getCachedAlertMessage(cacheConfig.cache, key)
     if (!cachedAlert) {
       await processAlert(alert)
       await setCachedAlertMessage(cacheConfig.cache, key, alert)
+    } else {
+      console.log('Alert already processed, ignoring.')
     }
     await receiver.completeMessage(message)
   } catch (err) {

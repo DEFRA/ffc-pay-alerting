@@ -3,8 +3,9 @@ const { set } = require('./set')
 
 const setCachedAlertMessage = async (cacheName, key, data) => {
   const cacheData = await get(cacheName, key)
-  if (!cacheData) {
-    console.log('Caching value')
+  const hasCache = cacheData && Object.keys(cacheData).length > 0
+  if (!hasCache) {
+    console.log('Caching value:', key)
     await set(cacheName, key, data)
   }
 }

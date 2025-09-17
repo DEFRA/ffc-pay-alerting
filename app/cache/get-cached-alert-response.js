@@ -2,8 +2,9 @@ const { get } = require('./get')
 
 const getCachedAlertMessage = async (cache, key) => {
   const cacheData = await get(cache, key)
-  console.log(cacheData ? 'Using cached value' : 'No cached value available')
-  return cacheData
+  const hasCache = cacheData && Object.keys(cacheData).length > 0
+  console.log(hasCache ? 'Using cached value' : 'No cached value available')
+  return hasCache ? cacheData : null
 }
 
 module.exports = {

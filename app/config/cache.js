@@ -20,7 +20,7 @@ const config = {
   },
   password: process.env.REDIS_PASSWORD,
   partition: process.env.REDIS_PARTITION,
-  ttl: process.env.REDIS_TTL,
+  ttl: process.env.REDIS_TTL || 3600,
   cache: process.env.REDIS_DATA_CACHE
 }
 

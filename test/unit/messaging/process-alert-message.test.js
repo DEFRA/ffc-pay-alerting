@@ -1,12 +1,20 @@
 const { VALIDATION } = require('../../../app/constants/errors')
 
+jest.mock('../../../app/cache', () => ({
+  getAlertCacheKey: jest.fn(() => 'test-key'),
+  getCachedAlertMessage: jest.fn(),
+  setCachedAlertMessage: jest.fn()
+}))
+const { getCachedAlertMessage, setCachedAlertMessage } = require('../../../app/cache')
+
 jest.mock('../../../app/alerting')
 const { processAlert: mockProcessAlert } = require('../../../app/alerting')
 
 jest.mock('../../../app/messaging/validate-alert')
 const { validateAlert: mockValidateAlert } = require('../../../app/messaging/validate-alert')
 
-const message = require('../../mocks/event')
+const mockEvent = require('../../mocks/event')
+const message = { body: mockEvent }
 
 const { processAlertMessage } = require('../../../app/messaging/process-alert-message')
 
@@ -19,6 +27,20 @@ describe('process event message', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockValidateAlert.mockReset()
+    getCachedAlertMessage.mockReset()
+    setCachedAlertMessage.mockReset()
+  })
+
+  test('should set cached alert message if not cached', async () => {
+    getCachedAlertMessage.mockResolvedValue(undefined)
+    await processAlertMessage(message, receiver)
+    expect(setCachedAlertMessage).toHaveBeenCalledWith(expect.anything(), 'test-key', message.body)
+  })
+
+  test('should not set cached alert message if already cached', async () => {
+    getCachedAlertMessage.mockResolvedValue({ some: 'data' })
+    await processAlertMessage(message, receiver)
+    expect(setCachedAlertMessage).not.toHaveBeenCalled()
   })
 
   test('should validate message body', async () => {

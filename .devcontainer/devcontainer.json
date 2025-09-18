@@ -1,0 +1,38 @@
+{
+  "name": "ffc-pay-alerting-devcontainer",
+  "dockerComposeFile": [
+    "../docker-compose.yaml",
+    "../docker-compose.override.yaml"
+  ],
+  "service": "ffc-pay-alerting",
+  "runServices": [
+    "ffc-pay-alerting",
+    "ffc-pay-responses-azurite"
+  ],
+  "shutdownAction": "stopCompose",
+  "workspaceFolder": "/workspace",
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "editor.formatOnSave": true
+  },
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-azuretools.vscode-azurite",
+    "ms-vscode.vscode-node-azure-pack"
+  ],
+  "forwardPorts": [
+    10000
+  ],
+  "portsAttributes": {
+    "10000": {
+      "label": "Azurite Blob",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "npm install",
+  "remoteUser": "node",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ]
+}

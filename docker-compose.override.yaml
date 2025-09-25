@@ -21,7 +21,7 @@ services:
     volumes:
       - redis_data:/data
     ports:
-      - "6391:6379"
+      - "6392:6379"
     command: redis-server --dir /data --save 5 1
 
 volumes:

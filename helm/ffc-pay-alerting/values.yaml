@@ -61,6 +61,10 @@ container:
   returnFolder: return
   azureStorageUseConnectionString: false
   azureStorageCreateContainers: false
+  redisHostname: redis-redis-ha.default
+  redisPassword: redis
+  redisPort: 6379
+  redisPartition: ffc-pay-alerting
 
 workloadIdentity: true
 

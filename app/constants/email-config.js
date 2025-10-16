@@ -16,6 +16,8 @@ module.exports = {
     [sourceSystems.IMPS]: `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFI_EXPANDED]: `${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.devTeamEmails
   },
   [events.BATCH_QUARANTINED]: {
@@ -27,6 +29,8 @@ module.exports = {
     [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.devTeamEmails
   },
   [events.PAYMENT_REJECTED]: {
@@ -43,6 +47,8 @@ module.exports = {
     [sourceSystems.IMPS]: `${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.devTeamEmails
   },
   [events.PAYMENT_DAX_REJECTED]: {
@@ -51,9 +57,11 @@ module.exports = {
     [sourceSystems.SFI]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
-    [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.SFI_EXPANDED]: `${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.devTeamEmails
   },
   [events.PAYMENT_INVALID_BANK]: {
@@ -63,10 +71,12 @@ module.exports = {
     [sourceSystems.SFI]: `${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails}`,
-    [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails}`,
+    [sourceSystems.SFI_EXPANDED]: `${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails}`,
     [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.VET_VISITS]: `${alertConfig.vetVisitsEmails};${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: `${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`
   },
   [events.PAYMENT_PROCESSING_FAILED]: {
@@ -78,6 +88,8 @@ module.exports = {
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.devTeamEmails
   },
   [events.PAYMENT_SETTLEMENT_UNSETTLED]: {
@@ -89,6 +101,8 @@ module.exports = {
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.opsAnalysisEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.opsAnalysisEmails}`,
     default: alertConfig.d365UnsettledEmails
   },
   [events.PAYMENT_SETTLEMENT_UNMATCHED]: {
@@ -100,6 +114,8 @@ module.exports = {
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.devTeamEmails
   },
   [events.RESPONSE_REJECTED]: {
@@ -111,6 +127,8 @@ module.exports = {
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.devTeamEmails
   },
   [events.PAYMENT_REQUEST_BLOCKED]: {
@@ -122,28 +140,34 @@ module.exports = {
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.debtEnrichmentEmails
   },
   [events.PAYMENT_DAX_UNAVAILABLE]: {
     [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`,
-    [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails}`,
+    [sourceSystems.SFI_EXPANDED]: `${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails}`,
     [sourceSystems.CS]: `${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.BPS]: `${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.SFI]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: `${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`
   },
   [events.RECEIVER_CONNECTION_FAILED]: {
     [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
-    [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails}`,
+    [sourceSystems.SFI_EXPANDED]: `${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails}`,
     [sourceSystems.CS]: `${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.BPS]: `${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.SFI]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.devTeamEmails
   },
   [events.DEMOGRAPHICS_PROCESSING_FAILED]: {
@@ -155,6 +179,8 @@ module.exports = {
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
   },
   [events.DEMOGRAPHICS_UPDATE_FAILED]: {
@@ -166,6 +192,8 @@ module.exports = {
     [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_REVENUE]: `${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
+    [sourceSystems.COHT_CAPITAL]: `${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: `${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`
   },
   [events.TABLE_CREATE_ALERT]: {

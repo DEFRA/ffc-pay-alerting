@@ -47,6 +47,8 @@ container:
   demographicsEmails:
   daxUnavailableEmails:
   esfioDAXEmails:
+  apTeamEmails:
+  cshtEmails:
   d365UnsettledEmails:
   bpsEmails:
   csEmails:

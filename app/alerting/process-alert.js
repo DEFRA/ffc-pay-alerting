@@ -13,7 +13,7 @@ const {
 } = require('../constants/events')
 
 const processAlert = async (event) => {
-  const recipients = getRecipients(event)
+  const recipients = await getRecipients(event)
   const templateId = templateMap[event.type]
   if (templateId) {
     await sendAlerts(recipients, templateId, event)

@@ -1,0 +1,127 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="Sam Plackett" id="1">
+    <tagDatabase tag="v0.0.0" />
+  </changeSet>
+  <changeSet author="Sam Plackett" id="2">
+    <tagDatabase tag="v1.0.0" />
+  </changeSet>
+  <changeSet author="Sam Plackett" id="3">
+    <createTable tableName="schemes">
+      <column autoIncrement="true" name="schemeId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="contactId_pkey" />
+      </column>
+      <column name="name" type="VARCHAR(30)" />
+      <column name="sourceSystem" type="VARCHAR(30)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="Sam Plackett" id="4">
+    <insert tableName="schemes">
+      <column name="schemeId" value="0" />
+      <column name="name" value="Default" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="1" />
+      <column name="name" value="SFI" />
+      <column name="sourceSystem" value="SFI" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="2" />
+      <column name="name" value="SFI Pilot" />
+      <column name="sourceSystem" value="SFIP" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="3" />
+      <column name="name" value="Lump Sums" />
+      <column name="sourceSystem" value="LSES" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="4" />
+      <column name="name" value="Vet Visits" />
+      <column name="sourceSystem" value="AHWR" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="5" />
+      <column name="name" value="CS" />
+      <column name="sourceSystem" value="SITI AGRI CS SYS" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="6" />
+      <column name="name" value="BPS" />
+      <column name="sourceSystem" value="SITI AGRI SYS" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="7" />
+      <column name="name" value="FDMR" />
+      <column name="sourceSystem" value="FDMR" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="9" />
+      <column name="name" value="ES" />
+      <column name="sourceSystem" value="Genesis" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="10" />
+      <column name="name" value="FC" />
+      <column name="sourceSystem" value="GLOS" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="11" />
+      <column name="name" value="IMPS" />
+      <column name="sourceSystem" value="IMPS" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="12" />
+      <column name="name" value="SFI23" />
+      <column name="sourceSystem" value="SFIA" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="13" />
+      <column name="name" value="Delinked" />
+      <column name="sourceSystem" value="DP" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="14" />
+      <column name="name" value="Expanded SFI Offer" />
+      <column name="sourceSystem" value="ESFIO" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="15" />
+      <column name="name" value="COHT Revenue" />
+      <column name="sourceSystem" value="COHTR" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="16" />
+      <column name="name" value="COHT Capital" />
+      <column name="sourceSystem" value="COHTC" />
+    </insert>    
+  </changeSet>
+  <changeSet author="Sam Plackett" id="5">
+    <createTable tableName="contacts">
+      <column autoIncrement="true" name="contactId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="contactId_pkey" />
+      </column>
+      <column name="emailAddress" type="VARCHAR(255)" />
+      <column name="addedBy" type="VARCHAR(255)" />
+      <column name="addedAt" type="TIMESTAMP" />
+      <column name="removedBy" type="VARCHAR(255)" />
+      <column name="removedAt" type="TIMESTAMP" />
+      <column name="BATCH_REJECTED" type="INTEGER[]" />
+      <column name="BATCH_QUARANTINED" type="INTEGER[]" />
+      <column name="PAYMENT_REJECTED" type="INTEGER[]" />
+      <column name="PAYMENT_DAX_REJECTED" type="INTEGER[]" />
+      <column name="PAYMENT_INVALID_BANK" type="INTEGER[]" />
+      <column name="PAYMENT_PROCESSING_FAILED" type="INTEGER[]" />
+      <column name="PAYMENT_SETTLEMENT_UNSETTLED" type="INTEGER[]" />
+      <column name="PAYMENT_SETTLEMENT_UNMATCHED" type="INTEGER[]" />
+      <column name="RESPONSE_REJECTED" type="INTEGER[]" />
+      <column name="PAYMENT_REQUEST_BLOCKED" type="INTEGER[]" />
+      <column name="PAYMENT_DAX_UNAVAILABLE" type="INTEGER[]" />
+      <column name="RECEIVER_CONNECTION_FAILED" type="INTEGER[]" />
+      <column name="DEMOGRAPHICS_PROCESSING_FAILED" type="INTEGER[]" />
+      <column name="DEMOGRAPHICS_UPDATE_FAILED" type="INTEGER[]" />
+      <column name="EVENT_SAVE_ALERT" type="INTEGER[]" />
+      <column name="TABLE_CREATE_ALERT" type="INTEGER[]" />
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

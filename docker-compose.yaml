@@ -8,6 +8,7 @@ services:
     depends_on:
       - ffc-pay-responses-azurite
       - ffc-pay-alerting-redis
+      - ffc-pay-alerting-postgres
     environment:
       APPINSIGHTS_CLOUDROLE: ffc-pay-alerting-local
       APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
@@ -17,30 +18,19 @@ services:
       ALERT_TOPIC_ADDRESS: ${EVENT_TOPIC_ADDRESS:-ffc-pay-alert}${MESSAGE_QUEUE_SUFFIX}
       ALERT_SUBSCRIPTION_ADDRESS: ${EVENT_SUBSCRIPTION_ADDRESS:-ffc-pay-alerting}${MESSAGE_QUEUE_SUFFIX}
       NOTIFY_API_KEY: ${NOTIFY_API_KEY}
-      DEV_TEAM_EMAILS: ${DEV_TEAM_EMAILS}
-      DEBT_ENRICHMENT_EMAILS: ${DEBT_ENRICHMENT_EMAILS}
-      INVALID_BANK_DETAILS_EMAILS: ${INVALID_BANK_DETAILS_EMAILS}
-      CORE_SOLUTIONS_TEAM_EMAILS: ${CORE_SOLUTIONS_TEAM_EMAILS}
-      SFI_EMAILS: ${SFI_EMAILS}
-      ES_EMAILS: ${ES_EMAILS}
-      FC_EMAILS: ${FC_EMAILS}
-      TRADER_EMAILS: ${TRADER_EMAILS}
-      VET_VISITS_EMAILS: ${VET_VISITS_EMAILS}
-      OPS_ANALYSIS_EMAILS: ${OPS_ANALYSIS_EMAILS}
-      FINANCE_EMAILS: ${FINANCE_EMAILS}
-      DEMOGRAPHICS_EMAILS: ${DEMOGRAPHICS_EMAILS}
-      DAX_UNAVAILABLE_EMAILS: ${DAX_UNAVAILABLE_EMAILS}
-      ESFIO_DAX_EMAILS: ${ESFIO_DAX_EMAILS}
-      D365_UNSETTLED_EMAILS: ${D365_UNSETTLED_EMAILS}
-      BPS_EMAILS: ${BPS_EMAILS}
-      CS_EMAILS: ${CS_EMAILS}
-      PDS_TEAM_EMAILS: ${PDS_TEAM_EMAILS}
       FFC_ENVIRONMENT: local
       AZURE_STORAGE_ACCOUNT_NAME: ${AZURE_STORAGE_ACCOUNT_NAME:-devstoreaccount1}
       AZURE_STORAGE_USE_CONNECTION_STRING: "true"
       AZURE_STORAGE_CREATE_CONTAINERS: "true"
       AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://ffc-pay-responses-azurite:10000/devstoreaccount1;
       REDIS_HOSTNAME: ffc-pay-alerting-redis
+      POSTGRES_DB: ffc_pay_alerting
+      POSTGRES_HOST: ${POSTGRES_HOST:-ffc-pay-alerting-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_SCHEMA_PASSWORD:-ppp}
+      POSTGRES_PORT: 5432
+      POSTGRES_SCHEMA_NAME: ${POSTGRES_SCHEMA_NAME:-public}
+      POSTGRES_USERNAME: ${POSTGRES_SCHEMA_USERNAME:-postgres}
+      POSTGRES_LOGGING: "false"
 
   ffc-pay-responses-azurite:
     image: mcr.microsoft.com/azure-storage/azurite:3.32.0
@@ -50,3 +40,10 @@ services:
 
   ffc-pay-alerting-redis:
     image: redis:4.0.14
+
+  ffc-pay-alerting-postgres:
+    image: postgres:11.4-alpine
+    environment:
+      POSTGRES_DB: ffc_pay_alerting
+      POSTGRES_PASSWORD: ppp
+      POSTGRES_USERNAME: postgres

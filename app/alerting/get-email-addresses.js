@@ -1,11 +1,16 @@
-const emailConfig = require('../constants/email-config')
-const alertConfig = require('../config/alert')
+const db = require('../data')
 
-const getEmailAddresses = (eventType, sourceSystem) => {
-  let emailAddresses = emailConfig[eventType]?.[sourceSystem] || emailConfig[eventType]?.default
-  if (emailAddresses && alertConfig.pdsTeamEmails) { emailAddresses = emailAddresses.concat(`;${alertConfig.pdsTeamEmails}`) }
-
-  return emailAddresses
+const getEmailAddresses = async (eventType, schemeId) => {
+  const emails = await db.contact.findAll({
+    attributes: ['emailAddress'],
+    where: {
+      removedAt: null,
+      [eventType]: {
+        [db.Sequelize.Op.contains]: [schemeId]
+      }
+    }
+  })
+  return emails.map(contact => contact.emailAddress)
 }
 
 module.exports = {

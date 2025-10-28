@@ -1,11 +1,27 @@
+const events = require('../constants/events')
 const db = require('../data')
 
 const getEmailAddresses = async (eventType, schemeId) => {
+  let eventKey
+  for (const [key, value] of Object.entries(events)) {
+    if (value === eventType) {
+      eventKey = key
+    }
+  }
+
+  if (!eventKey) {
+    return
+  }
+
+  if (schemeId === 0) {
+    return []
+  }
+
   const emails = await db.contact.findAll({
     attributes: ['emailAddress'],
     where: {
       removedAt: null,
-      [eventType]: {
+      [eventKey.toLocaleLowerCase()]: {
         [db.Sequelize.Op.contains]: [schemeId]
       }
     }

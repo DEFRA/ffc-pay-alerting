@@ -1,12 +1,16 @@
 const db = require('../data')
 
-const getSchemeIdFromSourceSystem = async (sourceSystem = 'Default') => {
-  return db.scheme.findOne({
+const getSchemeIdFromSourceSystem = async (sourceSystem) => {
+  if (!sourceSystem) {
+    return 0
+  }
+  const scheme = await db.scheme.findOne({
     attributes: ['schemeId'],
     where: {
       sourceSystem
     }
   })
+  return scheme ? scheme.schemeId : 0
 }
 
 module.exports = {

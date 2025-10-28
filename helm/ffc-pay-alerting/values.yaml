@@ -29,6 +29,7 @@ container:
   requestCpu: 100m
   limitMemory: 100Mi
   limitCpu: 100m
+  port: 3025
   messageQueueHost: namespace.servicebus.windows.net
   alertTopicAddress: ffc-pay-alert
   alertSubscriptionAddress: ffc-pay-alerting
@@ -47,6 +48,8 @@ container:
   redisPassword: redis
   redisPort: 6379
   redisPartition: ffc-pay-alerting
+  devTeamEmails:
+  pdsTeamEmails:
 
 postgresService:
   postgresDb: ffc_pay_alerting
@@ -58,7 +61,7 @@ postgresService:
 
 readinessProbe:
   path: /healthy
-  port: 3008
+  port: 3025
   initialDelaySeconds: 60
   periodSeconds: 120
   failureThreshold: 5
@@ -66,7 +69,7 @@ readinessProbe:
 
 livenessProbe:
   path: /healthz
-  port: 3008
+  port: 3025
   initialDelaySeconds: 70
   periodSeconds: 120
   failureThreshold: 5

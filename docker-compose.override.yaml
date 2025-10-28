@@ -35,3 +35,4 @@ services:
 volumes:
   azurite_data:
   redis_data:
+  postgres_data: {}

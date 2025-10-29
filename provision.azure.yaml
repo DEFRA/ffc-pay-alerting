@@ -1,5 +1,7 @@
 resources:
   identity: pay-alerting
+  postgreSql:
+    name: ffc-pay-alerting
   topics:
     - name: ffc-pay-alert
       role: receiver

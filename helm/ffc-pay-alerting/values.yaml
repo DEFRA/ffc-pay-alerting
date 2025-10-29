@@ -29,30 +29,11 @@ container:
   requestCpu: 100m
   limitMemory: 100Mi
   limitCpu: 100m
+  port: 3025
   messageQueueHost: namespace.servicebus.windows.net
   alertTopicAddress: ffc-pay-alert
   alertSubscriptionAddress: ffc-pay-alerting
   notifyApiKey:
-  devTeamEmails:
-  debtEnrichmentEmails:
-  invalidBankDetailsEmails:
-  coreSolutionsTeamEmails:
-  sfiEmails:
-  esEmails:
-  fcEmails:
-  traderEmails:
-  vetVisitsEmails:
-  opsAnalysisEmails:
-  financeEmails:
-  demographicsEmails:
-  daxUnavailableEmails:
-  esfioDAXEmails:
-  apTeamEmails:
-  cshtEmails:
-  d365UnsettledEmails:
-  bpsEmails:
-  csEmails:
-  pdsTeamEmails:
   sendAlerts: true
   azureStorageConnectionString: dummy
   azureStorageAccountName: ffcpay
@@ -67,6 +48,32 @@ container:
   redisPassword: redis
   redisPort: 6379
   redisPartition: ffc-pay-alerting
+  devTeamEmails:
+  pdsTeamEmails:
+
+postgresService:
+  postgresDb: ffc_pay_alerting
+  postgresqlHost: ffc-pay-alerting-postgres
+  postgresPort: 5432
+  postgresSchema: public
+  postgresUser: postgres
+  logging: false
+
+readinessProbe:
+  path: /healthy
+  port: 3025
+  initialDelaySeconds: 60
+  periodSeconds: 120
+  failureThreshold: 5
+  timeoutSeconds: 30
+
+livenessProbe:
+  path: /healthz
+  port: 3025
+  initialDelaySeconds: 70
+  periodSeconds: 120
+  failureThreshold: 5
+  timeoutSeconds: 30
 
 workloadIdentity: true
 

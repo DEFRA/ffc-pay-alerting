@@ -5,10 +5,10 @@ const { getSchemeIdFromSourceSystem } = require('./get-scheme-id-from-source-sys
 const getRecipients = async (event) => {
   const schemeId = await getSchemeIdFromSourceSystem(event.data?.sourceSystem)
   const emailAddresses = await getEmailAddresses(event.type, schemeId)
-  if (emailAddresses === []) {
+  if (emailAddresses.length === 0) {
     emailAddresses.push(alertConfig.pdsTeamEmails)
   }
-  return emailAddresses.map(email => email.trim()).filter(email => email.length)
+  return emailAddresses?.map(email => email.trim()).filter(email => email.length)
 }
 
 module.exports = {

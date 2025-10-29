@@ -2,7 +2,6 @@ const db = require('../data')
 
 /* eslint-disable camelcase */
 const updateContact = async (payload) => {
-  console.log(payload)
   const {
     contactId,
     emailAddress,
@@ -25,7 +24,7 @@ const updateContact = async (payload) => {
     table_create_alert
   } = payload
 
-  if (contactId) {
+  if (contactId !== undefined && contactId !== null) {
     await db.contact.update({
       emailAddress,
       modifiedBy,

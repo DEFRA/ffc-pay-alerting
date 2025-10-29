@@ -9,11 +9,7 @@ const getEmailAddresses = async (eventType, schemeId) => {
     }
   }
 
-  if (!eventKey) {
-    return
-  }
-
-  if (schemeId === 0) {
+  if (schemeId === 0 || !eventKey) {
     return []
   }
 

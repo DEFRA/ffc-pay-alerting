@@ -11,7 +11,7 @@
       <column autoIncrement="true" name="schemeId" type="INTEGER">
         <constraints nullable="false" primaryKey="true" primaryKeyName="schemeId_pkey" />
       </column>
-      <column name="name" type="VARCHAR(30)" />
+      <column name="name" type="VARCHAR(50)" />
       <column name="sourceSystem" type="VARCHAR(30)" />
     </createTable>
   </changeSet>
@@ -88,12 +88,12 @@
     </insert>
     <insert tableName="schemes">
       <column name="schemeId" value="15" />
-      <column name="name" value="Higher Tier (Revenue)" />
+      <column name="name" value="Countryside Stewardship Higher Tier (Revenue)" />
       <column name="sourceSystem" value="COHTR" />
     </insert>
     <insert tableName="schemes">
       <column name="schemeId" value="16" />
-      <column name="name" value="Higher Tier (Capital)" />
+      <column name="name" value="Countryside Stewardship Higher Tier (Capital)" />
       <column name="sourceSystem" value="COHTC" />
     </insert>    
   </changeSet>

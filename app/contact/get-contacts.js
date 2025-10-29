@@ -34,7 +34,7 @@ const getContacts = async () => {
           const replacedArray = await Promise.all(
             value.map(async (schemeId) => {
               if (typeof schemeId === 'number') {
-                return await getSchemeName(schemeId, schemeCache)
+                return getSchemeName(schemeId, schemeCache)
               }
               return schemeId
             })

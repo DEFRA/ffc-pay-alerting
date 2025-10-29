@@ -2,12 +2,14 @@ const Joi = require('joi')
 const boom = require('@hapi/boom')
 const removeSchema = require('./schemas/remove-contact')
 const { removeContactById, updateContact, getContacts, getAlertTypes, getAlertDescriptions, getContactById, getContactByEmail } = require('../../contact')
+const { OK } = require('../../constants/ok')
+const { OK: OK_STATUS } = require('../../constants/status')
 
 module.exports = [{
   method: 'GET',
   path: '/contact-list',
   options: {
-    handler: async (request, h) => {
+    handler: async (_request, h) => {
       const contacts = await getContacts()
       return h.response({
         contacts
@@ -18,8 +20,8 @@ module.exports = [{
   method: 'GET',
   path: '/alert-types',
   options: {
-    handler: async (request, h) => {
-      const alertTypes = await getAlertTypes()
+    handler: async (_request, h) => {
+      const alertTypes = getAlertTypes()
       return h.response({
         alertTypes
       })
@@ -29,8 +31,8 @@ module.exports = [{
   method: 'GET',
   path: '/alert-descriptions',
   options: {
-    handler: async (request, h) => {
-      const alertDescriptions = await getAlertDescriptions()
+    handler: async (_request, h) => {
+      const alertDescriptions = getAlertDescriptions()
       return h.response({
         alertDescriptions
       })
@@ -44,7 +46,7 @@ module.exports = [{
       params: Joi.object({
         contactId: Joi.number().integer().required()
       }),
-      failAction: (request, h, error) => {
+      failAction: (_request, _h, error) => {
         throw boom.badRequest(error.details[0].message)
       }
     },
@@ -58,7 +60,7 @@ module.exports = [{
           throw boom.notFound(`Contact with ID ${contactId} not found`)
         }
 
-        return h.response({ contact }).code(200)
+        return h.response({ contact }).code(OK_STATUS)
       } catch (err) {
         if (boom.isBoom(err)) {
           throw err
@@ -76,7 +78,7 @@ module.exports = [{
       params: Joi.object({
         emailAddress: Joi.string().email().required()
       }),
-      failAction: (request, h, error) => {
+      failAction: (_request, _h, error) => {
         throw boom.badRequest(error.details[0].message)
       }
     },
@@ -86,7 +88,7 @@ module.exports = [{
       try {
         const contact = await getContactByEmail(emailAddress)
 
-        return h.response({ contact }).code(200)
+        return h.response({ contact }).code(OK_STATUS)
       } catch (err) {
         if (boom.isBoom(err)) {
           throw err
@@ -102,9 +104,8 @@ module.exports = [{
   path: '/update-contact',
   options: {
     handler: async (request, h) => {
-      console.log(request)
       await updateContact(request.payload)
-      return h.response('ok').code(200)
+      return h.response('ok').code(OK_STATUS)
     }
   }
 },
@@ -114,13 +115,13 @@ module.exports = [{
   options: {
     validate: {
       payload: removeSchema,
-      failAction: (request, h, error) => {
+      failAction: (_request, _h, error) => {
         return boom.badRequest(error)
       }
     },
     handler: async (request, h) => {
       await removeContactById(request.payload.contactId, request.payload.removedBy)
-      return h.response('ok').code(200)
+      return h.response(OK).code(OK_STATUS)
     }
   }
 }]

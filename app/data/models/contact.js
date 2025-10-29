@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes) => {
+const contactDB = (sequelize, DataTypes) => {
   const contact = sequelize.define('contact', {
     contactId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     emailAddress: DataTypes.STRING,
@@ -23,10 +23,12 @@ module.exports = (sequelize, DataTypes) => {
     event_save_alert: DataTypes.ARRAY(DataTypes.INTEGER),
     table_create_alert: DataTypes.ARRAY(DataTypes.INTEGER)
   },
-  {
-    tableName: 'contacts',
-    freezeTableName: true,
-    timestamps: false
-  })
+    {
+      tableName: 'contacts',
+      freezeTableName: true,
+      timestamps: false
+    })
   return contact
 }
+
+module.exports = contactDB

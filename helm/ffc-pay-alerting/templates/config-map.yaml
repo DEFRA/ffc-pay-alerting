@@ -52,6 +52,12 @@ data:
   {{- if .Values.container.esfioDAXEmails }}
   ESFIO_DAX_EMAILS: {{ quote .Values.container.esfioDAXEmails }}
   {{- end }}
+  {{- if .Values.container.apTeamEmails }}
+  AP_TEAM_EMAILS: {{ quote .Values.container.apTeamEmails }}
+  {{- end }}
+  {{- if .Values.container.cshtEmails }}
+  CSHT_EMAILS: {{ quote .Values.container.cshtEmails }}
+  {{- end }}
   {{- if .Values.container.d365UnsettledEmails }}
   D365_UNSETTLED_EMAILS: {{ quote .Values.container.d365UnsettledEmails }}
   {{- end }}

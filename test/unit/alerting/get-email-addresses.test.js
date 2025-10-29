@@ -1,5 +1,3 @@
-// BEGIN GENERATED CODE BY ATOS POLARIS AI FOR DEVELOPMENT ON 10/28/2025, 5:40:31 PM
-
 const events = require('../../../app/constants/events')
 const db = require('../../../app/data')
 const { getEmailAddresses } = require('../../../app/alerting/get-email-addresses')

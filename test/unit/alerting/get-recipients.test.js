@@ -4,7 +4,6 @@ jest.mock('../../../app/alerting/get-scheme-id-from-source-system')
 const { getEmailAddresses: mockGetEmailAddresses } = require('../../../app/alerting/get-email-addresses')
 const { getSchemeIdFromSourceSystem: mockGetSchemeIdFromSourceSystem } = require('../../../app/alerting/get-scheme-id-from-source-system')
 
-const { alertConfig } = require('../../../app/config')
 const { EMAIL } = require('../../mocks/values/email')
 const event = require('../../mocks/event')
 

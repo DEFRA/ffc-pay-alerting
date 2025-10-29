@@ -4,11 +4,11 @@ const schemeDB = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     sourceSystem: DataTypes.STRING
   },
-    {
-      tableName: 'schemes',
-      freezeTableName: true,
-      timestamps: false
-    })
+  {
+    tableName: 'schemes',
+    freezeTableName: true,
+    timestamps: false
+  })
   return scheme
 }
 

@@ -23,11 +23,11 @@ const contactDB = (sequelize, DataTypes) => {
     event_save_alert: DataTypes.ARRAY(DataTypes.INTEGER),
     table_create_alert: DataTypes.ARRAY(DataTypes.INTEGER)
   },
-    {
-      tableName: 'contacts',
-      freezeTableName: true,
-      timestamps: false
-    })
+  {
+    tableName: 'contacts',
+    freezeTableName: true,
+    timestamps: false
+  })
   return contact
 }
 

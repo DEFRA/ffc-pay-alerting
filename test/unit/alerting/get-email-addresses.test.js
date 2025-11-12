@@ -162,7 +162,13 @@ describe('get email addresses', () => {
       SFI,
       SFI23,
       SFIP,
-      SFI_EXPANDED,
+      SFI_EXPANDED
+    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       DELINKED,
       LUMP_SUMS
     ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
@@ -181,7 +187,13 @@ describe('get email addresses', () => {
 
     test.each([
       SFI,
-      SFIP,
+      SFIP
+    ])('should return coreSolutionsTeamEmails, financeEmails, devTeamEmails, opsAnalysisEmails and sfiEmails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       LUMP_SUMS
     ])('should return coreSolutionsTeamEmails, financeEmails, devTeamEmails, and opsAnalysisEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
@@ -204,17 +216,24 @@ describe('get email addresses', () => {
     })
 
     test.each([
-      DELINKED,
-      SFI_EXPANDED
+      DELINKED
     ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
+    })
+
+    test.each([
+      SFI_EXPANDED
+    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
     })
 
     test('should return apTeamEmails, esfioDAXEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
       const result = getEmailAddresses(event, COHT_REVENUE)
       expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
     })
+
     test('should return apTeamEmails, esfioDAXEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
       const result = getEmailAddresses(event, COHT_CAPITAL)
       expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
@@ -262,7 +281,13 @@ describe('get email addresses', () => {
     test.each([
       SFI,
       SFIP,
-      SFI23,
+      SFI23
+    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       DELINKED,
       LUMP_SUMS
     ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
@@ -270,9 +295,9 @@ describe('get email addresses', () => {
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
     })
 
-    test('should return apTeamEmails, opsAnalysisEmails and devTeamEmails for SFI_EXPANDED', () => {
+    test('should return apTeamEmails, opsAnalysisEmails, devTeamEmails and sfiEmails for SFI_EXPANDED', () => {
       const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails};${alertConfig.devTeamEmails}`)
+      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
     })
     test('should return apTeamEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
       const result = getEmailAddresses(event, COHT_REVENUE)
@@ -319,16 +344,22 @@ describe('get email addresses', () => {
     test.each([
       SFI,
       SFI23,
-      SFIP,
+      SFIP
+    ])('should return opsAnalysisEmails and sfiEmails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       LUMP_SUMS
     ])('should return opsAnalysisEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
       expect(result).toBe(`${alertConfig.opsAnalysisEmails}`)
     })
 
-    test('should return opsAnalysisEmails and esfioDAXEmails for SFI_EXPANDED', () => {
+    test('should return opsAnalysisEmails, esfioDAXEmails and sfiEmails for SFI_EXPANDED', () => {
       const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails}`)
+      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails};${alertConfig.sfiEmails}`)
     })
 
     test('should return apTeamEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
@@ -391,7 +422,13 @@ describe('get email addresses', () => {
     test.each([
       SFI,
       SFI23,
-      SFIP,
+      SFIP
+    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       LUMP_SUMS
     ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
@@ -439,7 +476,13 @@ describe('get email addresses', () => {
     test.each([
       SFI,
       SFI23,
-      SFIP,
+      SFIP
+    ])('should return opsAnalysisEmails and sfiEmails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       LUMP_SUMS
     ])('should return opsAnalysisEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
@@ -487,7 +530,13 @@ describe('get email addresses', () => {
     test.each([
       SFI,
       SFI23,
-      SFIP,
+      SFIP
+    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
+    })
+
+    test.each([
       LUMP_SUMS
     ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
@@ -504,11 +553,17 @@ describe('get email addresses', () => {
     const event = RESPONSE_REJECTED
 
     test.each([
-      DELINKED,
       SFI_EXPANDED,
       SFI,
       SFI23,
-      SFIP,
+      SFIP
+    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
+      DELINKED,
       LUMP_SUMS
     ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
@@ -575,7 +630,13 @@ describe('get email addresses', () => {
     test.each([
       SFI,
       SFI23,
-      SFIP,
+      SFIP
+    ])('should return opsAnalysisEmails and sfiEmails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       LUMP_SUMS
     ])('should return opsAnalysisEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
@@ -596,9 +657,9 @@ describe('get email addresses', () => {
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)
     })
 
-    test('should return opsAnalysisEmails, devTeamEmails, and esfioDAXEmails for SFI_EXPANDED', () => {
+    test('should return opsAnalysisEmails, devTeamEmails, esfioDAXEmails and sfiEmails for SFI_EXPANDED', () => {
       const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails}`)
+      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.sfiEmails}`)
     })
 
     test('should return apTeamEmails, esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
@@ -623,7 +684,13 @@ describe('get email addresses', () => {
     test.each([
       SFI,
       SFI23,
-      SFIP,
+      SFIP
+    ])('should return opsAnalysisEmails, devTeamEmails and sfi emails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       LUMP_SUMS
     ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
@@ -642,7 +709,13 @@ describe('get email addresses', () => {
     test.each([
       SFI,
       SFI23,
-      SFIP,
+      SFIP
+    ])('should return opsAnalysis, dev and sfi emails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       LUMP_SUMS,
       DELINKED
     ])('should return opsAnalysis and dev emails for %s', (sourceSystem) => {
@@ -650,9 +723,9 @@ describe('get email addresses', () => {
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
     })
 
-    test('should return opsAnalysis, dev and esfioDAX emails for SFI_EXPANDED', () => {
+    test('should return opsAnalysis, dev, esfioDAX and sfi emails for SFI_EXPANDED', () => {
       const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails}`)
+      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.sfiEmails}`)
     })
 
     test('should return apTeamEmails, esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
@@ -686,7 +759,13 @@ describe('get email addresses', () => {
     test.each([
       SFI,
       SFI23,
-      SFIP,
+      SFIP
+    ])('should return opsAnalysis, dev and sfi emails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       LUMP_SUMS
     ])('should return opsAnalysis and dev emails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
@@ -694,11 +773,17 @@ describe('get email addresses', () => {
     })
 
     test.each([
-      DELINKED,
-      SFI_EXPANDED
+      DELINKED
     ])('should return opsAnalysis, demographics, and dev emails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
+    })
+
+    test.each([
+      SFI_EXPANDED
+    ])('should return opsAnalysis, demographics, dev and sfi emails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
     })
 
     test('should return esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
@@ -732,19 +817,31 @@ describe('get email addresses', () => {
     test.each([
       SFI,
       SFI23,
-      SFIP,
+      SFIP
+    ])('should return opsAnalysis, dev and sfi emails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
+    })
+
+    test.each([
       LUMP_SUMS
-    ])('should return opsAnalysis, demographics and dev emails for %s', (sourceSystem) => {
+    ])('should return opsAnalysis, dev emails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
     })
 
     test.each([
-      DELINKED,
-      SFI_EXPANDED
+      DELINKED
     ])('should return opsAnalysis, demographics, and dev emails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
+    })
+
+    test.each([
+      SFI_EXPANDED
+    ])('should return opsAnalysis, demographics, dev and sfi emails for %s', (sourceSystem) => {
+      const result = getEmailAddresses(event, sourceSystem)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
     })
 
     test('should return esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {

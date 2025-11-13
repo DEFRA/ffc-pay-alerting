@@ -603,9 +603,9 @@ describe('get email addresses', () => {
       expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`)
     })
 
-    test('should return opsAnalysisEmails and sfiEmails for SFI_EXPANDED', () => {
+    test('should return opsAnalysisEmails and debtEnrichmentEmails for SFI_EXPANDED', () => {
       const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`)
     })
 
     test('should return cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
@@ -631,16 +631,16 @@ describe('get email addresses', () => {
       SFI,
       SFI23,
       SFIP
-    ])('should return opsAnalysisEmails and sfiEmails for %s', (sourceSystem) => {
+    ])('should return opsAnalysisEmails and debtEnrichmentEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`)
     })
 
     test.each([
       LUMP_SUMS
-    ])('should return opsAnalysisEmails for %s', (sourceSystem) => {
+    ])('should return opsAnalysisEmails and debtEnrichmentEmails for %s', (sourceSystem) => {
       const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails}`)
+      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`)
     })
 
     test('should return debtEnrichmentEmails for unknown sourceSystem (default)', () => {

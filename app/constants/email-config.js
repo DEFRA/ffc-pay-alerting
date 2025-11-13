@@ -133,13 +133,13 @@ module.exports = {
   },
   [events.PAYMENT_REQUEST_BLOCKED]: {
     [sourceSystems.DELINKED]: `${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`,
-    [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`,
+    [sourceSystems.SFI_EXPANDED]: `${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`,
     [sourceSystems.CS]: `${alertConfig.csEmails};${alertConfig.opsAnalysisEmails}`,
     [sourceSystems.BPS]: `${alertConfig.bpsEmails};${alertConfig.opsAnalysisEmails}`,
-    [sourceSystems.SFI]: `${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`,
-    [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`,
-    [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`,
-    [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails}`,
+    [sourceSystems.SFI]: `${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`,
+    [sourceSystems.SFI23]: `${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`,
+    [sourceSystems.SFIP]: `${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`,
+    [sourceSystems.LUMP_SUMS]: `${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`,
     [sourceSystems.COHT_REVENUE]: `${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     [sourceSystems.COHT_CAPITAL]: `${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`,
     default: alertConfig.debtEnrichmentEmails

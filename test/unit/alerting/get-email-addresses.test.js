@@ -1,889 +1,111 @@
-const sharedAlertConfig = {
-  notifyApiKey: 'test-notify',
-  devTeamEmails: 'testDev@test.com',
-  debtEnrichmentEmails: 'testDebtEnrich@test.com',
-  invalidBankDetailsEmails: 'testInvalidBank@test.com',
-  coreSolutionsTeamEmails: 'testCoreSolutions@test.com',
-  sfiEmails: 'testSFI@test.com',
-  esEmails: 'testES@test.com',
-  fcEmails: 'testFC@test.com',
-  traderEmails: 'testTrader@test.com',
-  vetVisitsEmails: 'testVet@test.com',
-  opsAnalysisEmails: 'testOps@test.com',
-  financeEmails: 'testFinance@test.com',
-  demographicsEmails: 'testDemographics@test.com',
-  daxUnavailableEmails: 'testDaxUnavailable@test.com',
-  esfioDAXEmails: 'testESFIO@test.com',
-  d365UnsettledEmails: 'testD365@test.com',
-  bpsEmails: 'testBPS@test.com',
-  csEmails: 'testCS@test.com',
-  apTeamEmails: 'testAP@test.com',
-  // default to null so code treats it as absent unless a test sets it
-  pdsTeamEmails: null,
-  cshtEmails: 'testCSHT@test.com'
-}
-
-jest.mock('../../../app/config', () => ({
-  alertConfig: sharedAlertConfig
-}))
-
-jest.mock('../../../app/config/alert', () => sharedAlertConfig)
-
-const {
-  BATCH_REJECTED,
-  BATCH_QUARANTINED,
-  PAYMENT_REJECTED,
-  PAYMENT_DAX_REJECTED,
-  PAYMENT_INVALID_BANK,
-  PAYMENT_PROCESSING_FAILED,
-  PAYMENT_SETTLEMENT_UNSETTLED,
-  PAYMENT_SETTLEMENT_UNMATCHED,
-  RESPONSE_REJECTED,
-  PAYMENT_REQUEST_BLOCKED,
-  PAYMENT_DAX_UNAVAILABLE,
-  RECEIVER_CONNECTION_FAILED,
-  DEMOGRAPHICS_PROCESSING_FAILED,
-  DEMOGRAPHICS_UPDATE_FAILED,
-  EVENT_SAVE_ALERT,
-  TABLE_CREATE_ALERT
-} = require('../../../app/constants/events')
-
-const { SFI, SFIP, LUMP_SUMS, VET_VISITS, CS, BPS, FDMR, ES, FC, IMPS, SFI23, DELINKED, SFI_EXPANDED, COHT_REVENUE, COHT_CAPITAL } = require('../../../app/constants/source-systems')
-const { alertConfig } = require('../../../app/config')
+const events = require('../../../app/constants/events')
+const db = require('../../../app/data')
 const { getEmailAddresses } = require('../../../app/alerting/get-email-addresses')
 
-describe('get email addresses', () => {
+describe('getEmailAddresses (new implementation)', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    alertConfig.pdsTeamEmails = null
   })
 
-  test('pdsTeamEmails should be added if not empty', () => {
-    alertConfig.pdsTeamEmails = 'testPDS@test.com'
-
-    const result = getEmailAddresses(BATCH_REJECTED, 'UNKNOWN_SYSTEM')
-
-    expect(result).toContain(alertConfig.pdsTeamEmails)
+  const OpContains = Symbol('contains')
+  beforeAll(() => {
+    db.Sequelize = {
+      Op: {
+        contains: OpContains
+      }
+    }
   })
 
-  describe('getEmailAddresses - BATCH_REJECTED', () => {
-    const event = BATCH_REJECTED
-
-    test.each([
-      SFI,
-      SFIP,
-      SFI23
-    ])('should return sfiEmails, coreSolutionsTeamEmails, financeEmails and devTeamEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS,
-      FDMR
-    ])('should return coreSolutionsTeamEmails, financeEmails and devTeamEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return csEmails and devTeamEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return bpsEmails and devTeamEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return opsAnalysisEmails and devTeamEmails for ES', () => {
-      const result = getEmailAddresses(event, ES)
-      expect(result).toBe(`${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return opsAnalysisEmails and devTeamEmails for FC', () => {
-      const result = getEmailAddresses(event, FC)
-      expect(result).toBe(`${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return opsAnalysisEmails and devTeamEmails for IMPS', () => {
-      const result = getEmailAddresses(event, IMPS)
-      expect(result).toBe(`${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return opsAnalysisEmails and devTeamEmails for DELINKED', () => {
-      const result = getEmailAddresses(event, DELINKED)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return sfiEmails, opsAnalysisEmails and devTeamEmails for SFI_EXPANDED', () => {
-      const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return apTeamEmails, esfioDAXEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return apTeamEmails, esfioDAXEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return devTeamEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(alertConfig.devTeamEmails)
-    })
+  beforeEach(() => {
+    db.contact = {
+      findAll: jest.fn()
+    }
   })
 
-  describe('getEmailAddresses - BATCH_QUARANTINED', () => {
-    const event = BATCH_QUARANTINED
+  const mockContacts = emails => emails.map(email => ({ emailAddress: email }))
 
-    test('should return bpsEmails, devTeamEmails, and opsAnalysisEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return csEmails, devTeamEmails, and opsAnalysisEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return apTeamEmails, esfioDAXEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return apTeamEmails, esfioDAXEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test.each([
-      SFI,
-      SFI23,
-      SFIP,
-      SFI_EXPANDED
-    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test.each([
-      DELINKED,
-      LUMP_SUMS
-    ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return devTeamEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(alertConfig.devTeamEmails)
-    })
+  test('returns empty array if eventType is unknown', async () => {
+    const result = await getEmailAddresses('unknown_eventType', 1)
+    expect(result).toEqual([])
+    expect(db.contact.findAll).not.toHaveBeenCalled()
   })
 
-  describe('getEmailAddresses - PAYMENT_REJECTED', () => {
-    const event = PAYMENT_REJECTED
-
-    test.each([
-      SFI,
-      SFIP
-    ])('should return coreSolutionsTeamEmails, financeEmails, devTeamEmails, opsAnalysisEmails and sfiEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS
-    ])('should return coreSolutionsTeamEmails, financeEmails, devTeamEmails, and opsAnalysisEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return csEmails, devTeamEmails, and opsAnalysisEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return vetVisitsEmails, financeEmails, and devTeamEmails for VET_VISITS', () => {
-      const result = getEmailAddresses(event, VET_VISITS)
-      expect(result).toBe(`${alertConfig.vetVisitsEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return bpsEmails, devTeamEmails, and opsAnalysisEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test.each([
-      DELINKED
-    ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test.each([
-      SFI_EXPANDED
-    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test('should return apTeamEmails, esfioDAXEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return apTeamEmails, esfioDAXEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return coreSolutionsTeamEmails, financeEmails and devTeamEmails for DELINKED', () => {
-      const result = getEmailAddresses(event, FDMR)
-      expect(result).toBe(`${alertConfig.coreSolutionsTeamEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return esEmails, financeEmails and devTeamEmails for  for ES', () => {
-      const result = getEmailAddresses(event, ES)
-      expect(result).toBe(`${alertConfig.esEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return fcEmails, financeEmails and devTeamEmails for  for ES', () => {
-      const result = getEmailAddresses(event, FC)
-      expect(result).toBe(`${alertConfig.fcEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return traderEmails, financeEmails and devTeamEmails for  for ES', () => {
-      const result = getEmailAddresses(event, IMPS)
-      expect(result).toBe(`${alertConfig.traderEmails};${alertConfig.financeEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return devTeamEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(alertConfig.devTeamEmails)
-    })
+  test('returns empty array if schemeId is 0', async () => {
+    const result = await getEmailAddresses(events.BATCH_REJECTED, 0)
+    expect(result).toEqual([])
+    expect(db.contact.findAll).not.toHaveBeenCalled()
   })
 
-  describe('getEmailAddresses - PAYMENT_DAX_REJECTED', () => {
-    const event = PAYMENT_DAX_REJECTED
+  test('calls db.contact.findAll with correct where clause based on event and schemeId', async () => {
+    const eventType = events.PAYMENT_REJECTED
+    const schemeId = 123
 
-    test('should return bpsEmails, devTeamEmails, and opsAnalysisEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
+    db.contact.findAll.mockResolvedValueOnce(mockContacts(['a@test.com', 'b@test.com']))
 
-    test('should return csEmails, devTeamEmails, and opsAnalysisEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
+    const result = await getEmailAddresses(eventType, schemeId)
 
-    test.each([
-      SFI,
-      SFIP,
-      SFI23
-    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
+    expect(db.contact.findAll).toHaveBeenCalledWith({
+      attributes: ['emailAddress'],
+      where: {
+        removedAt: null,
+        payment_rejected: {
+          [OpContains]: [schemeId]
+        }
+      }
     })
 
-    test.each([
-      DELINKED,
-      LUMP_SUMS
-    ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return apTeamEmails, opsAnalysisEmails, devTeamEmails and sfiEmails for SFI_EXPANDED', () => {
-      const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-    test('should return apTeamEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return apTeamEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return devTeamEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(alertConfig.devTeamEmails)
-    })
+    expect(result).toEqual(['a@test.com', 'b@test.com'])
   })
 
-  describe('getEmailAddresses - PAYMENT_INVALID_BANK', () => {
-    const event = PAYMENT_INVALID_BANK
+  test('works correctly for different event types and schemeIds', async () => {
+    const testCases = [
+      { event: events.BATCH_REJECTED, key: 'batch_rejected', schemeId: 1, emails: ['x@example.com'] },
+      { event: events.DEMOGRAPHICS_UPDATE_FAILED, key: 'demographics_update_failed', schemeId: 42, emails: ['demog@test.com', 'dev@test.com'] },
+      { event: events.TABLE_CREATE_ALERT, key: 'table_create_alert', schemeId: 5, emails: [] }
+    ]
 
-    test('should return fcEmails and invalidBankDetailsEmails for FC', () => {
-      const result = getEmailAddresses(event, FC)
-      expect(result).toBe(`${alertConfig.fcEmails};${alertConfig.invalidBankDetailsEmails}`)
-    })
+    for (const { event, key, schemeId, emails } of testCases) {
+      db.contact.findAll.mockResolvedValueOnce(mockContacts(emails))
 
-    test('should return opsAnalysisEmails and bpsEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.bpsEmails}`)
-    })
+      const result = await getEmailAddresses(event, schemeId)
 
-    test('should return opsAnalysisEmails and csEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.csEmails}`)
-    })
+      expect(db.contact.findAll).toHaveBeenCalledWith({
+        attributes: ['emailAddress'],
+        where: {
+          removedAt: null,
+          [key]: {
+            [OpContains]: [schemeId]
+          }
+        }
+      })
 
-    test('should return apTeamEmails, esfioDAXEmails and opsAnalysisEmails (plus csht/dev where configured) for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return apTeamEmails, esfioDAXEmails and opsAnalysisEmails (plus csht/dev where configured) for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test.each([
-      SFI,
-      SFI23,
-      SFIP
-    ])('should return opsAnalysisEmails and sfiEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS
-    ])('should return opsAnalysisEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return opsAnalysisEmails, esfioDAXEmails and sfiEmails for SFI_EXPANDED', () => {
-      const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.esfioDAXEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test('should return apTeamEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return apTeamEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return opsAnalysisEmails and invalidBankDetailsEmails for DELINKED', () => {
-      const result = getEmailAddresses(event, DELINKED)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)
-    })
-
-    test('should return vet visits emails, opsAnalysisEmails and invalidBankDetailsEmails for VV', () => {
-      const result = getEmailAddresses(event, VET_VISITS)
-      expect(result).toBe(`${alertConfig.vetVisitsEmails};${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)
-    })
-
-    test('should return opsAnalysisEmails and invalidBankDetailsEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.invalidBankDetailsEmails}`)
-    })
+      expect(result).toEqual(emails)
+    }
   })
 
-  describe('getEmailAddresses - PAYMENT_PROCESSING_FAILED', () => {
-    const event = PAYMENT_PROCESSING_FAILED
+  test('returns empty array if no contacts found', async () => {
+    db.contact.findAll.mockResolvedValueOnce([])
 
-    test('should return opsAnalysisEmails and devTeamEmails for DELINKED', () => {
-      const result = getEmailAddresses(event, DELINKED)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
+    const result = await getEmailAddresses(events.BATCH_REJECTED, 10)
 
-    test('should return sfiEmails, opsAnalysisEmails, and devTeamEmails for SFI_EXPANDED', () => {
-      const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return apTeamEmails, esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return apTeamEmails, esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return csEmails, opsAnalysisEmails, and devTeamEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return bpsEmails, opsAnalysisEmails, and devTeamEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test.each([
-      SFI,
-      SFI23,
-      SFIP
-    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS
-    ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return devTeamEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(alertConfig.devTeamEmails)
-    })
+    expect(result).toEqual([])
   })
 
-  describe('getEmailAddresses - PAYMENT_SETTLEMENT_UNSETTLED', () => {
-    const event = PAYMENT_SETTLEMENT_UNSETTLED
-
-    test('should return csEmails and opsAnalysisEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return bpsEmails and opsAnalysisEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return opsAnalysisEmails for DELINKED', () => {
-      const result = getEmailAddresses(event, DELINKED)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return sfiEmails and opsAnalysisEmails for SFI_EXPANDED', () => {
-      const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return opsAnalysisEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails}`)
-    })
-    test('should return opsAnalysisEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test.each([
-      SFI,
-      SFI23,
-      SFIP
-    ])('should return opsAnalysisEmails and sfiEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS
-    ])('should return opsAnalysisEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return d365UnsettledEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(alertConfig.d365UnsettledEmails)
-    })
-  })
-
-  describe('getEmailAddresses - PAYMENT_SETTLEMENT_UNMATCHED', () => {
-    const event = PAYMENT_SETTLEMENT_UNMATCHED
-
-    test('should return opsAnalysisEmails and devTeamEmails for DELINKED', () => {
-      const result = getEmailAddresses(event, DELINKED)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return sfiEmails, opsAnalysisEmails, and devTeamEmails for SFI_EXPANDED', () => {
-      const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return csEmails, devTeamEmails, and opsAnalysisEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return bpsEmails, devTeamEmails, and opsAnalysisEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test.each([
-      SFI,
-      SFI23,
-      SFIP
-    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.sfiEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS
-    ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return devTeamEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(alertConfig.devTeamEmails)
-    })
-  })
-
-  describe('getEmailAddresses - RESPONSE_REJECTED', () => {
-    const event = RESPONSE_REJECTED
-
-    test.each([
-      SFI_EXPANDED,
-      SFI,
-      SFI23,
-      SFIP
-    ])('should return opsAnalysisEmails, devTeamEmails and sfiEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test.each([
-      DELINKED,
-      LUMP_SUMS
-    ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return csEmails, devTeamEmails, and opsAnalysisEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return bpsEmails, devTeamEmails, and opsAnalysisEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return devTeamEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(alertConfig.devTeamEmails)
-    })
-  })
-
-  describe('getEmailAddresses - PAYMENT_REQUEST_BLOCKED', () => {
-    const event = PAYMENT_REQUEST_BLOCKED
-
-    test('should return opsAnalysisEmails and debtEnrichmentEmails for DELINKED', () => {
-      const result = getEmailAddresses(event, DELINKED)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`)
-    })
-
-    test('should return opsAnalysisEmails and debtEnrichmentEmails for SFI_EXPANDED', () => {
-      const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`)
-    })
-
-    test('should return cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return cshtEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return csEmails and opsAnalysisEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return bpsEmails and opsAnalysisEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test.each([
-      SFI,
-      SFI23,
-      SFIP
-    ])('should return opsAnalysisEmails and debtEnrichmentEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS
-    ])('should return opsAnalysisEmails and debtEnrichmentEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.debtEnrichmentEmails}`)
-    })
-
-    test('should return debtEnrichmentEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(alertConfig.debtEnrichmentEmails)
-    })
-  })
-
-  describe('getEmailAddresses - PAYMENT_DAX_UNAVAILABLE', () => {
-    const event = PAYMENT_DAX_UNAVAILABLE
-
-    test('should return opsAnalysisEmails, devTeamEmails, and daxUnavailableEmails for DELINKED', () => {
-      const result = getEmailAddresses(event, DELINKED)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)
-    })
-
-    test('should return opsAnalysisEmails, devTeamEmails, esfioDAXEmails and sfiEmails for SFI_EXPANDED', () => {
-      const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test('should return apTeamEmails, esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return apTeamEmails, esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return csEmails, devTeamEmails, and opsAnalysisEmails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return bpsEmails, devTeamEmails, and opsAnalysisEmails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test.each([
-      SFI,
-      SFI23,
-      SFIP
-    ])('should return opsAnalysisEmails, devTeamEmails and sfi emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS
-    ])('should return opsAnalysisEmails and devTeamEmails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return devTeamEmails and daxUnavailableEmails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(`${alertConfig.devTeamEmails};${alertConfig.daxUnavailableEmails}`)
-    })
-  })
-
-  describe('getEmailAddresses - RECEIVER_CONNECTION_FAILED', () => {
-    const event = RECEIVER_CONNECTION_FAILED
-
-    test.each([
-      SFI,
-      SFI23,
-      SFIP
-    ])('should return opsAnalysis, dev and sfi emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS,
-      DELINKED
-    ])('should return opsAnalysis and dev emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return opsAnalysis, dev, esfioDAX and sfi emails for SFI_EXPANDED', () => {
-      const result = getEmailAddresses(event, SFI_EXPANDED)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test('should return apTeamEmails, esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return apTeamEmails, esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.apTeamEmails};${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return csEmails, dev and opsAnalysis emails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return bpsEmails, dev and opsAnalysis emails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return dev emails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(alertConfig.devTeamEmails)
-    })
-  })
-
-  describe('getEmailAddresses - DEMOGRAPHICS_PROCESSING_FAILED', () => {
-    const event = DEMOGRAPHICS_PROCESSING_FAILED
-
-    test.each([
-      SFI,
-      SFI23,
-      SFIP
-    ])('should return opsAnalysis, dev and sfi emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS
-    ])('should return opsAnalysis and dev emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test.each([
-      DELINKED
-    ])('should return opsAnalysis, demographics, and dev emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test.each([
-      SFI_EXPANDED
-    ])('should return opsAnalysis, demographics, dev and sfi emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test('should return esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return csEmails, dev and opsAnalysis emails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return bpsEmails, dev and opsAnalysis emails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return demographics and dev emails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(`${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
-    })
-  })
-
-  describe('getEmailAddresses - DEMOGRAPHICS_UPDATE_FAILED', () => {
-    const event = DEMOGRAPHICS_UPDATE_FAILED
-
-    test.each([
-      SFI,
-      SFI23,
-      SFIP
-    ])('should return opsAnalysis, dev and sfi emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test.each([
-      LUMP_SUMS
-    ])('should return opsAnalysis, dev emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test.each([
-      DELINKED
-    ])('should return opsAnalysis, demographics, and dev emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test.each([
-      SFI_EXPANDED
-    ])('should return opsAnalysis, demographics, dev and sfi emails for %s', (sourceSystem) => {
-      const result = getEmailAddresses(event, sourceSystem)
-      expect(result).toBe(`${alertConfig.opsAnalysisEmails};${alertConfig.demographicsEmails};${alertConfig.devTeamEmails};${alertConfig.sfiEmails}`)
-    })
-
-    test('should return esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTR', () => {
-      const result = getEmailAddresses(event, COHT_REVENUE)
-      expect(result).toBe(`${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-    test('should return esfioDAXEmails, cshtEmails, opsAnalysisEmails and devTeamEmails for COHTC', () => {
-      const result = getEmailAddresses(event, COHT_CAPITAL)
-      expect(result).toBe(`${alertConfig.esfioDAXEmails};${alertConfig.cshtEmails};${alertConfig.opsAnalysisEmails};${alertConfig.devTeamEmails}`)
-    })
-
-    test('should return csEmails, dev and opsAnalysis emails for CS', () => {
-      const result = getEmailAddresses(event, CS)
-      expect(result).toBe(`${alertConfig.csEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return bpsEmails, dev and opsAnalysis emails for BPS', () => {
-      const result = getEmailAddresses(event, BPS)
-      expect(result).toBe(`${alertConfig.bpsEmails};${alertConfig.devTeamEmails};${alertConfig.opsAnalysisEmails}`)
-    })
-
-    test('should return demographics and dev emails for unknown sourceSystem (default)', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(`${alertConfig.demographicsEmails};${alertConfig.devTeamEmails}`)
-    })
-  })
-
-  describe('getEmailAddresses - EVENT_SAVE_ALERT', () => {
-    const event = EVENT_SAVE_ALERT
-
-    test('should return dev emails for any source system', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(`${alertConfig.devTeamEmails}`)
-    })
-  })
-
-  describe('getEmailAddresses - TABLE_CREATE_ALERT', () => {
-    const event = TABLE_CREATE_ALERT
-
-    test('should return dev emails for any source system', () => {
-      const result = getEmailAddresses(event, 'UNKNOWN_SYSTEM')
-      expect(result).toBe(`${alertConfig.devTeamEmails}`)
-    })
+  test('handles multiple schemeIds as numbers and strings (schemeId as number)', async () => {
+    const schemeId = 99
+    db.contact.findAll.mockResolvedValueOnce(mockContacts(['multi@test.com']))
+
+    const result = await getEmailAddresses(events.RESPONSE_REJECTED, schemeId)
+
+    expect(db.contact.findAll).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          response_rejected: {
+            [OpContains]: [schemeId]
+          }
+        })
+      })
+    )
+    expect(result).toEqual(['multi@test.com'])
   })
 })

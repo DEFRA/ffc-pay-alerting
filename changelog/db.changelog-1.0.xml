@@ -1,0 +1,128 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="Sam Plackett" id="1">
+    <tagDatabase tag="v0.0.0" />
+  </changeSet>
+  <changeSet author="Sam Plackett" id="2">
+    <tagDatabase tag="v1.0.0" />
+  </changeSet>
+  <changeSet author="Sam Plackett" id="3">
+    <createTable tableName="schemes">
+      <column autoIncrement="true" name="schemeId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="schemeId_pkey" />
+      </column>
+      <column name="name" type="VARCHAR(50)" />
+      <column name="sourceSystem" type="VARCHAR(30)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="Sam Plackett" id="4">
+    <insert tableName="schemes">
+      <column name="schemeId" value="1" />
+      <column name="name" value="SFI-22" />
+      <column name="sourceSystem" value="SFI" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="2" />
+      <column name="name" value="SFI-Pilot" />
+      <column name="sourceSystem" value="SFIP" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="3" />
+      <column name="name" value="Lump Sum Payments" />
+      <column name="sourceSystem" value="LSES" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="4" />
+      <column name="name" value="Vet Visits" />
+      <column name="sourceSystem" value="AHWR" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="5" />
+      <column name="name" value="Countryside Stewardship" />
+      <column name="sourceSystem" value="SITI AGRI CS SYS" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="6" />
+      <column name="name" value="Basic Payment Scheme" />
+      <column name="sourceSystem" value="SITI AGRI SYS" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="7" />
+      <column name="name" value="FDMR" />
+      <column name="sourceSystem" value="FDMR" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="8" />
+      <column name="name" value="Manual Injection" />
+      <column name="sourceSystem" value="Injection" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="9" />
+      <column name="name" value="Environmental Stewardship" />
+      <column name="sourceSystem" value="Genesis" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="10" />
+      <column name="name" value="Forestry Commission" />
+      <column name="sourceSystem" value="GLOS" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="11" />
+      <column name="name" value="IMPS" />
+      <column name="sourceSystem" value="IMPS" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="12" />
+      <column name="name" value="SFI-23" />
+      <column name="sourceSystem" value="SFIA" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="13" />
+      <column name="name" value="Delinked Payments" />
+      <column name="sourceSystem" value="DP" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="14" />
+      <column name="name" value="Expanded SFI Offer" />
+      <column name="sourceSystem" value="ESFIO" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="15" />
+      <column name="name" value="Countryside Stewardship Higher Tier (Revenue)" />
+      <column name="sourceSystem" value="COHTR" />
+    </insert>
+    <insert tableName="schemes">
+      <column name="schemeId" value="16" />
+      <column name="name" value="Countryside Stewardship Higher Tier (Capital)" />
+      <column name="sourceSystem" value="COHTC" />
+    </insert>    
+  </changeSet>
+  <changeSet author="Sam Plackett" id="5">
+    <createTable tableName="contacts">
+      <column autoIncrement="true" name="contactId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="contactId_pkey" />
+      </column>
+      <column name="emailAddress" type="VARCHAR(255)" />
+      <column name="modifiedBy" type="VARCHAR(255)" />
+      <column name="modifiedAt" type="TIMESTAMP" />
+      <column name="removedBy" type="VARCHAR(255)" />
+      <column name="removedAt" type="TIMESTAMP" />
+      <column name="batch_rejected" type="INTEGER[]" />
+      <column name="batch_quarantined" type="INTEGER[]" />
+      <column name="payment_rejected" type="INTEGER[]" />
+      <column name="payment_dax_rejected" type="INTEGER[]" />
+      <column name="payment_invalid_bank" type="INTEGER[]" />
+      <column name="payment_processing_failed" type="INTEGER[]" />
+      <column name="payment_settlement_unsettled" type="INTEGER[]" />
+      <column name="payment_settlement_unmatched" type="INTEGER[]" />
+      <column name="response_rejected" type="INTEGER[]" />
+      <column name="payment_request_blocked" type="INTEGER[]" />
+      <column name="payment_dax_unavailable" type="INTEGER[]" />
+      <column name="receiver_connection_failed" type="INTEGER[]" />
+      <column name="demographics_processing_failed" type="INTEGER[]" />
+      <column name="demographics_update_failed" type="INTEGER[]" />
+      <column name="event_save_alert" type="INTEGER[]" />
+      <column name="table_create_alert" type="INTEGER[]" />
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

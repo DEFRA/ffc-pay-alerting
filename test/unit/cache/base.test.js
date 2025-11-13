@@ -6,19 +6,15 @@ const mockClient = {
   connect: mockConnect,
   disconnect: mockDisconnect
 }
-jest.mock('redis', () => {
-  return {
-    createClient: jest.fn().mockImplementation(() => {
-      return mockClient
-    })
-  }
-})
+
+jest.mock('redis', () => ({
+  createClient: jest.fn().mockImplementation(() => mockClient)
+}))
 
 const mockRedis = require('redis')
-
 const { start, stop } = require('../../../app/cache/base')
 
-describe('cache', () => {
+describe('cacheAllCases', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -33,19 +29,11 @@ describe('cache', () => {
     expect(mockConnect).toHaveBeenCalledTimes(1)
   })
 
-  test('should setup error listener on start', async () => {
-    await start()
-    expect(mockOn).toHaveBeenCalledWith('error', expect.any(Function))
-  })
+  const listenerEvents = ['error', 'reconnecting', 'ready']
 
-  test('should setup reconnecting listener on start', async () => {
+  test.each(listenerEvents)('should setup %s listener on start', async (event) => {
     await start()
-    expect(mockOn).toHaveBeenCalledWith('reconnecting', expect.any(Function))
-  })
-
-  test('should setup ready listener on start', async () => {
-    await start()
-    expect(mockOn).toHaveBeenCalledWith('ready', expect.any(Function))
+    expect(mockOn).toHaveBeenCalledWith(event, expect.any(Function))
   })
 
   test('should only setup three listeners on start', async () => {

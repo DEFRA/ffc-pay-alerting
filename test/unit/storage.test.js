@@ -3,14 +3,19 @@ jest.mock('@azure/identity')
 
 describe('storage', () => {
   let storage
-  const mockstorage = {
+
+  const mockStorageClient = {
     upload: jest.fn().mockResolvedValue({}),
     url: 'test-url'
   }
 
   const mockContainer = {
     createIfNotExists: jest.fn(),
-    getBlockBlobClient: jest.fn().mockReturnValue(mockstorage)
+    getBlockBlobClient: jest.fn().mockReturnValue(mockStorageClient)
+  }
+
+  const mockBlobServiceClient = {
+    getContainerClient: jest.fn().mockReturnValue(mockContainer)
   }
 
   const mockStorageConfig = {
@@ -23,55 +28,45 @@ describe('storage', () => {
     inboundFolder: 'test-folder'
   }
 
-  const mockBlobServiceClient = {
-    getContainerClient: jest.fn().mockReturnValue(mockContainer)
-  }
-
   beforeEach(() => {
     jest.resetModules()
     jest.clearAllMocks()
 
-    require('@azure/storage-blob').BlobServiceClient.fromConnectionString = jest
-      .fn()
-      .mockReturnValue(mockBlobServiceClient)
+    const { BlobServiceClient } = require('@azure/storage-blob')
+    BlobServiceClient.fromConnectionString = jest.fn().mockReturnValue(mockBlobServiceClient)
+    BlobServiceClient.mockImplementation(() => mockBlobServiceClient)
 
-    require('@azure/storage-blob').BlobServiceClient.mockImplementation(() => mockBlobServiceClient)
+    const { DefaultAzureCredential } = require('@azure/identity')
+    DefaultAzureCredential.mockImplementation(() => ({}))
 
-    require('@azure/identity').DefaultAzureCredential.mockImplementation(() => ({}))
-
-    jest.mock('../../app/config', () => ({
-      storageConfig: mockStorageConfig
-    }))
+    jest.mock('../../app/config', () => ({ storageConfig: mockStorageConfig }))
 
     storage = require('../../app/storage')
   })
 
   test('uses connection string when config.useConnectionStr is true', async () => {
-    expect(require('@azure/storage-blob').BlobServiceClient.fromConnectionString)
-      .toHaveBeenCalledWith(mockStorageConfig.connectionStr)
+    const { BlobServiceClient } = require('@azure/storage-blob')
+    expect(BlobServiceClient.fromConnectionString).toHaveBeenCalledWith(mockStorageConfig.connectionStr)
   })
 
   test('uses DefaultAzureCredential when config.useConnectionStr is false', async () => {
     jest.resetModules()
     mockStorageConfig.useConnectionStr = false
 
-    jest.mock('../../app/config', () => ({
-      storageConfig: mockStorageConfig
-    }))
-
+    jest.mock('../../app/config', () => ({ storageConfig: mockStorageConfig }))
     storage = require('../../app/storage')
 
-    expect(require('@azure/identity').DefaultAzureCredential).toHaveBeenCalledWith({
-      managedIdentityClientId: 'fake-client-id'
-    })
+    const { DefaultAzureCredential } = require('@azure/identity')
+    const { BlobServiceClient } = require('@azure/storage-blob')
 
-    expect(require('@azure/storage-blob').BlobServiceClient).toHaveBeenCalledWith(
+    expect(DefaultAzureCredential).toHaveBeenCalledWith({ managedIdentityClientId: 'fake-client-id' })
+    expect(BlobServiceClient).toHaveBeenCalledWith(
       `https://${mockStorageConfig.storageAccount}.blob.core.windows.net`,
       expect.any(Object)
     )
   })
 
-  test('gets outbound blob client', async () => {
+  test('gets inbound blob client', async () => {
     const result = await storage.getInboundBlobClient('test-file.txt')
     expect(result.url).toBe('test-url')
     expect(mockContainer.getBlockBlobClient).toHaveBeenCalledWith('test-folder/test-file.txt')
@@ -82,17 +77,14 @@ describe('storage', () => {
       jest.resetModules()
       mockStorageConfig.useConnectionStr = false
 
-      jest.mock('../../app/config', () => ({
-        storageConfig: mockStorageConfig
-      }))
-
+      jest.mock('../../app/config', () => ({ storageConfig: mockStorageConfig }))
       require('../../app/storage')
 
-      expect(require('@azure/storage-blob').BlobServiceClient)
-        .toHaveBeenCalledWith(
-          `https://${mockStorageConfig.storageAccount}.blob.core.windows.net`,
-          expect.any(Object)
-        )
+      const { BlobServiceClient } = require('@azure/storage-blob')
+      expect(BlobServiceClient).toHaveBeenCalledWith(
+        `https://${mockStorageConfig.storageAccount}.blob.core.windows.net`,
+        expect.any(Object)
+      )
     })
   })
 })

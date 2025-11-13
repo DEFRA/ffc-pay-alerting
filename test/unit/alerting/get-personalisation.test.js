@@ -13,7 +13,7 @@ const { getPersonalisation } = require('../../../app/alerting/get-personalisatio
 
 let event
 
-describe('get personalisation', () => {
+describe('getPersonalisationAllCases', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockGetEnvironment.mockReturnValue(TEST_NAME)
@@ -52,57 +52,34 @@ describe('get personalisation', () => {
     expect(result.timestamp).toBe('01/01/2021 00:00')
   })
 
-  test('should return frn from event data if exists', () => {
-    const result = getPersonalisation(event)
-    expect(result.frn).toBe(event.data.frn)
-  })
+  const optionalFields = [
+    ['frn', 'frn'],
+    ['invoiceNumber', 'invoiceNumber'],
+    ['contractNumber', 'contractNumber'],
+    ['paymentRequestNumber', 'paymentRequestNumber'],
+    ['context', 'context']
+  ]
 
-  test('should return unknown frn if frn does not exist in event data', () => {
-    delete event.data.frn
-    const result = getPersonalisation(event)
-    expect(result.frn).toBe(UNKNOWN)
-  })
+  test.each(optionalFields)(
+    'should return correct %s from event data or UNKNOWN if missing',
+    (key, dataKey) => {
+      // Test existing value
+      let result = getPersonalisation(event)
+      const expected = key === 'context'
+        ? event.data[dataKey] ? event.data[dataKey].charAt(0).toUpperCase() + event.data[dataKey].slice(1) : UNKNOWN
+        : event.data[dataKey] || UNKNOWN
+      expect(result[key]).toBe(expected)
 
-  test('should return invoice number from event data if exists', () => {
-    const result = getPersonalisation(event)
-    expect(result.invoiceNumber).toBe(event.data.invoiceNumber)
-  })
-
-  test('should return unknown invoice number if invoice number does not exist in event data', () => {
-    delete event.data.invoiceNumber
-    const result = getPersonalisation(event)
-    expect(result.invoiceNumber).toBe(UNKNOWN)
-  })
-
-  test('should return contract number from event data if exists', () => {
-    const result = getPersonalisation(event)
-    expect(result.contractNumber).toBe(event.data.contractNumber)
-  })
-
-  test('should return unknown contract number if contract number does not exist in event data', () => {
-    delete event.data.contractNumber
-    const result = getPersonalisation(event)
-    expect(result.contractNumber).toBe(UNKNOWN)
-  })
-
-  test('should return payment request number from event data if exists', () => {
-    const result = getPersonalisation(event)
-    expect(result.paymentRequestNumber).toBe(event.data.paymentRequestNumber)
-  })
-
-  test('should return unknown payment request number if payment request number does not exist in event data', () => {
-    delete event.data.paymentRequestNumber
-    const result = getPersonalisation(event)
-    expect(result.paymentRequestNumber).toBe(UNKNOWN)
-  })
-
-  test('should get scheme name', () => {
-    getPersonalisation(event)
-    expect(mockGetScheme).toHaveBeenCalledTimes(1)
-  })
+      // Test missing value
+      delete event.data[dataKey]
+      result = getPersonalisation(event)
+      expect(result[key]).toBe(UNKNOWN)
+    }
+  )
 
   test('should get scheme name from scheme id', () => {
     getPersonalisation(event)
+    expect(mockGetScheme).toHaveBeenCalledTimes(1)
     expect(mockGetScheme).toHaveBeenCalledWith(event.data.schemeId)
   })
 
@@ -111,52 +88,25 @@ describe('get personalisation', () => {
     expect(result.scheme).toBe(schemeNames[SFI])
   })
 
-  test('should capitalize context if it exists', () => {
-    event.data.context = 'test context'
-    const result = getPersonalisation(event)
-    expect(result.context).toBe('Test context')
-  })
-
-  test('should return unknown context if context does not exist', () => {
-    delete event.data.context
-    const result = getPersonalisation(event)
-    expect(result.context).toBe(UNKNOWN)
-  })
-
-  test('should format original event if originalEvent exists', () => {
-    event.data.originalEvent = { key1: 'value1', key2: 'value2' }
-    const result = getPersonalisation(event)
-    expect(result.originalEvent).toContain('Key1: value1')
-    expect(result.originalEvent).toContain('Key2: value2')
-  })
-
-  test('should return unknown if originalEvent is not an object', () => {
-    event.data.originalEvent = 'not an object'
-    const result = getPersonalisation(event)
-    expect(result.originalEvent).toBe(UNKNOWN)
-  })
-
-  test('should return unknown if originalEvent is null', () => {
-    event.data.originalEvent = null
-    const result = getPersonalisation(event)
-    expect(result.originalEvent).toBe(UNKNOWN)
-  })
-
-  test('should return unknown for empty originalEvent', () => {
-    event.data.originalEvent = {}
-    const result = getPersonalisation(event)
-    expect(result.originalEvent).toBe(UNKNOWN)
-  })
-
-  test('should format nested original event', () => {
-    event.data.originalEvent = { level1: { level2: { key: 'value' } } }
-    const result = getPersonalisation(event)
-    expect(result.originalEvent).toContain('Level1.Level2.Key: value')
-  })
-
-  test('should return unknown for non-object originalEvent', () => {
-    event.data.originalEvent = 12345
-    const result = getPersonalisation(event)
-    expect(result.originalEvent).toBe(UNKNOWN)
+  describe('originalEvent formatting', () => {
+    test.each([
+      [{ key1: 'value1', key2: 'value2' }, true],
+      [{}, false],
+      [null, false],
+      ['not an object', false],
+      [12345, false],
+      [{ level1: { level2: { key: 'value' } } }, true]
+    ])('should handle originalEvent: %p', (originalEvent, shouldContain) => {
+      event.data.originalEvent = originalEvent
+      const result = getPersonalisation(event)
+      if (shouldContain) {
+        const keys = JSON.stringify(originalEvent).match(/"(\w+)":/g).map(k => k.replace(/"/g, '').replace(':', ''))
+        keys.forEach(k => {
+          expect(result.originalEvent).toContain(k.charAt(0).toUpperCase() + k.slice(1))
+        })
+      } else {
+        expect(result.originalEvent).toBe(UNKNOWN)
+      }
+    })
   })
 })

@@ -14,7 +14,7 @@ const { PAYMENT_REJECTED } = require('../../../app/constants/templates')
 
 const { sendAlert } = require('../../../app/alerting/send-alert')
 
-describe('send alert', () => {
+describe('sendAlertAllCases', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockAlertConfig.sendAlerts = true

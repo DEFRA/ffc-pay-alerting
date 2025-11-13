@@ -10,33 +10,26 @@ const { VALUE } = require('../../mocks/cache/value')
 
 const { update } = require('../../../app/cache/update')
 
-describe('cache set', () => {
+describe('cacheUpdateAllCases', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    mockGet.mockResolvedValue({})
   })
 
-  test('should get existing item', async () => {
+  test('should get existing item from cache', async () => {
+    mockGet.mockResolvedValue({})
     await update(NAME, KEY, VALUE)
     expect(mockGet).toHaveBeenCalledWith(NAME, KEY)
   })
 
-  test('should set value as is if no value exists', async () => {
-    await update(NAME, KEY, VALUE)
-    expect(mockSet).toHaveBeenCalledWith(NAME, KEY, VALUE)
-  })
+  const scenarios = [
+    ['should set value as is if no existing value', {}, VALUE, VALUE],
+    ['should merge existing object with new value', { a: 1, b: 2 }, VALUE, { a: 1, b: 2, ...VALUE }],
+    ['should overwrite arrays instead of merging', { a: [1, 2, 3] }, { a: [4, 5, 6] }, { a: [4, 5, 6] }]
+  ]
 
-  test('should merge existing item with new value', async () => {
-    const existing = { a: 1, b: 2 }
+  test.each(scenarios)('%s', async (_, existing, newValue, expected) => {
     mockGet.mockResolvedValue(existing)
-    await update(NAME, KEY, VALUE)
-    expect(mockSet).toHaveBeenCalledWith(NAME, KEY, { ...existing, ...VALUE })
-  })
-
-  test('should not merge arrays', async () => {
-    const existing = { a: [1, 2, 3] }
-    mockGet.mockResolvedValue(existing)
-    await update(NAME, KEY, { a: [4, 5, 6] })
-    expect(mockSet).toHaveBeenCalledWith(NAME, KEY, { a: [4, 5, 6] })
+    await update(NAME, KEY, newValue)
+    expect(mockSet).toHaveBeenCalledWith(NAME, KEY, expected)
   })
 })

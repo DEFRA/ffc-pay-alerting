@@ -6,7 +6,7 @@ const event = require('../../mocks/event')
 
 const { getRecipients } = require('../../../app/alerting/get-recipients')
 
-describe('get recipients', () => {
+describe('getRecipientsAllCases', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockGetEmailAddresses.mockReturnValue(EMAIL)
@@ -22,32 +22,20 @@ describe('get recipients', () => {
     expect(mockGetEmailAddresses).toHaveBeenCalledWith(event.type, event.data.sourceSystem)
   })
 
-  test('should return email addresses as array', () => {
-    const result = getRecipients(event)
-    expect(result).toStrictEqual([EMAIL])
-  })
+  const emailScenarios = [
+    [EMAIL, [EMAIL]],
+    [undefined, []],
+    [`${EMAIL};${EMAIL}`, [EMAIL, EMAIL]],
+    [` ${EMAIL} ; ${EMAIL} `, [EMAIL, EMAIL]],
+    [` ${EMAIL} ;; ${EMAIL} `, [EMAIL, EMAIL]]
+  ]
 
-  test('should return empty array if no email addresses', () => {
-    mockGetEmailAddresses.mockReturnValue(undefined)
-    const result = getRecipients(event)
-    expect(result).toStrictEqual([])
-  })
-
-  test('should return array item for each email', () => {
-    mockGetEmailAddresses.mockReturnValue(`${EMAIL};${EMAIL}`)
-    const result = getRecipients(event)
-    expect(result).toStrictEqual([EMAIL, EMAIL])
-  })
-
-  test('should remove whitespace from emails', () => {
-    mockGetEmailAddresses.mockReturnValue(` ${EMAIL} ; ${EMAIL} `)
-    const result = getRecipients(event)
-    expect(result).toStrictEqual([EMAIL, EMAIL])
-  })
-
-  test('should remove empty emails', () => {
-    mockGetEmailAddresses.mockReturnValue(` ${EMAIL} ;; ${EMAIL} `)
-    const result = getRecipients(event)
-    expect(result).toStrictEqual([EMAIL, EMAIL])
-  })
+  test.each(emailScenarios)(
+    'should correctly parse emails from mock value %p',
+    (mockReturn, expected) => {
+      mockGetEmailAddresses.mockReturnValue(mockReturn)
+      const result = getRecipients(event)
+      expect(result).toStrictEqual(expected)
+    }
+  )
 })

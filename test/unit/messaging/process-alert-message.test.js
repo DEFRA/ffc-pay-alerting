@@ -58,39 +58,21 @@ describe('process event message', () => {
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
   })
 
-  test('should dead letter message if validation throws error', async () => {
-    mockValidateAlert.mockImplementation(() => {
-      const err = new Error('Validation error')
-      err.category = VALIDATION
-      throw err
-    })
-    await processAlertMessage(message, receiver)
-    expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
-  })
-
-  test('should not complete message if validation throws error', async () => {
-    mockValidateAlert.mockImplementation(() => {
-      const err = new Error('Validation error')
-      err.category = VALIDATION
-      throw err
-    })
-    await processAlertMessage(message, receiver)
-    expect(receiver.completeMessage).not.toHaveBeenCalledWith(message)
-  })
-
-  test('should not dead letter message if processing throws error', async () => {
-    mockProcessAlert.mockImplementation(() => {
+  test.each([
+    ['validation error', () => {
+      const err = new Error('Validation error'); err.category = VALIDATION; throw err
+    }, 'deadLetterMessage', true],
+    ['processing error', () => {
       throw new Error('Processing error')
-    })
+    }, 'completeMessage', false]
+  ])('should handle %s correctly', async (_, mockFn, method, shouldCall) => {
+    mockFn.name === 'validation error' ? mockValidateAlert.mockImplementation(mockFn) : mockProcessAlert.mockImplementation(mockFn)
     await processAlertMessage(message, receiver)
-    expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
-  })
-
-  test('should not complete message if processing throws error', async () => {
-    mockProcessAlert.mockImplementation(() => {
-      throw new Error('Processing error')
-    })
-    await processAlertMessage(message, receiver)
-    expect(receiver.completeMessage).not.toHaveBeenCalledWith(message)
+    const receiverMethod = receiver[method]
+    if (shouldCall) {
+      expect(receiverMethod).toHaveBeenCalledWith(message)
+    } else {
+      expect(receiverMethod).not.toHaveBeenCalledWith(message)
+    }
   })
 })

@@ -18,11 +18,10 @@ const {
 
 let event
 
-describe('process alert', () => {
+describe('processAlertAllCases', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     mockGetRecipients.mockReturnValue(RECIPIENTS)
-
     event = JSON.parse(JSON.stringify(require('../../mocks/event')))
   })
 
@@ -45,27 +44,26 @@ describe('process alert', () => {
     expect(mockGenerateReturnFile).not.toHaveBeenCalled()
   })
 
-  test('should generate return file if FC and event type matches', async () => {
-    event.data.sourceSystem = sourceSystems.FC
-    event.type = BATCH_REJECTED
-    await processAlert(event)
-    expect(mockSendAlerts).toHaveBeenCalled()
-    expect(mockGenerateReturnFile).toHaveBeenCalledWith(event)
-  })
+  const returnFileScenarios = [
+    ['should generate return file if FC and event type matches', sourceSystems.FC, BATCH_REJECTED, true],
+    ['should not generate return file if source system is not FC', 'OTHER_SYSTEM', BATCH_REJECTED, false],
+    ['should not generate return file if event type does not match', sourceSystems.FC, DEMOGRAPHICS_UPDATE_FAILED, false]
+  ]
 
-  test('should not generate return file if source system is not FC', async () => {
-    event.data.sourceSystem = 'OTHER_SYSTEM'
-    event.type = BATCH_REJECTED
-    await processAlert(event)
-    expect(mockSendAlerts).toHaveBeenCalled()
-    expect(mockGenerateReturnFile).not.toHaveBeenCalled()
-  })
+  test.each(returnFileScenarios)(
+    '%s',
+    async (_, sourceSystem, type, shouldGenerate) => {
+      event.data.sourceSystem = sourceSystem
+      event.type = type
 
-  test('should not generate return file if event type does not match', async () => {
-    event.data.sourceSystem = sourceSystems.FC
-    event.type = DEMOGRAPHICS_UPDATE_FAILED
-    await processAlert(event)
-    expect(mockSendAlerts).toHaveBeenCalled()
-    expect(mockGenerateReturnFile).not.toHaveBeenCalled()
-  })
+      await processAlert(event)
+
+      expect(mockSendAlerts).toHaveBeenCalled()
+      if (shouldGenerate) {
+        expect(mockGenerateReturnFile).toHaveBeenCalledWith(event)
+      } else {
+        expect(mockGenerateReturnFile).not.toHaveBeenCalled()
+      }
+    }
+  )
 })

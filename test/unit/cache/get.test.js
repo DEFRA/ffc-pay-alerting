@@ -15,32 +15,31 @@ const { VALUE, VALUE_STRING } = require('../../mocks/cache/value')
 
 const { get } = require('../../../app/cache/get')
 
-describe('cache get', () => {
+describe('cacheGetAllCases', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     mockGetClient.mockReturnValue(mockClient)
     mockGetFullKey.mockReturnValue(PREFIX)
-    mockClient.get.mockResolvedValue(VALUE_STRING)
   })
 
-  test('should get full key from cache with name and key', async () => {
+  test('should get full key using name and key', async () => {
     await get(NAME, KEY)
     expect(mockGetFullKey).toHaveBeenCalledWith(NAME, KEY)
   })
 
-  test('should get full key from cache', async () => {
+  test('should get value from cache using full key', async () => {
     await get(NAME, KEY)
     expect(mockClient.get).toHaveBeenCalledWith(PREFIX)
   })
 
-  test('should return value from cache', async () => {
-    const value = await get(NAME, KEY)
-    expect(value).toEqual(VALUE)
-  })
+  const valueScenarios = [
+    ['should return parsed value from cache', VALUE_STRING, VALUE],
+    ['should return empty object if cache returns null', null, {}]
+  ]
 
-  test('should return empty object if value is not in cache', async () => {
-    mockClient.get.mockResolvedValue(null)
+  test.each(valueScenarios)('%s', async (_, mockValue, expected) => {
+    mockClient.get.mockResolvedValue(mockValue)
     const value = await get(NAME, KEY)
-    expect(value).toEqual({})
+    expect(value).toEqual(expected)
   })
 })

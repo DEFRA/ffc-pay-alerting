@@ -1,65 +1,103 @@
-jest.mock('../../../app/alerting/get-email-addresses')
-jest.mock('../../../app/alerting/get-scheme-id-from-source-system')
+jest.mock('../../../app/alerting/get-email-addresses', () => ({
+  getEmailAddresses: jest.fn()
+}))
 
-const { getEmailAddresses: mockGetEmailAddresses } = require('../../../app/alerting/get-email-addresses')
-const { getSchemeIdFromSourceSystem: mockGetSchemeIdFromSourceSystem } = require('../../../app/alerting/get-scheme-id-from-source-system')
+jest.mock('../../../app/alerting/get-scheme-id-from-source-system', () => ({
+  getSchemeIdFromSourceSystem: jest.fn()
+}))
 
-const { EMAIL } = require('../../mocks/values/email')
-const event = require('../../mocks/event')
+jest.mock('../../../app/config', () => ({
+  alertConfig: {
+    pdsTeamEmails: '',
+    devTeamEmails: ''
+  }
+}))
+
+const { getEmailAddresses } = require('../../../app/alerting/get-email-addresses')
+const { getSchemeIdFromSourceSystem } = require('../../../app/alerting/get-scheme-id-from-source-system')
+const { alertConfig } = require('../../../app/config')
 
 const { getRecipients } = require('../../../app/alerting/get-recipients')
 
 describe('getRecipients', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    mockGetEmailAddresses.mockResolvedValue([EMAIL])
-    mockGetSchemeIdFromSourceSystem.mockResolvedValue(event.data.sourceSystem)
   })
 
-  test('should call getSchemeIdFromSourceSystem with event source system', async () => {
-    await getRecipients(event)
-    expect(mockGetSchemeIdFromSourceSystem).toHaveBeenCalledTimes(1)
-    expect(mockGetSchemeIdFromSourceSystem).toHaveBeenCalledWith(event.data.sourceSystem)
-  })
+  test('returns combined and trimmed email addresses from all sources', async () => {
+    const event = {
+      type: 'eventType1',
+      data: {
+        sourceSystem: 'source1'
+      }
+    }
+    getSchemeIdFromSourceSystem.mockResolvedValue('scheme123')
+    getEmailAddresses.mockResolvedValue([' user1@example.com ', 'user2@example.com'])
+    alertConfig.pdsTeamEmails = 'pds1@example.com ; pds2@example.com '
+    alertConfig.devTeamEmails = 'dev1@example.com;dev2@example.com '
 
-  test('should call getEmailAddresses with event type and schemeId', async () => {
-    await getRecipients(event)
-    expect(mockGetEmailAddresses).toHaveBeenCalledTimes(1)
-    expect(mockGetEmailAddresses).toHaveBeenCalledWith(event.type, event.data.sourceSystem)
-  })
-
-  test('should return array of trimmed emails', async () => {
-    mockGetEmailAddresses.mockResolvedValueOnce([`  ${EMAIL}  `])
     const result = await getRecipients(event)
-    expect(result).toStrictEqual([EMAIL])
+
+    expect(getSchemeIdFromSourceSystem).toHaveBeenCalledWith('source1')
+    expect(getEmailAddresses).toHaveBeenCalledWith('eventType1', 'scheme123')
+    expect(result).toEqual([
+      'user1@example.com',
+      'user2@example.com',
+      'pds1@example.com',
+      'pds2@example.com',
+      'dev1@example.com',
+      'dev2@example.com'
+    ])
   })
 
-  test('should return multiple emails split by semicolon and trimmed', async () => {
-    const multiEmails = [`  ${EMAIL}  `, ` ${EMAIL} `]
-    mockGetEmailAddresses.mockResolvedValueOnce(multiEmails)
+  test('handles missing sourceSystem gracefully', async () => {
+    const event = {
+      type: 'eventType2',
+      data: {}
+    }
+    getSchemeIdFromSourceSystem.mockResolvedValue(null)
+    getEmailAddresses.mockResolvedValue(['user@example.com'])
+    alertConfig.pdsTeamEmails = ''
+    alertConfig.devTeamEmails = ''
+
     const result = await getRecipients(event)
-    expect(result).toStrictEqual(multiEmails.map(e => e.trim()))
+
+    expect(getSchemeIdFromSourceSystem).toHaveBeenCalledWith(undefined)
+    expect(getEmailAddresses).toHaveBeenCalledWith('eventType2', null)
+    expect(result).toEqual(['user@example.com'])
   })
 
-  test('should filter out empty emails after trimming', async () => {
-    mockGetEmailAddresses.mockResolvedValueOnce([` ${EMAIL} `, ' ', '', '   '])
+  test('handles empty email addresses and team emails', async () => {
+    const event = {
+      type: 'eventType3',
+      data: {
+        sourceSystem: 'source3'
+      }
+    }
+    getSchemeIdFromSourceSystem.mockResolvedValue('scheme3')
+    getEmailAddresses.mockResolvedValue([])
+    alertConfig.pdsTeamEmails = ''
+    alertConfig.devTeamEmails = ''
+
     const result = await getRecipients(event)
-    expect(result).toStrictEqual([EMAIL])
+
+    expect(result).toEqual([])
   })
 
-  test('should add pdsTeamEmails when emailAddresses is empty array', async () => {
-    mockGetEmailAddresses.mockResolvedValueOnce([])
+  test('filters out empty and whitespace-only emails from all sources', async () => {
+    const event = {
+      type: 'eventType4',
+      data: {
+        sourceSystem: 'source4'
+      }
+    }
+    getSchemeIdFromSourceSystem.mockResolvedValue('scheme4')
+    getEmailAddresses.mockResolvedValue(['', ' ', 'valid@example.com'])
+    alertConfig.pdsTeamEmails = ' ; pds@example.com; '
+    alertConfig.devTeamEmails = '   ;dev@example.com'
+
     const result = await getRecipients(event)
-    expect(result).toContain('testpds@example.com')
-  })
 
-  test('should handle event with missing sourceSystem gracefully', async () => {
-    const eventWithoutSource = { ...event, data: {} }
-    mockGetSchemeIdFromSourceSystem.mockResolvedValueOnce(undefined)
-    mockGetEmailAddresses.mockResolvedValueOnce([EMAIL])
-    const result = await getRecipients(eventWithoutSource)
-    expect(mockGetSchemeIdFromSourceSystem).toHaveBeenCalledWith(undefined)
-    expect(mockGetEmailAddresses).toHaveBeenCalledWith(event.type, undefined)
-    expect(result).toStrictEqual([EMAIL])
+    expect(result).toEqual(['valid@example.com', 'pds@example.com', 'dev@example.com'])
   })
 })

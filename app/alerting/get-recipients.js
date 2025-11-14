@@ -5,9 +5,14 @@ const { getSchemeIdFromSourceSystem } = require('./get-scheme-id-from-source-sys
 const getRecipients = async (event) => {
   const schemeId = await getSchemeIdFromSourceSystem(event.data?.sourceSystem)
   const emailAddresses = await getEmailAddresses(event.type, schemeId)
-  if (emailAddresses.length === 0) {
-    emailAddresses.push(alertConfig.pdsTeamEmails)
-  }
+  const pdsEmails = alertConfig.pdsTeamEmails
+    ? alertConfig.pdsTeamEmails.split(';').map(email => email.trim()).filter(email => email.length)
+    : []
+  const devEmails = alertConfig.devTeamEmails
+    ? alertConfig.devTeamEmails.split(';').map(email => email.trim()).filter(email => email.length)
+    : []
+  emailAddresses.push(...pdsEmails)
+  emailAddresses.push(...devEmails)
   return emailAddresses?.map(email => email.trim()).filter(email => email.length)
 }
 

@@ -11,7 +11,7 @@ const getRecipients = async (event) => {
   const devEmails = alertConfig.devTeamEmails
     ? alertConfig.devTeamEmails.split(';').map(email => email.trim()).filter(email => email.length)
     : []
-  emailAddresses.push(...[...pdsEmails, ...devEmails])
+  emailAddresses.push(...pdsEmails, ...devEmails)
   return emailAddresses?.map(email => email.trim()).filter(email => email.length)
 }
 

@@ -14,5 +14,6 @@ module.exports = {
   DEMOGRAPHICS_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.demographics.processing.failed',
   DEMOGRAPHICS_UPDATE_FAILED: 'uk.gov.defra.ffc.pay.warning.demographics.update.failed',
   EVENT_SAVE_ALERT: 'uk.gov.defra.ffc.pay.warning.event.save.alert',
-  TABLE_CREATE_ALERT: 'uk.gov.defra.ffc.pay.warning.event.table.create.alert'
+  TABLE_CREATE_ALERT: 'uk.gov.defra.ffc.pay.warning.event.table.create.alert',
+  REPSONSES_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.responses.processing.failed'
 }

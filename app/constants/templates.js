@@ -1,5 +1,3 @@
-const { CUSTOMER_UPDATE_PROCESSING_FAILED } = require("./events");
-
 module.exports = {
   BATCH_REJECTED: '678abf78-463b-414b-ab47-f40fca95f650',
   BATCH_QUARANTINED: '0df95d07-a373-4f86-9413-820a71af7352',

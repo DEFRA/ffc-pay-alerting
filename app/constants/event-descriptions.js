@@ -74,5 +74,13 @@ module.exports = {
   REPSONSES_PROCESSING_FAILED: [
     'An error occurred when attempting to process payment responses impacting the ability to update payment statuses.',
     'The P&DS team are expected to investigate and action as appropriate.'
+  ],
+  CUSTOMER_UPDATE_PROCESSING_FAILED: [
+    'An error occurred when attempting to process customer updates impacting the ability to update customer details.',
+    'The P&DS team are expected to investigate and action as appropriate.'
+  ],
+  TRACKING_UPDATE_FAILURE: [
+    'An error occurred when attempting to update tracking information for a payment, impacting the ability to track payment progress.',
+    'The P&DS team are expected to investigate and action as appropriate.'
   ]
 }

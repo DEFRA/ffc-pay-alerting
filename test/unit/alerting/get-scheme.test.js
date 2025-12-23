@@ -5,7 +5,6 @@ const {
   VET_VISITS,
   CS,
   BPS,
-  FDMR,
   MANUAL,
   SFI23,
   DELINKED
@@ -42,11 +41,6 @@ describe('get scheme', () => {
   test('should return BPS name for BPS scheme', () => {
     const result = getScheme(BPS)
     expect(result).toBe('BPS')
-  })
-
-  test('should return FDMR name for FDMR scheme', () => {
-    const result = getScheme(FDMR)
-    expect(result).toBe('FDMR')
   })
 
   test('should return Manual Invoice name for Manual Invoice scheme', () => {

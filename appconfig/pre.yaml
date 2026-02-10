@@ -5,7 +5,8 @@ container:
   messageQueueHost: PREFFCINFSB1001.servicebus.windows.net
   azureStorageAccountName: preffcpayst1001
   endpointEnabled: true
-  redisHostname: PREFFCINFRD1001.redis.cache.windows.nete
+  redisHostname: PREFFCINFRD1001.redis.cache.windows.net
+  redisPort: 6380
   notifyApiKey: ffc_pay_alerts-822632b6-1b07-44ef-9fe0-24dc9bb99272-e0c67c78-0651-4956-8db1-26f25ef23ebb
   devTeamEmails: defra-ad2-fcp@atos.net
   pdsTeamEmails: payment-document-services@defra.gov.uk

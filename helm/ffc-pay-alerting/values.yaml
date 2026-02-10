@@ -33,7 +33,7 @@ container:
   messageQueueHost: namespace.servicebus.windows.net
   alertTopicAddress: ffc-pay-alert
   alertSubscriptionAddress: ffc-pay-alerting
-  notifyApiKey:
+  notifyApiKey: ffc_pay_alerts-822632b6-1b07-44ef-9fe0-24dc9bb99272-e0c67c78-0651-4956-8db1-26f25ef23ebb
   sendAlerts: true
   azureStorageConnectionString: dummy
   azureStorageAccountName: ffcpay

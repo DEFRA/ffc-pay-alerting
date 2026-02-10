@@ -6,6 +6,9 @@ container:
   azureStorageAccountName: prdffcpayst1001
   endpointEnabled: true
   redisHostname: PRDFFCINFRD1001.redis.cache.windows.net
+  notifyApiKey: ffc_pay_alerts_live-822632b6-1b07-44ef-9fe0-24dc9bb99272-273caaf4-326b-43de-9219-a18db3bfa2f4
+  devTeamEmails: defra-ad2-fcp@atos.net
+  pdsTeamEmails: payment-document-services@defra.gov.uk
 secretProviderClass:
   azure:
     keyvaultName: PRDFFCINFKV1001

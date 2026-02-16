@@ -35,3 +35,16 @@ extends:
     prDeployment: ${{ parameters.prDeployment }}
     branchDeployment: ${{ parameters.branchDeployment }}
     sndDeployment: ${{ parameters.sndDeployment }}
+    variableGroupName: ffc-pay-alerting-env-var
+    pr_params:
+      container.notifyApiKey: ${{ eq(variables['pr_notifyApiKey'], 'true') }}
+    snd2_params:
+      container.notifyApiKey: ${{ eq(variables['snd2_notifyApiKey'], 'true') }}
+    dev_params:
+      container.notifyApiKey: ${{ eq(variables['dev_notifyApiKey'], 'true') }}
+    test_params:
+      container.notifyApiKey: ${{ eq(variables['test_notifyApiKey'], 'true') }}
+    pre_params:
+      container.notifyApiKey: ${{ eq(variables['pre_notifyApiKey'], 'true') }}
+    prd_params:
+      container.notifyApiKey: ${{ eq(variables['prd_notifyApiKey'], 'true') }}

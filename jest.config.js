@@ -7,14 +7,18 @@ module.exports = {
   coverageDirectory: 'test-output',
   coverageReporters: [
     'text-summary',
-    'lcov'
+    'lcov',
+    'cobertura'
   ],
   coveragePathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/test-output/',
     '<rootDir>/test/',
     '<rootDir>/jest.config.js',
-    '<rootDir>/app/config'
+    '<rootDir>/app/config',
+    '<rootDir>/eslint.config.js',
+    '<rootDir>/jest.setup.js'
+
   ],
   modulePathIgnorePatterns: [
     'node_modules'
@@ -32,5 +36,6 @@ module.exports = {
   ],
   testEnvironment: 'node',
   testPathIgnorePatterns: [],
+  setupFilesAfterEnv: ['./jest.setup.js'],
   verbose: true
 }

@@ -42,4 +42,5 @@ data:
   POSTGRES_PORT: {{ quote .Values.postgresService.postgresPort }}
   POSTGRES_SCHEMA_NAME: {{ quote .Values.postgresService.postgresSchema }}
   POSTGRES_LOGGING: {{ quote .Values.postgresService.logging }}
+  POSTGRES_USERNAME: {{ .Values.postgresService.postgresUser | quote }}
 {{- end -}}

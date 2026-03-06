@@ -37,14 +37,14 @@ extends:
     sndDeployment: ${{ parameters.sndDeployment }}
     variableGroupName: ffc-pay-alerting-env-var
     pr_params:
-      container.notifyApiKey: ${{ eq(variables['pr_notifyApiKey'], 'true') }}
+      container.notifyApiKey: $('pr_notifyApiKey')
     snd2_params:
-      container.notifyApiKey: ${{ eq(variables['snd2_notifyApiKey'], 'true') }}
+      container.notifyApiKey: $('snd2_notifyApiKey')
     dev_params:
-      container.notifyApiKey: ${{ eq(variables['dev_notifyApiKey'], 'true') }}
+      container.notifyApiKey: $('dev_notifyApiKey')
     test_params:
-      container.notifyApiKey: ${{ eq(variables['test_notifyApiKey'], 'true') }}
+      container.notifyApiKey: $('test_notifyApiKey')
     pre_params:
-      container.notifyApiKey: ${{ eq(variables['pre_notifyApiKey'], 'true') }}
+      container.notifyApiKey: $('pre_notifyApiKey')
     prd_params:
-      container.notifyApiKey: ${{ eq(variables['prd_notifyApiKey'], 'true') }}
+      container.notifyApiKey: $('prd_notifyApiKey')

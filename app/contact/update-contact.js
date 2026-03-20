@@ -21,7 +21,10 @@ const updateContact = async (payload) => {
     demographics_processing_failed,
     demographics_update_failed,
     event_save_alert,
-    table_create_alert
+    table_create_alert,
+    responses_processing_failed,
+    customer_update_processing_failed,
+    tracking_update_failure
   } = payload
 
   if (contactId !== undefined && contactId !== null) {
@@ -44,7 +47,10 @@ const updateContact = async (payload) => {
       demographics_processing_failed,
       demographics_update_failed,
       event_save_alert,
-      table_create_alert
+      table_create_alert,
+      responses_processing_failed,
+      customer_update_processing_failed,
+      tracking_update_failure
     }, {
       where: {
         contactId
@@ -70,7 +76,10 @@ const updateContact = async (payload) => {
       demographics_processing_failed,
       demographics_update_failed,
       event_save_alert,
-      table_create_alert
+      table_create_alert,
+      responses_processing_failed,
+      customer_update_processing_failed,
+      tracking_update_failure
     })
   }
 }

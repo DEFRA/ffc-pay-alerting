@@ -29,7 +29,7 @@ describe('getContacts', () => {
         'payment_settlement_unsettled', 'payment_settlement_unmatched', 'response_rejected',
         'payment_request_blocked', 'payment_dax_unavailable', 'receiver_connection_failed',
         'demographics_processing_failed', 'demographics_update_failed', 'event_save_alert',
-        'table_create_alert'
+        'table_create_alert', 'responses_processing_failed', 'customer_update_processing_failed', 'tracking_update_failure'
       ]
     })
   })

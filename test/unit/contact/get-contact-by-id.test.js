@@ -37,7 +37,10 @@ test('should call db.contact.findOne with correct query', async () => {
       'demographics_processing_failed',
       'demographics_update_failed',
       'event_save_alert',
-      'table_create_alert'
+      'table_create_alert',
+      'responses_processing_failed',
+      'customer_update_processing_failed',
+      'tracking_update_failure'
     ]
   })
 })

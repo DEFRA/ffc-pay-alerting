@@ -37,14 +37,32 @@ extends:
     sndDeployment: ${{ parameters.sndDeployment }}
     variableGroupName: ffc-pay-alerting-env-var
     pr_params:
-      container.notifyApiKey: ${{ eq(variables['pr_notifyApiKey'], 'true') }}
+      container.sendAlerts: $(pr_sendAlerts)
+      container.notifyApiKey: $(pr_notifyApiKey)
+      container.devTeamEmails: $(pr_devTeamEmails)
+      container.pdsTeamEmails: $(pr_pdsTeamEmails)
     snd2_params:
-      container.notifyApiKey: ${{ eq(variables['snd2_notifyApiKey'], 'true') }}
+      container.sendAlerts: $(snd2_sendAlerts)
+      container.notifyApiKey: $(snd2_notifyApiKey)
+      container.devTeamEmails: $(snd2_devTeamEmails)
+      container.pdsTeamEmails: $(snd2_pdsTeamEmails)
     dev_params:
-      container.notifyApiKey: ${{ eq(variables['dev_notifyApiKey'], 'true') }}
+      container.sendAlerts: $(dev_sendAlerts)
+      container.notifyApiKey: $(dev_notifyApiKey)
+      container.devTeamEmails: $(dev_devTeamEmails)
+      container.pdsTeamEmails: $(dev_pdsTeamEmails)
     test_params:
-      container.notifyApiKey: ${{ eq(variables['test_notifyApiKey'], 'true') }}
+      container.sendAlerts: $(test_sendAlerts)
+      container.notifyApiKey: $(test_notifyApiKey)
+      container.devTeamEmails: $(test_devTeamEmails)
+      container.pdsTeamEmails: $(test_pdsTeamEmails)
     pre_params:
-      container.notifyApiKey: ${{ eq(variables['pre_notifyApiKey'], 'true') }}
+      container.sendAlerts: $(pre_sendAlerts)
+      container.notifyApiKey: $(pre_notifyApiKey)
+      container.devTeamEmails: $(pre_devTeamEmails)
+      container.pdsTeamEmails: $(pre_pdsTeamEmails)
     prd_params:
-      container.notifyApiKey: ${{ eq(variables['prd_notifyApiKey'], 'true') }}
+      container.sendAlerts: $(prd_sendAlerts)
+      container.notifyApiKey: $(prd_notifyApiKey)
+      container.devTeamEmails: $(prd_devTeamEmails)
+      container.pdsTeamEmails: $(prd_pdsTeamEmails)

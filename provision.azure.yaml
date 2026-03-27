@@ -2,8 +2,17 @@ resources:
   identity: pay-alerting
   postgreSql:
     name: ffc-pay-alerting
-  topics:
-    - name: ffc-pay-alert
-      role: receiver
-      subscriptions:
-        - name: ffc-pay-alerting
+  service_bus:
+    topics:
+      - name: ffc-pay-alert
+        defaultMessageTimeToLive: P3650D
+        duplicateDetectionHistoryTimeWindow: PT10M30S
+        requiresDuplicateDetection: true
+        roles: 
+        - name: receiver
+        subscriptions:
+          - name: ffc-pay-alerting
+            deadLetteringOnMessageExpiration: true
+            defaultMessageTimeToLive: P3650D
+            lockDuration: PT5M
+            maxDeliveryCount: 2000

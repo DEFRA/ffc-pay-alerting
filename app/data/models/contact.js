@@ -21,7 +21,10 @@ const contactDB = (sequelize, DataTypes) => {
     demographics_processing_failed: DataTypes.ARRAY(DataTypes.INTEGER),
     demographics_update_failed: DataTypes.ARRAY(DataTypes.INTEGER),
     event_save_alert: DataTypes.ARRAY(DataTypes.INTEGER),
-    table_create_alert: DataTypes.ARRAY(DataTypes.INTEGER)
+    table_create_alert: DataTypes.ARRAY(DataTypes.INTEGER),
+    responses_processing_failed: DataTypes.ARRAY(DataTypes.INTEGER),
+    customer_update_processing_failed: DataTypes.ARRAY(DataTypes.INTEGER),
+    tracking_update_failure: DataTypes.ARRAY(DataTypes.INTEGER)
   },
   {
     tableName: 'contacts',

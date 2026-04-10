@@ -33,5 +33,5 @@ module.exports = {
   [SFI_EXPANDED]: 'Expanded SFI Offer',
   [COHTR]: 'Combined Offer Higher Tier Revenue',
   [COHTC]: 'Combined Offer Higher Tier Capital',
-  [FPTT]: 'Future Payments Technical Test'
+  [FPTT]: 'Farm Payments Technical Test'
 }

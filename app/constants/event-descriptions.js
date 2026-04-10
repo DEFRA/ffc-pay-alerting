@@ -71,7 +71,7 @@ module.exports = {
     'An error occurred when attempting to create resources required to save events to the events storage, impacting accuracy of payment reporting.',
     'The P&DS team are expected to investigate and action as appropriate.'
   ],
-  REPSONSES_PROCESSING_FAILED: [
+  RESPONSES_PROCESSING_FAILED: [
     'An error occurred when attempting to process payment responses impacting the ability to update payment statuses.',
     'The P&DS team are expected to investigate and action as appropriate.'
   ],

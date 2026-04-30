@@ -32,7 +32,10 @@ test('should call db.contact.update when contactId is provided', async () => {
     demographics_processing_failed: false,
     demographics_update_failed: false,
     event_save_alert: false,
-    table_create_alert: false
+    table_create_alert: false,
+    responses_processing_failed: false,
+    customer_update_processing_failed: false,
+    tracking_update_failure: false
   }
 
   const beforeCall = Date.now()
@@ -67,6 +70,9 @@ test('should call db.contact.update when contactId is provided', async () => {
   expect(updateArg.demographics_update_failed).toBe(payload.demographics_update_failed)
   expect(updateArg.event_save_alert).toBe(payload.event_save_alert)
   expect(updateArg.table_create_alert).toBe(payload.table_create_alert)
+  expect(updateArg.responses_processing_failed).toBe(payload.responses_processing_failed)
+  expect(updateArg.customer_update_processing_failed).toBe(payload.customer_update_processing_failed)
+  expect(updateArg.tracking_update_failure).toBe(payload.tracking_update_failure)
 })
 
 test('should call db.contact.create when contactId is not provided', async () => {
@@ -88,7 +94,11 @@ test('should call db.contact.create when contactId is not provided', async () =>
     demographics_processing_failed: true,
     demographics_update_failed: true,
     event_save_alert: true,
-    table_create_alert: true
+    table_create_alert: true,
+    responses_processing_failed: true,
+    customer_update_processing_failed: true,
+    tracking_update_failure: true
+
   }
 
   const beforeCall = Date.now()
@@ -121,4 +131,7 @@ test('should call db.contact.create when contactId is not provided', async () =>
   expect(createArg.demographics_update_failed).toBe(payload.demographics_update_failed)
   expect(createArg.event_save_alert).toBe(payload.event_save_alert)
   expect(createArg.table_create_alert).toBe(payload.table_create_alert)
+  expect(createArg.responses_processing_failed).toBe(payload.responses_processing_failed)
+  expect(createArg.customer_update_processing_failed).toBe(payload.customer_update_processing_failed)
+  expect(createArg.tracking_update_failure).toBe(payload.tracking_update_failure)
 })

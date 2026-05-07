@@ -24,11 +24,21 @@ const receiver = {
 }
 
 describe('process event message', () => {
+  let consoleLogSpy
+  let consoleErrorSpy
+
   beforeEach(() => {
     jest.clearAllMocks()
     mockValidateAlert.mockReset()
     getCachedAlertMessage.mockReset()
     setCachedAlertMessage.mockReset()
+    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    consoleLogSpy.mockRestore()
+    consoleErrorSpy.mockRestore()
   })
 
   test('should set cached alert message if not cached', async () => {
@@ -92,5 +102,25 @@ describe('process event message', () => {
     })
     await processAlertMessage(message, receiver)
     expect(receiver.completeMessage).not.toHaveBeenCalledWith(message)
+  })
+
+  test('should log alert received with type, source and id', async () => {
+    await processAlertMessage(message, receiver)
+    expect(consoleLogSpy).toHaveBeenCalledWith(
+      `Alert received: ${mockEvent.type} from ${mockEvent.source} id: ${mockEvent.id}`
+    )
+  })
+
+  test('should log that alert was already processed when cached', async () => {
+    getCachedAlertMessage.mockResolvedValue({ some: 'data' })
+    await processAlertMessage(message, receiver)
+    expect(consoleLogSpy).toHaveBeenCalledWith('Alert already processed, ignoring.')
+  })
+
+  test('should log error when unable to process alert', async () => {
+    const err = new Error('Processing error')
+    mockProcessAlert.mockImplementation(() => { throw err })
+    await processAlertMessage(message, receiver)
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Unable to process alert:', err)
   })
 })

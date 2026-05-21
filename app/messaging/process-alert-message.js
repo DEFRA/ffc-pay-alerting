@@ -1,4 +1,3 @@
-const util = require('util')
 const { VALIDATION } = require('../constants/errors')
 const { validateAlert } = require('./validate-alert')
 const { processAlert } = require('../alerting')
@@ -8,7 +7,7 @@ const { cacheConfig } = require('../config')
 const processAlertMessage = async (message, receiver) => {
   try {
     const alert = message.body
-    console.log('Alert received:', util.inspect(alert, false, null, true))
+    console.log(`Alert received: ${alert.type} from ${alert.source} id: ${alert.id}`)
     validateAlert(alert)
 
     const { type, source, subject, data } = alert

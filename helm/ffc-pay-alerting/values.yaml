@@ -50,6 +50,7 @@ container:
   redisPartition: ffc-pay-alerting
   devTeamEmails:
   pdsTeamEmails:
+  azureLogLevel: error
 
 postgresService:
   postgresDb: ffc_pay_alerting

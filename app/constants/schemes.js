@@ -14,5 +14,6 @@ module.exports = {
   SFI_EXPANDED: 14,
   COHTR: 15,
   COHTC: 16,
-  FPTT: 17
+  FPTT: 17,
+  WMP: 18
 }

@@ -14,7 +14,8 @@ const {
   SFI_EXPANDED,
   COHTR,
   COHTC,
-  FPTT
+  FPTT,
+  WMP
 } = require('./schemes')
 
 module.exports = {
@@ -33,5 +34,6 @@ module.exports = {
   [SFI_EXPANDED]: 'Expanded SFI Offer',
   [COHTR]: 'Combined Offer Higher Tier Revenue',
   [COHTC]: 'Combined Offer Higher Tier Capital',
-  [FPTT]: 'Farm Payments Technical Test'
+  [FPTT]: 'Farm Payments Technical Test',
+  [WMP]: 'Woodland Management Plan'
 }

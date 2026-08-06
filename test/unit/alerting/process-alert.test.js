@@ -13,6 +13,7 @@ const { processAlert } = require('../../../app/alerting/process-alert')
 const sourceSystems = require('../../../app/constants/source-systems')
 const {
   BATCH_REJECTED,
+  DUPLICATE_PAYMENT,
   DEMOGRAPHICS_UPDATE_FAILED
 } = require('../../../app/constants/events')
 
@@ -50,6 +51,13 @@ describe('process alert', () => {
     event.type = BATCH_REJECTED
     await processAlert(event)
     expect(mockSendAlerts).toHaveBeenCalled()
+    expect(mockGenerateReturnFile).toHaveBeenCalledWith(event)
+  })
+
+  test('should generate return file for duplicate payment if FC', async () => {
+    event.data.sourceSystem = sourceSystems.FC
+    event.type = DUPLICATE_PAYMENT
+    await processAlert(event)
     expect(mockGenerateReturnFile).toHaveBeenCalledWith(event)
   })
 

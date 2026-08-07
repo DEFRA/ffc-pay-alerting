@@ -6,6 +6,7 @@ const { generateReturnFile } = require('./generate-return-file')
 const {
   BATCH_REJECTED,
   BATCH_QUARANTINED,
+  DUPLICATE_PAYMENT,
   PAYMENT_REJECTED,
   PAYMENT_PROCESSING_FAILED,
   PAYMENT_DAX_REJECTED,
@@ -25,6 +26,7 @@ const processAlert = async (event) => {
     [
       BATCH_REJECTED,
       BATCH_QUARANTINED,
+      DUPLICATE_PAYMENT,
       PAYMENT_REJECTED,
       PAYMENT_PROCESSING_FAILED,
       PAYMENT_DAX_REJECTED,

@@ -1,6 +1,7 @@
 module.exports = {
   BATCH_REJECTED: 'uk.gov.defra.ffc.pay.warning.batch.rejected',
   BATCH_QUARANTINED: 'uk.gov.defra.ffc.pay.warning.batch.quarantined',
+  DUPLICATE_PAYMENT: 'uk.gov.defra.ffc.pay.warning.duplicate.payment',
   PAYMENT_REJECTED: 'uk.gov.defra.ffc.pay.warning.payment.rejected',
   PAYMENT_DAX_REJECTED: 'uk.gov.defra.ffc.pay.warning.payment.dax.rejected',
   PAYMENT_INVALID_BANK: 'uk.gov.defra.ffc.pay.warning.bank.missing',

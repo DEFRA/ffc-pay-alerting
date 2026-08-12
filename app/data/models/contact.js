@@ -8,6 +8,7 @@ const contactDB = (sequelize, DataTypes) => {
     removedAt: DataTypes.DATE,
     batch_rejected: DataTypes.ARRAY(DataTypes.INTEGER),
     batch_quarantined: DataTypes.ARRAY(DataTypes.INTEGER),
+    duplicate_payment: DataTypes.ARRAY(DataTypes.INTEGER),
     payment_rejected: DataTypes.ARRAY(DataTypes.INTEGER),
     payment_dax_rejected: DataTypes.ARRAY(DataTypes.INTEGER),
     payment_invalid_bank: DataTypes.ARRAY(DataTypes.INTEGER),

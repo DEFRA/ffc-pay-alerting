@@ -24,6 +24,7 @@ test('should call db.contact.findOne with correct query', async () => {
       'emailAddress',
       'batch_rejected',
       'batch_quarantined',
+      'duplicate_payment',
       'payment_rejected',
       'payment_dax_rejected',
       'payment_invalid_bank',

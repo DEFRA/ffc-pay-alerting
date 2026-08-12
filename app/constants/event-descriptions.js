@@ -9,6 +9,10 @@ module.exports = {
     'This suggests there is an issue with the data, for instance the batch file is telling us there should be two payments in the file, but there are only details of one.',
     'Scheme Owners are expected to review the file and resubmit.'
   ],
+  DUPLICATE_PAYMENT: [
+    'A duplicate payment has been detected.',
+    'Scheme Owners are expected to review the file.'
+  ],
   PAYMENT_REJECTED: [
     'A specific payment request has been rejected for a given reason.',
     'This suggests a specific payment in a batch has an issue, for instance the total value of a payment request is different to the total value of invoice lines, or there are no invoice lines.',

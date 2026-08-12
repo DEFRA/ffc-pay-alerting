@@ -6,6 +6,7 @@ const prepareContactData = (payload) => ({
   modifiedAt: Date.now(),
   batch_rejected: payload.batch_rejected,
   batch_quarantined: payload.batch_quarantined,
+  duplicate_payment: payload.duplicate_payment,
   payment_rejected: payload.payment_rejected,
   payment_dax_rejected: payload.payment_dax_rejected,
   payment_invalid_bank: payload.payment_invalid_bank,

@@ -1,0 +1,60 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="Sam Plackett" id="1">
+    <tagDatabase tag="v1.7.0" />
+  </changeSet>
+  <changeSet author="Sam Plackett" id="2">
+    <update tableName="schemes">
+      <column name="name" value="SFI 22" />
+      <where>"schemeId" = 1</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="SFI Pilot" />
+      <where>"schemeId" = 2</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="Lump Sums" />
+      <where>"schemeId" = 3</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="Annual Health and Welfare Review" />
+      <where>"schemeId" = 4</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="CS" />
+      <where>"schemeId" = 5</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="BPS" />
+      <where>"schemeId" = 6</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="Manual Invoice" />
+      <where>"schemeId" = 8</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="ES" />
+      <where>"schemeId" = 9</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="FC" />
+      <where>"schemeId" = 10</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="SFI23" />
+      <where>"schemeId" = 12</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="Delinked" />
+      <where>"schemeId" = 13</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="COHT Revenue" />
+      <where>"schemeId" = 15</where>
+    </update>
+    <update tableName="schemes">
+      <column name="name" value="COHT Capital" />
+      <where>"schemeId" = 16</where>
+    </update>
+  </changeSet>
+</databaseChangeLog>

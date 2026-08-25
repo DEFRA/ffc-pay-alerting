@@ -1,10 +1,11 @@
 const boom = require('@hapi/boom')
 const removeSchema = require('../../../../app/server/routes/schemas/remove-contact')
 const routes = require('../../../../app/server/routes/contact')
+const schemeNames = require('../../../../app/constants/scheme-names')
 const {
   removeContactById,
   updateContact,
-  getContacts,
+  getContactsByScheme,
   getAlertTypes,
   getAlertDescriptions,
   getContactById,
@@ -16,7 +17,7 @@ const ok = require('../../../../app/constants/ok')
 jest.mock('../../../../app/contact', () => ({
   removeContactById: jest.fn(),
   updateContact: jest.fn(),
-  getContacts: jest.fn(),
+  getContactsByScheme: jest.fn(),
   getAlertTypes: jest.fn(),
   getAlertDescriptions: jest.fn(),
   getContactById: jest.fn(),
@@ -34,17 +35,18 @@ describe('Contact Routes', () => {
     }
   })
 
-  describe('GET /contact-list', () => {
-    const route = routes.find(r => r.path === '/contact-list')
+  describe('GET /contact-list/by-scheme/{schemeId}', () => {
+    const route = routes.find(r => r.path === '/contact-list/by-scheme/{schemeId}')
 
-    test('should respond with contacts', async () => {
+    test('should respond with contacts and schemeName', async () => {
       const fakeContacts = [{ id: 1 }, { id: 2 }]
-      getContacts.mockResolvedValue(fakeContacts)
+      getContactsByScheme.mockResolvedValue(fakeContacts)
 
-      await route.options.handler({}, hMock)
+      const request = { params: { schemeId: 5 } }
+      await route.options.handler(request, hMock)
 
-      expect(getContacts).toHaveBeenCalled()
-      expect(hMock.response).toHaveBeenCalledWith({ contacts: fakeContacts })
+      expect(getContactsByScheme).toHaveBeenCalledWith(5)
+      expect(hMock.response).toHaveBeenCalledWith({ contacts: fakeContacts, schemeName: schemeNames[5] })
     })
   })
 
@@ -76,13 +78,14 @@ describe('Contact Routes', () => {
     })
   })
 
-  describe('GET /contact/contactId/{contactId}', () => {
-    const route = routes.find(r => r.path === '/contact/contactId/{contactId}')
+  describe('GET /contact/{contactIdentifier}', () => {
+    const route = routes.find(r => r.path === '/contact/{contactIdentifier}')
 
-    test('should validate params with Joi', () => {
+    test('should validate params with Joi alternatives', () => {
       const schema = route.options.validate.params
-      expect(() => schema.validate({ contactId: 123 })).not.toThrow()
-      const { error } = schema.validate({ contactId: 'not-a-number' })
+      expect(() => schema.validate({ contactIdentifier: 123 })).not.toThrow()
+      expect(() => schema.validate({ contactIdentifier: 'test@example.com' })).not.toThrow()
+      const { error } = schema.validate({ contactIdentifier: 'not-a-valid-email' })
       expect(error).toBeDefined()
     })
 
@@ -92,11 +95,11 @@ describe('Contact Routes', () => {
         .toThrow(boom.Boom)
     })
 
-    test('should fetch contact and respond with 200 when found', async () => {
+    test('should fetch contact by id and respond with 200 when found', async () => {
       const fakeContact = { contactId: 1, name: 'John' }
       getContactById.mockResolvedValue(fakeContact)
 
-      const request = { params: { contactId: 1 } }
+      const request = { params: { contactIdentifier: 1 } }
       await route.options.handler(request, hMock)
 
       expect(getContactById).toHaveBeenCalledWith(1)
@@ -104,18 +107,30 @@ describe('Contact Routes', () => {
       expect(hMock.code).toHaveBeenCalledWith(OK_STATUS)
     })
 
+    test('should fetch contact by email and respond with 200 when found', async () => {
+      const fakeContact = { contactId: 1, emailAddress: 'test@example.com' }
+      getContactByEmail.mockResolvedValue(fakeContact)
+
+      const request = { params: { contactIdentifier: 'test@example.com' } }
+      await route.options.handler(request, hMock)
+
+      expect(getContactByEmail).toHaveBeenCalledWith('test@example.com')
+      expect(hMock.response).toHaveBeenCalledWith({ contact: fakeContact })
+      expect(hMock.code).toHaveBeenCalledWith(OK_STATUS)
+    })
+
     test('should throw notFound error when contact not found', async () => {
       getContactById.mockResolvedValue(null)
-      const request = { params: { contactId: 999 } }
+      const request = { params: { contactIdentifier: 999 } }
 
-      await expect(route.options.handler(request, hMock)).rejects.toThrow(boom.notFound('Contact with ID 999 not found').output.payload.message)
+      await expect(route.options.handler(request, hMock)).rejects.toThrow(boom.notFound('Contact with identifier 999 not found').output.payload.message)
     })
 
     test('should propagate boom errors', async () => {
       const boomError = boom.badRequest('Bad request')
       getContactById.mockRejectedValue(boomError)
 
-      const request = { params: { contactId: 1 } }
+      const request = { params: { contactIdentifier: 1 } }
       await expect(route.options.handler(request, hMock)).rejects.toBe(boomError)
     })
   })

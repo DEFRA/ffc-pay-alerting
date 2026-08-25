@@ -1,18 +1,30 @@
 const Joi = require('joi')
 const boom = require('@hapi/boom')
 const removeSchema = require('./schemas/remove-contact')
-const { removeContactById, updateContact, getContacts, getAlertTypes, getAlertDescriptions, getContactById, getContactByEmail } = require('../../contact')
+const { removeContactById, updateContact, getContactsByScheme, getAlertTypes, getAlertDescriptions, getContactById, getContactByEmail } = require('../../contact')
 const { OK } = require('../../constants/ok')
 const { OK: OK_STATUS } = require('../../constants/status')
+const schemeNames = require('../../constants/scheme-names')
 
 module.exports = [{
   method: 'GET',
-  path: '/contact-list',
+  path: '/contact-list/by-scheme/{schemeId}',
   options: {
-    handler: async (_request, h) => {
-      const contacts = await getContacts()
+    validate: {
+      params: Joi.object({
+        schemeId: Joi.number().integer().required()
+      }),
+      failAction: (_request, _h, error) => {
+        throw boom.badRequest(error.details[0].message)
+      }
+    },
+    handler: async (request, h) => {
+      const { schemeId } = request.params
+      const contacts = await getContactsByScheme(schemeId)
+      const schemeName = schemeNames[schemeId]
       return h.response({
-        contacts
+        contacts,
+        schemeName
       })
     }
   }
@@ -40,24 +52,29 @@ module.exports = [{
   }
 }, {
   method: 'GET',
-  path: '/contact/contactId/{contactId}',
+  path: '/contact/{contactIdentifier}',
   options: {
     validate: {
       params: Joi.object({
-        contactId: Joi.number().integer().required()
+        contactIdentifier: Joi.alternatives().try(
+          Joi.number().integer().required(),
+          Joi.string().email().required()
+        )
       }),
       failAction: (_request, _h, error) => {
         throw boom.badRequest(error.details[0].message)
       }
     },
     handler: async (request, h) => {
-      const { contactId } = request.params
+      const { contactIdentifier } = request.params
 
       try {
-        const contact = await getContactById(contactId)
+        const contact = typeof contactIdentifier === 'string'
+          ? await getContactByEmail(contactIdentifier)
+          : await getContactById(contactIdentifier)
 
         if (!contact) {
-          throw boom.notFound(`Contact with ID ${contactId} not found`)
+          throw boom.notFound(`Contact with identifier ${contactIdentifier} not found`)
         }
 
         return h.response({ contact }).code(OK_STATUS)

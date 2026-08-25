@@ -13,9 +13,9 @@ const {
 const { getScheme } = require('../../../app/alerting/get-scheme')
 
 describe('get scheme', () => {
-  test('should return SFI name for SFI scheme', () => {
+  test('should return SFI 22 name for SFI scheme', () => {
     const result = getScheme(SFI)
-    expect(result).toBe('SFI')
+    expect(result).toBe('SFI 22')
   })
 
   test('should return SFI Pilot name for SFI Pilot scheme', () => {
@@ -28,9 +28,9 @@ describe('get scheme', () => {
     expect(result).toBe('Lump Sums')
   })
 
-  test('should return Vet Visits name for Vet Visits scheme', () => {
+  test('should return Annual Health and Welfare Review name for Vet Visits scheme', () => {
     const result = getScheme(VET_VISITS)
-    expect(result).toBe('Vet Visits')
+    expect(result).toBe('Annual Health and Welfare Review')
   })
 
   test('should return Countryside Stewardship name for Countryside Stewardship scheme', () => {

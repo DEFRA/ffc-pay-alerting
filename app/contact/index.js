@@ -2,7 +2,7 @@ const { getAlertDescriptions } = require('./get-alert-descriptions')
 const { getAlertTypes } = require('./get-alert-types')
 const { getContactByEmail } = require('./get-contact-by-email')
 const { getContactById } = require('./get-contact-by-id')
-const { getContacts } = require('./get-contacts')
+const { getContactsByScheme } = require('./get-contacts-by-scheme')
 const { removeContactById } = require('./remove-contact-by-id')
 const { updateContact } = require('./update-contact')
 
@@ -11,7 +11,7 @@ module.exports = {
   getAlertTypes,
   getContactByEmail,
   getContactById,
-  getContacts,
+  getContactsByScheme,
   removeContactById,
   updateContact
 }

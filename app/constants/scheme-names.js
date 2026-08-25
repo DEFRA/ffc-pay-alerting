@@ -19,10 +19,10 @@ const {
 } = require('./schemes')
 
 module.exports = {
-  [SFI]: 'SFI',
+  [SFI]: 'SFI 22',
   [SFIP]: 'SFI Pilot',
   [LUMP_SUMS]: 'Lump Sums',
-  [VET_VISITS]: 'Vet Visits',
+  [VET_VISITS]: 'Annual Health and Welfare Review',
   [CS]: 'Countryside Stewardship',
   [BPS]: 'BPS',
   [MANUAL]: 'Manual Invoice',

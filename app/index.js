@@ -3,6 +3,7 @@ require('log-timestamp')
 const { start: startMessaging, stop: stopMessaging } = require('./messaging')
 const { start: startCache, stop: stopCache } = require('./cache')
 const { start: startServer } = require('./server')
+const { updateSchemesDatabase } = require('./update-schemes-database')
 
 process.on(['SIGTERM', 'SIGINT'], async () => {
   await stopCache()
@@ -13,5 +14,6 @@ process.on(['SIGTERM', 'SIGINT'], async () => {
 module.exports = (async () => {
   await startCache()
   await startServer()
+  await updateSchemesDatabase()
   await startMessaging()
 })()

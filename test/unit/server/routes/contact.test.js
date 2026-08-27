@@ -1,7 +1,19 @@
 const boom = require('@hapi/boom')
+
+jest.mock('ffc-pay-schemes', () => {
+  const actual = jest.requireActual('ffc-pay-schemes')
+
+  return {
+    ...actual,
+    getSchemeName: jest.fn()
+  }
+})
+
+const { getSchemeName: mockGetSchemeName } = require('ffc-pay-schemes')
+
 const removeSchema = require('../../../../app/server/routes/schemas/remove-contact')
 const routes = require('../../../../app/server/routes/contact')
-const schemeNames = require('../../../../app/constants/scheme-names')
+
 const {
   removeContactById,
   updateContact,
@@ -11,8 +23,10 @@ const {
   getContactById,
   getContactByEmail
 } = require('../../../../app/contact')
+
 const { OK: OK_STATUS } = require('../../../../app/constants/status')
 const ok = require('../../../../app/constants/ok')
+const { UNKNOWN } = require('../../../../app/constants/unknown')
 
 jest.mock('../../../../app/contact', () => ({
   removeContactById: jest.fn(),
@@ -38,15 +52,49 @@ describe('Contact Routes', () => {
   describe('GET /contact-list/by-scheme/{schemeId}', () => {
     const route = routes.find(r => r.path === '/contact-list/by-scheme/{schemeId}')
 
-    test('should respond with contacts and schemeName', async () => {
+    test('should validate schemeId as a required integer', () => {
+      const schema = route.options.validate.params
+
+      expect(schema.validate({ schemeId: 5 }).error).toBeUndefined()
+      expect(schema.validate({ schemeId: 1.5 }).error).toBeDefined()
+      expect(schema.validate({}).error).toBeDefined()
+    })
+
+    test('should respond with contacts and scheme name', async () => {
       const fakeContacts = [{ id: 1 }, { id: 2 }]
       getContactsByScheme.mockResolvedValue(fakeContacts)
+      mockGetSchemeName.mockReturnValue('Countryside Stewardship')
 
       const request = { params: { schemeId: 5 } }
       await route.options.handler(request, hMock)
 
       expect(getContactsByScheme).toHaveBeenCalledWith(5)
-      expect(hMock.response).toHaveBeenCalledWith({ contacts: fakeContacts, schemeName: schemeNames[5] })
+      expect(mockGetSchemeName).toHaveBeenCalledWith(5)
+      expect(hMock.response).toHaveBeenCalledWith({
+        contacts: fakeContacts,
+        schemeName: 'Countryside Stewardship'
+      })
+    })
+
+    test('should return unknown when the scheme name does not exist', async () => {
+      getContactsByScheme.mockResolvedValue([])
+      mockGetSchemeName.mockReturnValue(undefined)
+
+      const request = { params: { schemeId: 999 } }
+
+      await route.options.handler(request, hMock)
+
+      expect(hMock.response).toHaveBeenCalledWith({
+        contacts: [],
+        schemeName: UNKNOWN
+      })
+    })
+
+    test('should throw badRequest on validation failure', () => {
+      const fakeError = { details: [{ message: 'fail message' }] }
+
+      expect(() => route.options.validate.failAction({}, {}, fakeError))
+        .toThrow(boom.Boom)
     })
   })
 
@@ -59,8 +107,10 @@ describe('Contact Routes', () => {
 
       await route.options.handler({}, hMock)
 
-      expect(getAlertTypes).toHaveBeenCalled()
-      expect(hMock.response).toHaveBeenCalledWith({ alertTypes: fakeAlertTypes })
+      expect(getAlertTypes).toHaveBeenCalledTimes(1)
+      expect(hMock.response).toHaveBeenCalledWith({
+        alertTypes: fakeAlertTypes
+      })
     })
   })
 
@@ -73,8 +123,10 @@ describe('Contact Routes', () => {
 
       await route.options.handler({}, hMock)
 
-      expect(getAlertDescriptions).toHaveBeenCalled()
-      expect(hMock.response).toHaveBeenCalledWith({ alertDescriptions: fakeAlertDescriptions })
+      expect(getAlertDescriptions).toHaveBeenCalledTimes(1)
+      expect(hMock.response).toHaveBeenCalledWith({
+        alertDescriptions: fakeAlertDescriptions
+      })
     })
   })
 
@@ -83,13 +135,13 @@ describe('Contact Routes', () => {
 
     test('should validate params with Joi alternatives', () => {
       const schema = route.options.validate.params
-      expect(() => schema.validate({ contactIdentifier: 123 })).not.toThrow()
-      expect(() => schema.validate({ contactIdentifier: 'test@example.com' })).not.toThrow()
-      const { error } = schema.validate({ contactIdentifier: 'not-a-valid-email' })
-      expect(error).toBeDefined()
+
+      expect(schema.validate({ contactIdentifier: 123 }).error).toBeUndefined()
+      expect(schema.validate({ contactIdentifier: 'test@example.com' }).error).toBeUndefined()
+      expect(schema.validate({ contactIdentifier: 'not-a-valid-email' }).error).toBeDefined()
     })
 
-    test('should throw badRequest on validation fail', () => {
+    test('should throw badRequest on validation failure', () => {
       const fakeError = { details: [{ message: 'fail message' }] }
       expect(() => route.options.validate.failAction({}, {}, fakeError))
         .toThrow(boom.Boom)
@@ -119,11 +171,12 @@ describe('Contact Routes', () => {
       expect(hMock.code).toHaveBeenCalledWith(OK_STATUS)
     })
 
-    test('should throw notFound error when contact not found', async () => {
+    test('should throw notFound when contact is not found', async () => {
       getContactById.mockResolvedValue(null)
       const request = { params: { contactIdentifier: 999 } }
 
-      await expect(route.options.handler(request, hMock)).rejects.toThrow(boom.notFound('Contact with identifier 999 not found').output.payload.message)
+      await expect(route.options.handler(request, hMock))
+        .rejects.toThrow('Contact with identifier 999 not found')
     })
 
     test('should propagate boom errors', async () => {
@@ -131,7 +184,20 @@ describe('Contact Routes', () => {
       getContactById.mockRejectedValue(boomError)
 
       const request = { params: { contactIdentifier: 1 } }
-      await expect(route.options.handler(request, hMock)).rejects.toBe(boomError)
+
+      await expect(route.options.handler(request, hMock))
+        .rejects.toBe(boomError)
+    })
+
+    test('should return an internal error for non-boom errors', async () => {
+      getContactById.mockRejectedValue(new Error('Database failure'))
+
+      const request = { params: { contactIdentifier: 1 } }
+
+      await expect(route.options.handler(request, hMock))
+        .rejects.toMatchObject({
+          output: { statusCode: 500 }
+        })
     })
   })
 
@@ -140,12 +206,12 @@ describe('Contact Routes', () => {
 
     test('should validate params with Joi', () => {
       const schema = route.options.validate.params
-      expect(() => schema.validate({ emailAddress: 'test@example.com' })).not.toThrow()
-      const { error } = schema.validate({ emailAddress: 'invalid-email' })
-      expect(error).toBeDefined()
+
+      expect(schema.validate({ emailAddress: 'test@example.com' }).error).toBeUndefined()
+      expect(schema.validate({ emailAddress: 'invalid-email' }).error).toBeDefined()
     })
 
-    test('should throw badRequest on validation fail', () => {
+    test('should throw badRequest on validation failure', () => {
       const fakeError = { details: [{ message: 'fail message' }] }
       expect(() => route.options.validate.failAction({}, {}, fakeError))
         .toThrow(boom.Boom)
@@ -168,19 +234,31 @@ describe('Contact Routes', () => {
       getContactByEmail.mockRejectedValue(boomError)
 
       const request = { params: { emailAddress: 'test@example.com' } }
-      await expect(route.options.handler(request, hMock)).rejects.toBe(boomError)
+
+      await expect(route.options.handler(request, hMock))
+        .rejects.toBe(boomError)
+    })
+
+    test('should return an internal error for non-boom errors', async () => {
+      getContactByEmail.mockRejectedValue(new Error('Database failure'))
+
+      const request = { params: { emailAddress: 'test@example.com' } }
+
+      await expect(route.options.handler(request, hMock))
+        .rejects.toMatchObject({
+          output: { statusCode: 500 }
+        })
     })
   })
 
   describe('POST /update-contact', () => {
     const route = routes.find(r => r.path === '/update-contact')
 
-    test('should call updateContact and respond with "ok"', async () => {
-      updateContact.mockResolvedValue()
+    test('should call updateContact and respond with ok', async () => {
       const payload = { some: 'data' }
-      const request = { payload }
+      updateContact.mockResolvedValue()
 
-      await route.options.handler(request, hMock)
+      await route.options.handler({ payload }, hMock)
 
       expect(updateContact).toHaveBeenCalledWith(payload)
       expect(hMock.response).toHaveBeenCalledWith('ok')
@@ -191,29 +269,33 @@ describe('Contact Routes', () => {
   describe('POST /remove-contact', () => {
     const route = routes.find(r => r.path === '/remove-contact')
 
-    test('should validate payload with removeSchema', () => {
+    test('should validate a valid payload', () => {
       const validPayload = { contactId: 123, removedBy: 'admin' }
-      const { error } = removeSchema.validate(validPayload)
-      expect(error).toBeUndefined()
 
-      const invalidPayload = { contactId: 123 }
-      const { error: error2 } = removeSchema.validate(invalidPayload)
-      expect(error2).toBeDefined()
+      expect(removeSchema.validate(validPayload).error).toBeUndefined()
     })
 
-    test('should call removeContactById and respond with OK constant', async () => {
-      removeContactById.mockResolvedValue()
+    test('should reject an invalid payload', () => {
+      const invalidPayload = { contactId: 123 }
+
+      expect(removeSchema.validate(invalidPayload).error).toBeDefined()
+    })
+
+    test('should call removeContactById and respond with OK', async () => {
       const payload = { contactId: 1, removedBy: 'admin' }
-      const request = { payload }
+      removeContactById.mockResolvedValue()
 
-      await route.options.handler(request, hMock)
+      await route.options.handler({ payload }, hMock)
 
-      expect(removeContactById).toHaveBeenCalledWith(payload.contactId, payload.removedBy)
+      expect(removeContactById).toHaveBeenCalledWith(
+        payload.contactId,
+        payload.removedBy
+      )
       expect(hMock.response).toHaveBeenCalledWith(ok.OK)
       expect(hMock.code).toHaveBeenCalledWith(OK_STATUS)
     })
 
-    test('should throw badRequest on validation fail', () => {
+    test('should return badRequest on validation failure', () => {
       const fakeError = new Error('fail')
       const result = route.options.validate.failAction({}, {}, fakeError)
       expect(result.isBoom).toBe(true)

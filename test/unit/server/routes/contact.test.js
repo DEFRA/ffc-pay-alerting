@@ -26,7 +26,6 @@ const {
 
 const { OK: OK_STATUS } = require('../../../../app/constants/status')
 const ok = require('../../../../app/constants/ok')
-const { UNKNOWN } = require('../../../../app/constants/unknown')
 
 jest.mock('../../../../app/contact', () => ({
   removeContactById: jest.fn(),

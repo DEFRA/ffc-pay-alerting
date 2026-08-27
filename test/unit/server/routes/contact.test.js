@@ -5,11 +5,11 @@ jest.mock('ffc-pay-schemes', () => {
 
   return {
     ...actual,
-    getSchemeName: jest.fn()
+    getSchemeNameFromSchemeId: jest.fn()
   }
 })
 
-const { getSchemeName: mockGetSchemeName } = require('ffc-pay-schemes')
+const { getSchemeNameFromSchemeId: mockgetSchemeNameFromSchemeId } = require('ffc-pay-schemes')
 
 const removeSchema = require('../../../../app/server/routes/schemas/remove-contact')
 const routes = require('../../../../app/server/routes/contact')
@@ -63,30 +63,16 @@ describe('Contact Routes', () => {
     test('should respond with contacts and scheme name', async () => {
       const fakeContacts = [{ id: 1 }, { id: 2 }]
       getContactsByScheme.mockResolvedValue(fakeContacts)
-      mockGetSchemeName.mockReturnValue('Countryside Stewardship')
+      mockgetSchemeNameFromSchemeId.mockReturnValue('Countryside Stewardship')
 
       const request = { params: { schemeId: 5 } }
       await route.options.handler(request, hMock)
 
       expect(getContactsByScheme).toHaveBeenCalledWith(5)
-      expect(mockGetSchemeName).toHaveBeenCalledWith(5)
+      expect(mockgetSchemeNameFromSchemeId).toHaveBeenCalledWith(5)
       expect(hMock.response).toHaveBeenCalledWith({
         contacts: fakeContacts,
         schemeName: 'Countryside Stewardship'
-      })
-    })
-
-    test('should return unknown when the scheme name does not exist', async () => {
-      getContactsByScheme.mockResolvedValue([])
-      mockGetSchemeName.mockReturnValue(undefined)
-
-      const request = { params: { schemeId: 999 } }
-
-      await route.options.handler(request, hMock)
-
-      expect(hMock.response).toHaveBeenCalledWith({
-        contacts: [],
-        schemeName: UNKNOWN
       })
     })
 

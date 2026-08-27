@@ -41,7 +41,7 @@ const getPersonalisation = (event) => {
     invoiceNumber: event.data?.invoiceNumber ?? UNKNOWN,
     contractNumber: event.data?.contractNumber ?? UNKNOWN,
     paymentRequestNumber: event.data?.paymentRequestNumber ?? UNKNOWN,
-    scheme: getSchemeNameFromSchemeId(event.data?.schemeId) ?? UNKNOWN,
+    scheme: getSchemeNameFromSchemeId(event.data?.schemeId),
     context: capitalizeFirstLetter(event.data?.context ?? UNKNOWN),
     originalEvent: formatOriginalEvent(event.data?.originalEvent ?? UNKNOWN)
   }

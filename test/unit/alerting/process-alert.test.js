@@ -1,9 +1,13 @@
+const sourceSystems = {
+  FC: 'GLOS'
+}
+
 jest.mock('ffc-pay-schemes', () => {
   const actual = jest.requireActual('ffc-pay-schemes')
 
   return {
     ...actual,
-    getSourceSystems: jest.fn()
+    getSourceSystems: jest.fn(() => sourceSystems)
   }
 })
 
@@ -27,10 +31,6 @@ const {
 } = require('../../../app/constants/events')
 const { processAlert } = require('../../../app/alerting/process-alert')
 
-const sourceSystems = {
-  FC: 'GLOS'
-}
-
 let event
 
 describe('process alert', () => {
@@ -44,11 +44,6 @@ describe('process alert', () => {
   test('should get the recipients from the event', async () => {
     await processAlert(event)
     expect(mockGetRecipients).toHaveBeenCalledWith(event)
-  })
-
-  test('should get the source systems', async () => {
-    await processAlert(event)
-    expect(mockGetSourceSystems).toHaveBeenCalledTimes(1)
   })
 
   test('should send the alerts if a template is found', async () => {

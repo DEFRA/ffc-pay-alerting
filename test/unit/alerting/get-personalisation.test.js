@@ -121,12 +121,6 @@ describe('get personalisation', () => {
     expect(result.scheme).toBe(schemeNames.SFI)
   })
 
-  test('should return unknown scheme if scheme name does not exist', () => {
-    mockGetSchemeNameFromSchemeId.mockReturnValue(undefined)
-    const result = getPersonalisation(event)
-    expect(result.scheme).toBe(UNKNOWN)
-  })
-
   test('should capitalize context if it exists', () => {
     event.data.context = 'test context'
     const result = getPersonalisation(event)

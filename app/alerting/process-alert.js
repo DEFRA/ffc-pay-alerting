@@ -13,6 +13,8 @@ const {
   PAYMENT_INVALID_BANK
 } = require('../constants/events')
 
+const { FC } = getSourceSystems()
+
 const processAlert = async (event) => {
   const recipients = await getRecipients(event)
   const templateId = templateMap[event.type]
@@ -21,9 +23,8 @@ const processAlert = async (event) => {
   } else {
     console.log(`No alert template found for event type: ${event.type}, skipping`)
   }
-  const sourceSystems = getSourceSystems()
   if (
-    event?.data?.sourceSystem === sourceSystems.FC &&
+    event?.data?.sourceSystem === FC &&
     [
       BATCH_REJECTED,
       BATCH_QUARANTINED,

@@ -5,17 +5,17 @@ const { INVOICE_NUMBER } = require('./invoice-number')
 const { MESSAGE } = require('./message')
 const { PAYMENT_REQUEST_NUMBER } = require('./payment-request-number')
 
-const schemeIds = getSchemeIds()
-const sourceSystems = getSourceSystems()
+const { SFI } = getSchemeIds()
+const { SFI: SFI_SOURCE_SYSTEM } = getSourceSystems()
 
 module.exports = {
   DATA: {
     message: MESSAGE,
     frn: FRN,
     invoiceNumber: INVOICE_NUMBER,
-    schemeId: schemeIds.SFI,
+    schemeId: SFI,
     contractNumber: CONTRACT_NUMBER,
     paymentRequestNumber: PAYMENT_REQUEST_NUMBER,
-    sourceSystem: sourceSystems.SFI
+    sourceSystem: SFI_SOURCE_SYSTEM
   }
 }

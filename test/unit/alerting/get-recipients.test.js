@@ -1,10 +1,12 @@
+jest.mock('ffc-pay-schemes', () => ({
+  getSchemeIdFromSourceSystem: jest.fn()
+}))
+const { getSchemeIdFromSourceSystem } = require('ffc-pay-schemes')
+
 jest.mock('../../../app/alerting/get-email-addresses', () => ({
   getEmailAddresses: jest.fn()
 }))
-
-jest.mock('../../../app/alerting/get-scheme-id-from-source-system', () => ({
-  getSchemeIdFromSourceSystem: jest.fn()
-}))
+const { getEmailAddresses } = require('../../../app/alerting/get-email-addresses')
 
 jest.mock('../../../app/config', () => ({
   alertConfig: {
@@ -12,9 +14,6 @@ jest.mock('../../../app/config', () => ({
     devTeamEmails: ''
   }
 }))
-
-const { getEmailAddresses } = require('../../../app/alerting/get-email-addresses')
-const { getSchemeIdFromSourceSystem } = require('../../../app/alerting/get-scheme-id-from-source-system')
 const { alertConfig } = require('../../../app/config')
 
 const { getRecipients } = require('../../../app/alerting/get-recipients')

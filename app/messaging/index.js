@@ -1,18 +1,43 @@
 const { messageConfig } = require('../config')
 const { processAlertMessage } = require('./process-alert-message')
-const { MessageReceiver } = require('ffc-messaging')
+const { createServiceBusClient, createReceiver, subscribeReceiver } = require('./service-bus')
+
+let sbClient
 let receiver
 
+const createDiagnosticsHandler = name => error => {
+  console.error(`Error in ${name}:`, error)
+}
+
 const start = async () => {
-  const action = message => processAlertMessage(message, receiver)
-  receiver = new MessageReceiver(messageConfig.alertSubscription, action)
-  await receiver.subscribe()
+  await stop()
+
+  sbClient = createServiceBusClient(messageConfig.alertSubscription)
+  receiver = createReceiver(sbClient, messageConfig.alertSubscription)
+  const action = (message, receiver) => processAlertMessage(message, receiver)
+  subscribeReceiver(receiver, action, createDiagnosticsHandler('alert-receiver'), messageConfig.alertSubscription)
 
   console.info('Ready to process alerts')
 }
 
 const stop = async () => {
-  await receiver.closeConnection()
+  if (receiver) {
+    try {
+      await receiver.close()
+    } catch (err) {
+      console.error('Error closing receiver:', err)
+    }
+    receiver = null
+  }
+
+  if (sbClient) {
+    try {
+      await sbClient.close()
+    } catch (err) {
+      console.error('Error closing Service Bus client:', err)
+    }
+    sbClient = null
+  }
 }
 
 module.exports = { start, stop }

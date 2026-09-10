@@ -14,7 +14,7 @@ const start = async () => {
 
   sbClient = createServiceBusClient(messageConfig.alertSubscription)
   receiver = createReceiver(sbClient, messageConfig.alertSubscription)
-  const action = (message, receiver) => processAlertMessage(message, receiver)
+  const action = (message) => processAlertMessage(message, receiver)
   subscribeReceiver(receiver, action, createDiagnosticsHandler('alert-receiver'), messageConfig.alertSubscription)
 
   console.info('Ready to process alerts')

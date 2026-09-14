@@ -13,5 +13,7 @@ module.exports = {
   SFI_EXPANDED: 'ESFIO',
   COHT_REVENUE: 'COHTR',
   COHT_CAPITAL: 'COHTC',
-  FPTT: 'FPTT'
+  FPTT: 'FPTT',
+  WMP: 'WMP',
+  SFI26: 'SFI26'
 }

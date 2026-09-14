@@ -15,11 +15,12 @@ const {
   COHTR,
   COHTC,
   FPTT,
-  WMP
+  WMP,
+  SFI26
 } = require('./schemes')
 
 module.exports = {
-  [SFI]: 'SFI 22',
+  [SFI]: 'SFI22',
   [SFIP]: 'SFI Pilot',
   [LUMP_SUMS]: 'Lump Sums',
   [VET_VISITS]: 'Annual Health and Welfare Review',
@@ -29,11 +30,12 @@ module.exports = {
   [ES]: 'Environmental Stewardship',
   [FC]: 'Forestry Commission',
   [IMPS]: 'IMPS',
-  [SFI23]: 'SFI 23',
+  [SFI23]: 'SFI23',
   [DELINKED]: 'Delinked Payments',
   [SFI_EXPANDED]: 'Expanded SFI Offer',
   [COHTR]: 'Combined Offer Higher Tier Revenue',
   [COHTC]: 'Combined Offer Higher Tier Capital',
   [FPTT]: 'Farm Payments Technical Test',
-  [WMP]: 'Woodland Management Plan'
+  [WMP]: 'Woodland Management Plan',
+  [SFI26]: 'SFI26'
 }

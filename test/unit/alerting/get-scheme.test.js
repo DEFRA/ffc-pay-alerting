@@ -13,9 +13,9 @@ const {
 const { getScheme } = require('../../../app/alerting/get-scheme')
 
 describe('get scheme', () => {
-  test('should return SFI 22 name for SFI scheme', () => {
+  test('should return SFI22 name for SFI scheme', () => {
     const result = getScheme(SFI)
-    expect(result).toBe('SFI 22')
+    expect(result).toBe('SFI22')
   })
 
   test('should return SFI Pilot name for SFI Pilot scheme', () => {
@@ -48,9 +48,9 @@ describe('get scheme', () => {
     expect(result).toBe('Manual Invoice')
   })
 
-  test('should return SFI 23 name for SFI23 scheme', () => {
+  test('should return SFI23 name for SFI23 scheme', () => {
     const result = getScheme(SFI23)
-    expect(result).toBe('SFI 23')
+    expect(result).toBe('SFI23')
   })
 
   test('should return Delinked Payments name for Delinked scheme', () => {

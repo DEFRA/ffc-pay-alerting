@@ -6,11 +6,17 @@ const updateSchemesDatabase = async () => {
   const schemes = getSchemes()
 
   for (const { schemeId, schemeName, sourceSystem } of schemes) {
-    const [, created] = await db.scheme.upsert({
+    const existingScheme = await db.scheme.findOne({
+      where: { schemeId }
+    })
+
+    await db.scheme.upsert({
       schemeId,
       name: schemeName,
       sourceSystem
     })
+
+    const created = !existingScheme
     console.log(`${schemeName} ${created ? 'created' : 'updated'}`)
   }
 }

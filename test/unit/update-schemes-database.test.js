@@ -5,6 +5,7 @@ const { getSchemes: mockGetSchemes } = require('ffc-pay-schemes')
 
 jest.mock('../../app/data', () => ({
   scheme: {
+    findOne: jest.fn(),
     upsert: jest.fn()
   }
 }))
@@ -16,7 +17,7 @@ describe('update schemes database', () => {
   let consoleLogSpy
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    jest.resetAllMocks()
     consoleLogSpy = jest.spyOn(console, 'log').mockImplementation()
   })
 
@@ -40,9 +41,13 @@ describe('update schemes database', () => {
     }
 
     mockGetSchemes.mockReturnValue([scheme])
-    db.scheme.upsert.mockResolvedValue([{}, true])
+    db.scheme.findOne.mockResolvedValue(null)
 
     await updateSchemesDatabase()
+
+    expect(db.scheme.findOne).toHaveBeenCalledWith({
+      where: { schemeId: scheme.schemeId }
+    })
 
     expect(db.scheme.upsert).toHaveBeenCalledWith({
       schemeId: scheme.schemeId,
@@ -63,9 +68,13 @@ describe('update schemes database', () => {
     }
 
     mockGetSchemes.mockReturnValue([scheme])
-    db.scheme.upsert.mockResolvedValue([{}, false])
+    db.scheme.findOne.mockResolvedValue({ schemeId: scheme.schemeId })
 
     await updateSchemesDatabase()
+
+    expect(db.scheme.findOne).toHaveBeenCalledWith({
+      where: { schemeId: scheme.schemeId }
+    })
 
     expect(db.scheme.upsert).toHaveBeenCalledWith({
       schemeId: scheme.schemeId,
@@ -93,10 +102,12 @@ describe('update schemes database', () => {
     ]
 
     mockGetSchemes.mockReturnValue(schemes)
+    db.scheme.findOne.mockResolvedValue(null)
     db.scheme.upsert.mockResolvedValue([{}, true])
 
     await updateSchemesDatabase()
 
+    expect(db.scheme.findOne).toHaveBeenCalledTimes(schemes.length)
     expect(db.scheme.upsert).toHaveBeenCalledTimes(schemes.length)
 
     for (const scheme of schemes) {
@@ -135,6 +146,7 @@ describe('update schemes database', () => {
     const calls = []
 
     mockGetSchemes.mockReturnValue(schemes)
+    db.scheme.findOne.mockResolvedValue(null)
     db.scheme.upsert.mockImplementation(async ({ schemeId }) => {
       calls.push(schemeId)
       return [{}, true]
@@ -153,6 +165,7 @@ describe('update schemes database', () => {
       schemeName: 'Scheme one',
       sourceSystem: 'SOURCE_ONE'
     }])
+    db.scheme.findOne.mockResolvedValue(null)
     db.scheme.upsert.mockRejectedValue(error)
 
     await expect(updateSchemesDatabase()).rejects.toBe(error)

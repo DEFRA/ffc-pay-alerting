@@ -1,10 +1,16 @@
+const { fn, col, where } = require('sequelize')
 const db = require('../data')
 
 const getContactByEmail = async (emailAddress) => {
   return db.contact.findOne({
     where: {
       removedAt: null,
-      emailAddress
+      [db.Sequelize.Op.and]: [
+        where(
+          fn('LOWER', col('emailAddress')),
+          emailAddress.trim().toLowerCase()
+        )
+      ]
     },
     raw: true,
     attributes: ['contactId', 'emailAddress', 'batch_rejected', 'batch_quarantined', 'duplicate_payment', 'payment_rejected', 'payment_dax_rejected', 'payment_invalid_bank', 'payment_processing_failed', 'payment_settlement_unsettled', 'payment_settlement_unmatched', 'response_rejected', 'payment_request_blocked', 'payment_dax_unavailable', 'receiver_connection_failed', 'demographics_processing_failed', 'demographics_update_failed', 'event_save_alert', 'table_create_alert', 'responses_processing_failed', 'customer_update_processing_failed', 'tracking_update_failure']

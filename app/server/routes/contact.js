@@ -1,10 +1,10 @@
 const Joi = require('joi')
 const boom = require('@hapi/boom')
+const { getSchemeNameFromSchemeId } = require('ffc-pay-schemes')
 const removeSchema = require('./schemas/remove-contact')
 const { removeContactById, updateContact, getContactsByScheme, getAlertTypes, getAlertDescriptions, getContactById, getContactByEmail } = require('../../contact')
 const { OK } = require('../../constants/ok')
 const { OK: OK_STATUS } = require('../../constants/status')
-const schemeNames = require('../../constants/scheme-names')
 
 module.exports = [{
   method: 'GET',
@@ -21,7 +21,7 @@ module.exports = [{
     handler: async (request, h) => {
       const { schemeId } = request.params
       const contacts = await getContactsByScheme(schemeId)
-      const schemeName = schemeNames[schemeId]
+      const schemeName = getSchemeNameFromSchemeId(schemeId)
       return h.response({
         contacts,
         schemeName

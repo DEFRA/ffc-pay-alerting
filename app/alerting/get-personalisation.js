@@ -1,6 +1,6 @@
+const { getSchemeNameFromSchemeId } = require('ffc-pay-schemes')
 const moment = require('moment')
 const { getEnvironment } = require('./get-environment')
-const { getScheme } = require('./get-scheme')
 const { DATE } = require('../constants/date-format')
 const { UNKNOWN } = require('../constants/unknown')
 
@@ -41,7 +41,7 @@ const getPersonalisation = (event) => {
     invoiceNumber: event.data?.invoiceNumber ?? UNKNOWN,
     contractNumber: event.data?.contractNumber ?? UNKNOWN,
     paymentRequestNumber: event.data?.paymentRequestNumber ?? UNKNOWN,
-    scheme: getScheme(event.data?.schemeId),
+    scheme: getSchemeNameFromSchemeId(event.data?.schemeId),
     context: capitalizeFirstLetter(event.data?.context ?? UNKNOWN),
     originalEvent: formatOriginalEvent(event.data?.originalEvent ?? UNKNOWN)
   }

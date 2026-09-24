@@ -1,6 +1,6 @@
+const { MessageReceiver } = require('ffc-messaging')
 const { messageConfig } = require('../config')
 const { processAlertMessage } = require('./process-alert-message')
-const { MessageReceiver } = require('ffc-messaging')
 let receiver
 
 const start = async () => {

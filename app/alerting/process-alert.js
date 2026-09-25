@@ -1,7 +1,7 @@
+const { getSourceSystems } = require('ffc-pay-schemes')
 const { getRecipients } = require('./get-recipients')
 const templateMap = require('../constants/template-map')
 const { sendAlerts } = require('./send-alerts')
-const sourceSystems = require('../constants/source-systems')
 const { generateReturnFile } = require('./generate-return-file')
 const {
   BATCH_REJECTED,
@@ -13,6 +13,8 @@ const {
   PAYMENT_INVALID_BANK
 } = require('../constants/events')
 
+const { FC } = getSourceSystems()
+
 const processAlert = async (event) => {
   const recipients = await getRecipients(event)
   const templateId = templateMap[event.type]
@@ -22,7 +24,7 @@ const processAlert = async (event) => {
     console.log(`No alert template found for event type: ${event.type}, skipping`)
   }
   if (
-    event?.data?.sourceSystem === sourceSystems.FC &&
+    event?.data?.sourceSystem === FC &&
     [
       BATCH_REJECTED,
       BATCH_QUARANTINED,

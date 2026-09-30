@@ -1,9 +1,9 @@
-const db = require('../data')
+const { contact } = require('../database')
 
 const prepareContactData = (payload) => ({
   emailAddress: payload.emailAddress,
   modifiedBy: payload.modifiedBy,
-  modifiedAt: Date.now(),
+  modifiedAt: new Date(),
   batch_rejected: payload.batch_rejected,
   batch_quarantined: payload.batch_quarantined,
   duplicate_payment: payload.duplicate_payment,
@@ -27,11 +27,13 @@ const prepareContactData = (payload) => ({
 })
 
 const updateContactRecord = async (contactId, data) => {
-  await db.contact.update(data, { where: { contactId } })
+  await contact()
+    .where({ contactId })
+    .update(data)
 }
 
 const createContactRecord = async (data) => {
-  await db.contact.create(data)
+  await contact().insert(data)
 }
 
 const updateContact = async (payload) => {

@@ -1,4 +1,4 @@
-const crypto = require('crypto')
+const crypto = require('node:crypto')
 
 const getAlertCacheKey = (type, source, subject, data) => {
   const input = `${type}:${source}:${subject}:${JSON.stringify(data)}`

@@ -1,6 +1,6 @@
+const { getSchemeIdFromSourceSystem } = require('ffc-pay-schemes')
 const { alertConfig } = require('../config')
 const { getEmailAddresses } = require('./get-email-addresses')
-const { getSchemeIdFromSourceSystem } = require('./get-scheme-id-from-source-system')
 
 const getRecipients = async (event) => {
   const schemeId = await getSchemeIdFromSourceSystem(event.data?.sourceSystem)

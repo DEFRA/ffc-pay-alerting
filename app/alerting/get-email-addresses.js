@@ -1,5 +1,5 @@
 const events = require('../constants/events')
-const db = require('../data')
+const { contact } = require('../database')
 
 const getEmailAddresses = async (eventType, schemeId) => {
   let eventKey
@@ -13,16 +13,11 @@ const getEmailAddresses = async (eventType, schemeId) => {
     return []
   }
 
-  const emails = await db.contact.findAll({
-    attributes: ['emailAddress'],
-    where: {
-      removedAt: null,
-      [eventKey.toLocaleLowerCase()]: {
-        [db.Sequelize.Op.contains]: [schemeId]
-      }
-    }
-  })
-  return emails.map(contact => contact.emailAddress)
+  const emails = await contact()
+    .select('emailAddress')
+    .whereNull('removedAt')
+    .where(eventKey.toLocaleLowerCase(), '@>', [schemeId])
+  return emails.map(({ emailAddress }) => emailAddress)
 }
 
 module.exports = {

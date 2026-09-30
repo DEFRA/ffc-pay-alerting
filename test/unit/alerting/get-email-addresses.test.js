@@ -1,25 +1,21 @@
+const { createKnexMock } = require('../../helpers/mock-knex')
+
+const mockDb = createKnexMock(['contact'])
+
+jest.mock('../../../app/database', () => ({
+  client: mockDb.knex,
+  transaction: mockDb.transaction,
+  close: mockDb.close,
+  ...mockDb.tables
+}))
+
 const events = require('../../../app/constants/events')
-const db = require('../../../app/data')
 const { getEmailAddresses } = require('../../../app/alerting/get-email-addresses')
 
-describe('getEmailAddresses (new implementation)', () => {
+describe('getEmailAddresses', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-  })
-
-  const OpContains = Symbol('contains')
-  beforeAll(() => {
-    db.Sequelize = {
-      Op: {
-        contains: OpContains
-      }
-    }
-  })
-
-  beforeEach(() => {
-    db.contact = {
-      findAll: jest.fn()
-    }
+    mockDb.builder.resolves([])
   })
 
   const mockContacts = emails => emails.map(email => ({ emailAddress: email }))
@@ -27,32 +23,27 @@ describe('getEmailAddresses (new implementation)', () => {
   test('returns empty array if eventType is unknown', async () => {
     const result = await getEmailAddresses('unknown_eventType', 1)
     expect(result).toEqual([])
-    expect(db.contact.findAll).not.toHaveBeenCalled()
+    expect(mockDb.tables.contact).not.toHaveBeenCalled()
   })
 
   test('returns empty array if schemeId is 0', async () => {
     const result = await getEmailAddresses(events.BATCH_REJECTED, 0)
     expect(result).toEqual([])
-    expect(db.contact.findAll).not.toHaveBeenCalled()
+    expect(mockDb.tables.contact).not.toHaveBeenCalled()
   })
 
-  test('calls db.contact.findAll with correct where clause based on event and schemeId', async () => {
+  test('queries contacts with correct predicates based on event and schemeId', async () => {
     const eventType = events.PAYMENT_REJECTED
     const schemeId = 123
 
-    db.contact.findAll.mockResolvedValueOnce(mockContacts(['a@test.com', 'b@test.com']))
+    mockDb.builder.resolves(mockContacts(['a@test.com', 'b@test.com']))
 
     const result = await getEmailAddresses(eventType, schemeId)
 
-    expect(db.contact.findAll).toHaveBeenCalledWith({
-      attributes: ['emailAddress'],
-      where: {
-        removedAt: null,
-        payment_rejected: {
-          [OpContains]: [schemeId]
-        }
-      }
-    })
+    expect(mockDb.tables.contact).toHaveBeenCalledTimes(1)
+    expect(mockDb.builder.select).toHaveBeenCalledWith('emailAddress')
+    expect(mockDb.builder.whereNull).toHaveBeenCalledWith('removedAt')
+    expect(mockDb.builder.where).toHaveBeenCalledWith('payment_rejected', '@>', [schemeId])
 
     expect(result).toEqual(['a@test.com', 'b@test.com'])
   })
@@ -65,26 +56,18 @@ describe('getEmailAddresses (new implementation)', () => {
     ]
 
     for (const { event, key, schemeId, emails } of testCases) {
-      db.contact.findAll.mockResolvedValueOnce(mockContacts(emails))
+      mockDb.builder.resolves(mockContacts(emails))
 
       const result = await getEmailAddresses(event, schemeId)
 
-      expect(db.contact.findAll).toHaveBeenCalledWith({
-        attributes: ['emailAddress'],
-        where: {
-          removedAt: null,
-          [key]: {
-            [OpContains]: [schemeId]
-          }
-        }
-      })
+      expect(mockDb.builder.where).toHaveBeenCalledWith(key, '@>', [schemeId])
 
       expect(result).toEqual(emails)
     }
   })
 
   test('returns empty array if no contacts found', async () => {
-    db.contact.findAll.mockResolvedValueOnce([])
+    mockDb.builder.resolves([])
 
     const result = await getEmailAddresses(events.BATCH_REJECTED, 10)
 
@@ -93,19 +76,17 @@ describe('getEmailAddresses (new implementation)', () => {
 
   test('handles multiple schemeIds as numbers and strings (schemeId as number)', async () => {
     const schemeId = 99
-    db.contact.findAll.mockResolvedValueOnce(mockContacts(['multi@test.com']))
+    mockDb.builder.resolves(mockContacts(['multi@test.com']))
 
     const result = await getEmailAddresses(events.RESPONSE_REJECTED, schemeId)
 
-    expect(db.contact.findAll).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({
-          response_rejected: {
-            [OpContains]: [schemeId]
-          }
-        })
-      })
-    )
+    expect(mockDb.builder.where).toHaveBeenCalledWith('response_rejected', '@>', [schemeId])
     expect(result).toEqual(['multi@test.com'])
+  })
+
+  test('propagates a database failure', async () => {
+    mockDb.builder.rejects(new Error('DB error'))
+
+    await expect(getEmailAddresses(events.BATCH_REJECTED, 1)).rejects.toThrow('DB error')
   })
 })

@@ -1,79 +1,75 @@
-const { getContactsByScheme } = require('../../../app/contact/get-contacts-by-scheme')
-const db = require('../../../app/data')
+const { createKnexMock } = require('../../helpers/mock-knex')
 
-jest.mock('../../../app/data', () => ({
-  contact: {
-    findAll: jest.fn()
-  },
-  Sequelize: {
-    Op: {
-      or: 'or',
-      contains: 'contains'
-    }
-  }
+const mockDb = createKnexMock(['contact'])
+
+jest.mock('../../../app/database', () => ({
+  client: mockDb.knex,
+  transaction: mockDb.transaction,
+  close: mockDb.close,
+  ...mockDb.tables
 }))
+
+const events = require('../../../app/constants/events')
+const { getContactsByScheme } = require('../../../app/contact/get-contacts-by-scheme')
+
+const arrayFields = Object.keys(events).map((key) => key.toLowerCase())
 
 describe('getContactsByScheme', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockDb.builder.resolves([])
   })
 
-  test('should call db.contact.findAll with basic query when no schemeId provided', async () => {
-    db.contact.findAll.mockResolvedValue([])
-
+  test('should query contacts that have not been removed when no schemeId provided', async () => {
     await getContactsByScheme()
 
-    expect(db.contact.findAll).toHaveBeenCalledWith({
-      where: { removedAt: null },
-      raw: true,
-      attributes: expect.any(Array)
-    })
-
-    const calledAttrs = db.contact.findAll.mock.calls[0][0].attributes
-    expect(calledAttrs).toContain('contactId')
-    expect(calledAttrs).toContain('emailAddress')
+    expect(mockDb.tables.contact).toHaveBeenCalledTimes(1)
+    expect(mockDb.builder.select).toHaveBeenCalledWith(['contactId', 'emailAddress', ...arrayFields])
+    expect(mockDb.builder.whereNull).toHaveBeenCalledWith('removedAt')
+    expect(mockDb.builder.where).not.toHaveBeenCalled()
+    expect(mockDb.builder.orWhere).not.toHaveBeenCalled()
   })
 
-  test('should include Op.or when valid numeric schemeId provided', async () => {
-    db.contact.findAll.mockResolvedValue([])
-
+  test('should match any alert array containing the schemeId when valid numeric schemeId provided', async () => {
     await getContactsByScheme('5')
 
-    const calledWhere = db.contact.findAll.mock.calls[0][0].where
-    expect(calledWhere.removedAt).toBeNull()
-    expect(Object.prototype.hasOwnProperty.call(calledWhere, db.Sequelize.Op.or)).toBe(true)
-
-    const orArray = calledWhere[db.Sequelize.Op.or]
-    expect(Array.isArray(orArray)).toBe(true)
-    expect(orArray.length).toBeGreaterThan(0)
-    orArray.forEach((entry) => {
-      const val = Object.values(entry)[0]
-      expect(Object.prototype.hasOwnProperty.call(val, db.Sequelize.Op.contains)).toBe(true)
-      expect(val[db.Sequelize.Op.contains]).toEqual([5])
-    })
+    expect(mockDb.builder.whereNull).toHaveBeenCalledWith('removedAt')
+    expect(mockDb.builder.where).toHaveBeenCalledTimes(1)
+    expect(mockDb.builder.orWhere).toHaveBeenCalledTimes(arrayFields.length)
+    for (const field of arrayFields) {
+      expect(mockDb.builder.orWhere).toHaveBeenCalledWith(field, '@>', [5])
+    }
   })
 
-  test('should not include Op.or when schemeId is non-numeric', async () => {
-    db.contact.findAll.mockResolvedValue([])
-
+  test('should not filter by scheme when schemeId is non-numeric', async () => {
     await getContactsByScheme('not-a-number')
 
-    const calledWhere = db.contact.findAll.mock.calls[0][0].where
-    expect(calledWhere.removedAt).toBeNull()
-    expect(Object.prototype.hasOwnProperty.call(calledWhere, db.Sequelize.Op.or)).toBe(false)
+    expect(mockDb.builder.whereNull).toHaveBeenCalledWith('removedAt')
+    expect(mockDb.builder.where).not.toHaveBeenCalled()
+    expect(mockDb.builder.orWhere).not.toHaveBeenCalled()
   })
 
-  test('should not include Op.or when schemeId is null or undefined', async () => {
-    db.contact.findAll.mockResolvedValue([])
-
+  test('should not filter by scheme when schemeId is null or undefined', async () => {
     await getContactsByScheme(null)
-    let calledWhere = db.contact.findAll.mock.calls[0][0].where
-    expect(Object.prototype.hasOwnProperty.call(calledWhere, db.Sequelize.Op.or)).toBe(false)
+    expect(mockDb.builder.where).not.toHaveBeenCalled()
 
     jest.clearAllMocks()
-    db.contact.findAll.mockResolvedValue([])
     await getContactsByScheme(undefined)
-    calledWhere = db.contact.findAll.mock.calls[0][0].where
-    expect(Object.prototype.hasOwnProperty.call(calledWhere, db.Sequelize.Op.or)).toBe(false)
+    expect(mockDb.builder.where).not.toHaveBeenCalled()
+  })
+
+  test('should return the contacts found', async () => {
+    const contacts = [{ contactId: 1, emailAddress: 'a@example.com' }]
+    mockDb.builder.resolves(contacts)
+
+    const result = await getContactsByScheme('5')
+
+    expect(result).toEqual(contacts)
+  })
+
+  test('should propagate a database failure', async () => {
+    mockDb.builder.rejects(new Error('DB error'))
+
+    await expect(getContactsByScheme('5')).rejects.toThrow('DB error')
   })
 })

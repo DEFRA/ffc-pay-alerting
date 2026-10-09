@@ -1,24 +1,15 @@
-jest.mock('sequelize', () => ({
-  ...jest.requireActual('sequelize'),
-  fn: jest.fn((functionName, column) => ({ functionName, column })),
-  col: jest.fn(columnName => ({ columnName })),
-  where: jest.fn((left, right) => ({ left, right }))
+const { createKnexMock } = require('../../helpers/mock-knex')
+
+const mockDb = createKnexMock(['contact'])
+
+jest.mock('../../../app/database', () => ({
+  client: mockDb.knex,
+  transaction: mockDb.transaction,
+  close: mockDb.close,
+  ...mockDb.tables
 }))
 
-jest.mock('../../../app/data', () => ({
-  contact: {
-    findOne: jest.fn()
-  },
-  Sequelize: {
-    Op: {
-      and: Symbol.for('sequelize.and')
-    }
-  }
-}))
-
-const { fn, col, where } = require('sequelize')
 const { getContactByEmail } = require('../../../app/contact')
-const db = require('../../../app/data')
 
 const attributes = [
   'contactId',
@@ -48,51 +39,25 @@ const attributes = [
 describe('getContactByEmail', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockDb.builder.resolves()
   })
 
-  test('should call db.contact.findOne with a case-insensitive email query', async () => {
+  test('should query contacts with a case-insensitive email predicate', async () => {
     const email = 'test@example.com'
-    db.contact.findOne.mockResolvedValue(null)
 
     await getContactByEmail(email)
 
-    expect(col).toHaveBeenCalledWith('emailAddress')
-    expect(fn).toHaveBeenCalledWith('LOWER', { columnName: 'emailAddress' })
-    expect(where).toHaveBeenCalledWith(
-      {
-        functionName: 'LOWER',
-        column: { columnName: 'emailAddress' }
-      },
-      email
-    )
-
-    expect(db.contact.findOne).toHaveBeenCalledWith({
-      where: {
-        removedAt: null,
-        [db.Sequelize.Op.and]: [
-          {
-            left: {
-              functionName: 'LOWER',
-              column: { columnName: 'emailAddress' }
-            },
-            right: email
-          }
-        ]
-      },
-      raw: true,
-      attributes
-    })
+    expect(mockDb.tables.contact).toHaveBeenCalledTimes(1)
+    expect(mockDb.builder.select).toHaveBeenCalledWith(...attributes)
+    expect(mockDb.builder.whereNull).toHaveBeenCalledWith('removedAt')
+    expect(mockDb.builder.whereRaw).toHaveBeenCalledWith('LOWER(??) = ?', ['emailAddress', email])
+    expect(mockDb.builder.first).toHaveBeenCalledTimes(1)
   })
 
   test('should trim and convert the email address to lowercase before querying', async () => {
-    db.contact.findOne.mockResolvedValue(null)
-
     await getContactByEmail('  Test.User@Example.COM  ')
 
-    expect(where).toHaveBeenCalledWith(
-      expect.any(Object),
-      'test.user@example.com'
-    )
+    expect(mockDb.builder.whereRaw).toHaveBeenCalledWith('LOWER(??) = ?', ['emailAddress', 'test.user@example.com'])
   })
 
   test('should return contact when found', async () => {
@@ -101,7 +66,7 @@ describe('getContactByEmail', () => {
       emailAddress: 'found@example.com',
       batch_rejected: false
     }
-    db.contact.findOne.mockResolvedValue(contactData)
+    mockDb.builder.resolves(contactData)
 
     const result = await getContactByEmail('FOUND@EXAMPLE.COM')
 
@@ -109,10 +74,16 @@ describe('getContactByEmail', () => {
   })
 
   test('should return null when no contact is found', async () => {
-    db.contact.findOne.mockResolvedValue(null)
+    mockDb.builder.resolves(undefined)
 
     const result = await getContactByEmail('notfound@example.com')
 
     expect(result).toBeNull()
+  })
+
+  test('should propagate a database failure', async () => {
+    mockDb.builder.rejects(new Error('DB error'))
+
+    await expect(getContactByEmail('test@example.com')).rejects.toThrow('DB error')
   })
 })

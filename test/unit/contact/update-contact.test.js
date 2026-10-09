@@ -1,18 +1,22 @@
-const { updateContact } = require('../../../app/contact')
-const db = require('../../../app/data')
+const { createKnexMock } = require('../../helpers/mock-knex')
 
-jest.mock('../../../app/data', () => ({
-  contact: {
-    update: jest.fn(),
-    create: jest.fn()
-  }
+const mockDb = createKnexMock(['contact'])
+
+jest.mock('../../../app/database', () => ({
+  client: mockDb.knex,
+  transaction: mockDb.transaction,
+  close: mockDb.close,
+  ...mockDb.tables
 }))
+
+const { updateContact } = require('../../../app/contact')
 
 beforeEach(() => {
   jest.clearAllMocks()
+  mockDb.builder.resolves()
 })
 
-test('should call db.contact.update when contactId is provided', async () => {
+test('should update the contact when contactId is provided', async () => {
   const payload = {
     contactId: 1,
     emailAddress: 'test@example.com',
@@ -42,18 +46,19 @@ test('should call db.contact.update when contactId is provided', async () => {
   await updateContact(payload)
   const afterCall = Date.now()
 
-  expect(db.contact.update).toHaveBeenCalledTimes(1)
-  expect(db.contact.create).not.toHaveBeenCalled()
+  expect(mockDb.tables.contact).toHaveBeenCalledTimes(1)
+  expect(mockDb.builder.where).toHaveBeenCalledWith({ contactId: payload.contactId })
+  expect(mockDb.builder.update).toHaveBeenCalledTimes(1)
+  expect(mockDb.builder.insert).not.toHaveBeenCalled()
 
-  const updateArg = db.contact.update.mock.calls[0][0]
-  const whereArg = db.contact.update.mock.calls[0][1]
+  const updateArg = mockDb.builder.update.mock.calls[0][0]
 
-  expect(whereArg).toEqual({ where: { contactId: payload.contactId } })
+  expect(updateArg).not.toHaveProperty('contactId')
   expect(updateArg.emailAddress).toBe(payload.emailAddress)
   expect(updateArg.modifiedBy).toBe(payload.modifiedBy)
-  expect(typeof updateArg.modifiedAt).toBe('number')
-  expect(updateArg.modifiedAt).toBeGreaterThanOrEqual(beforeCall)
-  expect(updateArg.modifiedAt).toBeLessThanOrEqual(afterCall)
+  expect(updateArg.modifiedAt).toBeInstanceOf(Date)
+  expect(updateArg.modifiedAt.getTime()).toBeGreaterThanOrEqual(beforeCall)
+  expect(updateArg.modifiedAt.getTime()).toBeLessThanOrEqual(afterCall)
   expect(updateArg.batch_rejected).toBe(payload.batch_rejected)
   expect(updateArg.batch_quarantined).toBe(payload.batch_quarantined)
   expect(updateArg.payment_rejected).toBe(payload.payment_rejected)
@@ -75,7 +80,7 @@ test('should call db.contact.update when contactId is provided', async () => {
   expect(updateArg.tracking_update_failure).toBe(payload.tracking_update_failure)
 })
 
-test('should call db.contact.create when contactId is not provided', async () => {
+test('should insert a contact when contactId is not provided', async () => {
   const payload = {
     emailAddress: 'new@example.com',
     modifiedBy: 'creator',
@@ -105,16 +110,19 @@ test('should call db.contact.create when contactId is not provided', async () =>
   await updateContact(payload)
   const afterCall = Date.now()
 
-  expect(db.contact.create).toHaveBeenCalledTimes(1)
-  expect(db.contact.update).not.toHaveBeenCalled()
+  expect(mockDb.tables.contact).toHaveBeenCalledTimes(1)
+  expect(mockDb.builder.insert).toHaveBeenCalledTimes(1)
+  expect(mockDb.builder.update).not.toHaveBeenCalled()
 
-  const createArg = db.contact.create.mock.calls[0][0]
+  const createArg = mockDb.builder.insert.mock.calls[0][0]
+
+  expect(createArg).not.toHaveProperty('contactId')
 
   expect(createArg.emailAddress).toBe(payload.emailAddress)
   expect(createArg.modifiedBy).toBe(payload.modifiedBy)
-  expect(typeof createArg.modifiedAt).toBe('number')
-  expect(createArg.modifiedAt).toBeGreaterThanOrEqual(beforeCall)
-  expect(createArg.modifiedAt).toBeLessThanOrEqual(afterCall)
+  expect(createArg.modifiedAt).toBeInstanceOf(Date)
+  expect(createArg.modifiedAt.getTime()).toBeGreaterThanOrEqual(beforeCall)
+  expect(createArg.modifiedAt.getTime()).toBeLessThanOrEqual(afterCall)
   expect(createArg.batch_rejected).toBe(payload.batch_rejected)
   expect(createArg.batch_quarantined).toBe(payload.batch_quarantined)
   expect(createArg.payment_rejected).toBe(payload.payment_rejected)
@@ -134,4 +142,43 @@ test('should call db.contact.create when contactId is not provided', async () =>
   expect(createArg.responses_processing_failed).toBe(payload.responses_processing_failed)
   expect(createArg.customer_update_processing_failed).toBe(payload.customer_update_processing_failed)
   expect(createArg.tracking_update_failure).toBe(payload.tracking_update_failure)
+})
+
+test('should only pass contact columns to the insert', async () => {
+  await updateContact({ emailAddress: 'new@example.com', modifiedBy: 'creator', notAColumn: 'value' })
+
+  const createArg = mockDb.builder.insert.mock.calls[0][0]
+
+  expect(createArg).not.toHaveProperty('notAColumn')
+  expect(Object.keys(createArg)).toEqual([
+    'emailAddress',
+    'modifiedBy',
+    'modifiedAt',
+    'batch_rejected',
+    'batch_quarantined',
+    'duplicate_payment',
+    'payment_rejected',
+    'payment_dax_rejected',
+    'payment_invalid_bank',
+    'payment_processing_failed',
+    'payment_settlement_unsettled',
+    'payment_settlement_unmatched',
+    'response_rejected',
+    'payment_request_blocked',
+    'payment_dax_unavailable',
+    'receiver_connection_failed',
+    'demographics_processing_failed',
+    'demographics_update_failed',
+    'event_save_alert',
+    'table_create_alert',
+    'responses_processing_failed',
+    'customer_update_processing_failed',
+    'tracking_update_failure'
+  ])
+})
+
+test('should propagate a database failure', async () => {
+  mockDb.builder.rejects(new Error('DB error'))
+
+  await expect(updateContact({ contactId: 1, emailAddress: 'test@example.com' })).rejects.toThrow('DB error')
 })

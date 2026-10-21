@@ -1,37 +1,17 @@
-const db = require('../data')
+const { contact } = require('../database')
+const TABLES = require('../constants/tables')
+const { pickColumns } = require('../constants/columns')
 
-const prepareContactData = (payload) => ({
-  emailAddress: payload.emailAddress,
-  modifiedBy: payload.modifiedBy,
-  modifiedAt: Date.now(),
-  batch_rejected: payload.batch_rejected,
-  batch_quarantined: payload.batch_quarantined,
-  duplicate_payment: payload.duplicate_payment,
-  payment_rejected: payload.payment_rejected,
-  payment_dax_rejected: payload.payment_dax_rejected,
-  payment_invalid_bank: payload.payment_invalid_bank,
-  payment_processing_failed: payload.payment_processing_failed,
-  payment_settlement_unsettled: payload.payment_settlement_unsettled,
-  payment_settlement_unmatched: payload.payment_settlement_unmatched,
-  response_rejected: payload.response_rejected,
-  payment_request_blocked: payload.payment_request_blocked,
-  payment_dax_unavailable: payload.payment_dax_unavailable,
-  receiver_connection_failed: payload.receiver_connection_failed,
-  demographics_processing_failed: payload.demographics_processing_failed,
-  demographics_update_failed: payload.demographics_update_failed,
-  event_save_alert: payload.event_save_alert,
-  table_create_alert: payload.table_create_alert,
-  responses_processing_failed: payload.responses_processing_failed,
-  customer_update_processing_failed: payload.customer_update_processing_failed,
-  tracking_update_failure: payload.tracking_update_failure
-})
+const prepareContactData = (payload) => pickColumns({ ...payload, modifiedAt: new Date() }, TABLES.contact)
 
 const updateContactRecord = async (contactId, data) => {
-  await db.contact.update(data, { where: { contactId } })
+  await contact()
+    .where({ contactId })
+    .update(data)
 }
 
 const createContactRecord = async (data) => {
-  await db.contact.create(data)
+  await contact().insert(data)
 }
 
 const updateContact = async (payload) => {

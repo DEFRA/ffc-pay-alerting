@@ -1,7 +1,9 @@
-const db = require('../data')
+const { contact } = require('../database')
 
 const removeContactById = async (contactId, removedBy) => {
-  await db.contact.update({ removedBy, removedAt: Date.now() }, { where: { contactId } })
+  await contact()
+    .where({ contactId })
+    .update({ removedBy, removedAt: new Date() })
 }
 
 module.exports = {

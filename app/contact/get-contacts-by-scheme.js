@@ -1,4 +1,4 @@
-const db = require('../data')
+const { contact } = require('../database')
 const events = require('../constants/events')
 
 const CONTACT_ATTRIBUTES = [
@@ -10,27 +10,23 @@ const CONTACT_ATTRIBUTES = [
 const ARRAY_FIELDS = CONTACT_ATTRIBUTES.filter((field) => field !== 'contactId' && field !== 'emailAddress')
 
 const getContactsByScheme = async (schemeId) => {
-  const where = {
-    removedAt: null
-  }
+  const query = contact()
+    .select(CONTACT_ATTRIBUTES)
+    .whereNull('removedAt')
 
   if (schemeId !== undefined && schemeId !== null) {
     const parsedSchemeId = Number(schemeId)
 
     if (!Number.isNaN(parsedSchemeId)) {
-      where[db.Sequelize.Op.or] = ARRAY_FIELDS.map((field) => ({
-        [field]: {
-          [db.Sequelize.Op.contains]: [parsedSchemeId]
+      query.where(function () {
+        for (const field of ARRAY_FIELDS) {
+          this.orWhere(field, '@>', [parsedSchemeId])
         }
-      }))
+      })
     }
   }
 
-  return db.contact.findAll({
-    where,
-    raw: true,
-    attributes: CONTACT_ATTRIBUTES
-  })
+  return query
 }
 
 module.exports = {

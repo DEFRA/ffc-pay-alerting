@@ -18,5 +18,6 @@ module.exports = {
   TABLE_CREATE_ALERT: 'uk.gov.defra.ffc.pay.warning.event.table.create.alert',
   RESPONSES_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.responses.processing.failed',
   CUSTOMER_UPDATE_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.customer.update.processing.failed',
-  TRACKING_UPDATE_FAILURE: 'uk.gov.defra.ffc.pay.tracking.update.failure'
+  TRACKING_UPDATE_FAILURE: 'uk.gov.defra.ffc.pay.tracking.update.failure',
+  SCHEME_ADDED: 'uk.gov.defra.ffc.pay.scheme.added'
 }

@@ -86,5 +86,8 @@ module.exports = {
   TRACKING_UPDATE_FAILURE: [
     'An error occurred when attempting to update tracking information for a payment, impacting the ability to track payment progress.',
     'The P&DS team are expected to investigate and action as appropriate.'
+  ],
+  SCHEME_ADDED: [
+    'A new scheme has been added to Payment Hub.'
   ]
 }

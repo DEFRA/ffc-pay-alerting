@@ -112,4 +112,30 @@ describe('contact queries', () => {
 
     expect(emails).toEqual(['match@example.com'])
   })
+
+  test('getEmailAddresses returns contacts subscribed to scheme added alerts', async () => {
+    await db.contact().insert([
+      {
+        emailAddress: 'subscribed@example.com',
+        scheme_added: [0]
+      },
+      {
+        emailAddress: 'not-subscribed@example.com'
+      },
+      {
+        emailAddress: 'removed@example.com',
+        scheme_added: [0],
+        removedAt: new Date()
+      }
+    ])
+
+    const emails = await getEmailAddresses(
+      events.SCHEME_ADDED,
+      schemeId
+    )
+
+    expect(emails).toEqual([
+      'subscribed@example.com'
+    ])
+  })
 })

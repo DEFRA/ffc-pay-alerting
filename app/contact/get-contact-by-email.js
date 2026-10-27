@@ -2,7 +2,7 @@ const { contact } = require('../database')
 
 const getContactByEmail = async (emailAddress) => {
   return (await contact()
-    .select('contactId', 'emailAddress', 'batch_rejected', 'batch_quarantined', 'duplicate_payment', 'payment_rejected', 'payment_dax_rejected', 'payment_invalid_bank', 'payment_processing_failed', 'payment_settlement_unsettled', 'payment_settlement_unmatched', 'response_rejected', 'payment_request_blocked', 'payment_dax_unavailable', 'receiver_connection_failed', 'demographics_processing_failed', 'demographics_update_failed', 'event_save_alert', 'table_create_alert', 'responses_processing_failed', 'customer_update_processing_failed', 'tracking_update_failure')
+    .select('contactId', 'emailAddress', 'batch_rejected', 'batch_quarantined', 'duplicate_payment', 'payment_rejected', 'payment_dax_rejected', 'payment_invalid_bank', 'payment_processing_failed', 'payment_settlement_unsettled', 'payment_settlement_unmatched', 'response_rejected', 'payment_request_blocked', 'payment_dax_unavailable', 'receiver_connection_failed', 'demographics_processing_failed', 'demographics_update_failed', 'event_save_alert', 'table_create_alert', 'responses_processing_failed', 'customer_update_processing_failed', 'tracking_update_failure', 'scheme_added')
     .whereNull('removedAt')
     .whereRaw('LOWER(??) = ?', ['emailAddress', emailAddress.trim().toLowerCase()])
     .first()) ?? null

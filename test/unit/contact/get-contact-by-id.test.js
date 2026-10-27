@@ -44,7 +44,8 @@ test('should query contacts for a contact that has not been removed', async () =
     'table_create_alert',
     'responses_processing_failed',
     'customer_update_processing_failed',
-    'tracking_update_failure'
+    'tracking_update_failure',
+    'scheme_added'
   )
   expect(mockDb.builder.whereNull).toHaveBeenCalledWith('removedAt')
   expect(mockDb.builder.where).toHaveBeenCalledWith({ contactId })

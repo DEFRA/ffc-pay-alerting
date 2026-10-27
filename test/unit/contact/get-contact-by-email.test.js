@@ -33,7 +33,8 @@ const attributes = [
   'table_create_alert',
   'responses_processing_failed',
   'customer_update_processing_failed',
-  'tracking_update_failure'
+  'tracking_update_failure',
+  'scheme_added'
 ]
 
 describe('getContactByEmail', () => {

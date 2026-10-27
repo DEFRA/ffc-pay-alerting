@@ -88,6 +88,6 @@ module.exports = {
     'The P&DS team are expected to investigate and action as appropriate.'
   ],
   SCHEME_ADDED: [
-    'A new scheme has been added to Payment Hub.'
+    'A new scheme has been added to Payment Hub. These notifications are for information only, and no action is required'
   ]
 }

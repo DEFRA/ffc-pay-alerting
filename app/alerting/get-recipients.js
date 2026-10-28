@@ -3,7 +3,7 @@ const { alertConfig } = require('../config')
 const { getEmailAddresses } = require('./get-email-addresses')
 
 const getRecipients = async (event) => {
-  const schemeId = await getSchemeIdFromSourceSystem(event.data?.sourceSystem)
+  const schemeId = event.data?.schemeId ?? await getSchemeIdFromSourceSystem(event.data?.sourceSystem)
   const emailAddresses = await getEmailAddresses(event.type, schemeId)
   const pdsEmails = alertConfig.pdsTeamEmails
     ? alertConfig.pdsTeamEmails.split(';').map(email => email.trim()).filter(email => email.length)

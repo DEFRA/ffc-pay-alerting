@@ -1,10 +1,24 @@
 const { getSchemeIdFromSourceSystem } = require('ffc-pay-schemes')
 const { alertConfig } = require('../config')
+const { SCHEME_ADDED } = require('../constants/events')
 const { getEmailAddresses } = require('./get-email-addresses')
 
+const SCHEME_ADDED_SCHEME_ID = 0
+
 const getRecipients = async (event) => {
-  const schemeId = event.data?.schemeId ?? await getSchemeIdFromSourceSystem(event.data?.sourceSystem)
-  const emailAddresses = await getEmailAddresses(event.type, schemeId)
+  const { schemeId: eventSchemeId, sourceSystem } = event.data ?? {}
+  let emailAddresses = []
+  if (event.type === SCHEME_ADDED) {
+    emailAddresses = await getEmailAddresses(event.type, SCHEME_ADDED_SCHEME_ID)
+  } else if (eventSchemeId || sourceSystem) {
+    const schemeId = eventSchemeId || await getSchemeIdFromSourceSystem(sourceSystem)
+    if (schemeId) {
+      emailAddresses = await getEmailAddresses(event.type, schemeId)
+    }
+  } else {
+    console.log('No SchemeId Identified')
+  }
+
   const pdsEmails = alertConfig.pdsTeamEmails
     ? alertConfig.pdsTeamEmails.split(';').map(email => email.trim()).filter(email => email.length)
     : []

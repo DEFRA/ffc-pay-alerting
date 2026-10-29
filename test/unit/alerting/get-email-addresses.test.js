@@ -32,6 +32,12 @@ describe('getEmailAddresses', () => {
     expect(mockDb.tables.contact).not.toHaveBeenCalled()
   })
 
+  test.each([undefined, null])('returns empty array if schemeId is %p', async (schemeId) => {
+    const result = await getEmailAddresses(events.PAYMENT_PROCESSING_FAILED, schemeId)
+    expect(result).toEqual([])
+    expect(mockDb.tables.contact).not.toHaveBeenCalled()
+  })
+
   test('queries contacts with correct predicates based on event and schemeId', async () => {
     const eventType = events.PAYMENT_REJECTED
     const schemeId = 123
@@ -46,6 +52,15 @@ describe('getEmailAddresses', () => {
     expect(mockDb.builder.where).toHaveBeenCalledWith('payment_rejected', '@>', [schemeId])
 
     expect(result).toEqual(['a@test.com', 'b@test.com'])
+  })
+
+  test.each([0, 5, undefined])('queries scheme added contacts subscribed to scheme 0 when schemeId is %p', async (schemeId) => {
+    mockDb.builder.resolves(mockContacts(['subscribed@test.com']))
+
+    const result = await getEmailAddresses(events.SCHEME_ADDED, schemeId)
+
+    expect(mockDb.builder.where).toHaveBeenCalledWith('scheme_added', '@>', [0])
+    expect(result).toEqual(['subscribed@test.com'])
   })
 
   test('works correctly for different event types and schemeIds', async () => {

@@ -49,20 +49,40 @@ describe('getRecipients', () => {
     ])
   })
 
-  test('handles missing sourceSystem gracefully', async () => {
+  test.each([
+    ['empty data', {}],
+    ['missing data', undefined],
+    ['null schemeId and sourceSystem', { schemeId: null, sourceSystem: null }]
+  ])('skips contact lookup and returns default emails when no schemeId or sourceSystem (%s)', async (_, data) => {
     const event = {
       type: 'eventType2',
-      data: {}
+      data
     }
-    getSchemeIdFromSourceSystem.mockResolvedValue(null)
+    alertConfig.pdsTeamEmails = 'pds@example.com'
+    alertConfig.devTeamEmails = 'dev@example.com'
+
+    const result = await getRecipients(event)
+
+    expect(getSchemeIdFromSourceSystem).not.toHaveBeenCalled()
+    expect(getEmailAddresses).not.toHaveBeenCalled()
+    expect(result).toEqual(['pds@example.com', 'dev@example.com'])
+  })
+
+  test('uses schemeId from event without looking up sourceSystem', async () => {
+    const event = {
+      type: 'eventType5',
+      data: {
+        schemeId: 7
+      }
+    }
     getEmailAddresses.mockResolvedValue(['user@example.com'])
     alertConfig.pdsTeamEmails = ''
     alertConfig.devTeamEmails = ''
 
     const result = await getRecipients(event)
 
-    expect(getSchemeIdFromSourceSystem).toHaveBeenCalledWith(undefined)
-    expect(getEmailAddresses).toHaveBeenCalledWith('eventType2', null)
+    expect(getSchemeIdFromSourceSystem).not.toHaveBeenCalled()
+    expect(getEmailAddresses).toHaveBeenCalledWith('eventType5', 7)
     expect(result).toEqual(['user@example.com'])
   })
 

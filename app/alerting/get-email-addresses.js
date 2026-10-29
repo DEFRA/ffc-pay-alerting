@@ -18,7 +18,7 @@ const getEmailAddresses = async (eventType, schemeId) => {
   const subscribedSchemeId =
     eventType === SCHEME_ADDED ? 0 : schemeId
 
-  if (subscribedSchemeId === 0 && eventType !== SCHEME_ADDED) {
+  if (subscribedSchemeId == null || (subscribedSchemeId === 0 && eventType !== SCHEME_ADDED)) {
     return []
   }
 

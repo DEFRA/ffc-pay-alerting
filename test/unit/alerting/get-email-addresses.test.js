@@ -32,6 +32,12 @@ describe('getEmailAddresses', () => {
     expect(mockDb.tables.contact).not.toHaveBeenCalled()
   })
 
+  test.each([undefined, null])('returns empty array if schemeId is %p', async (schemeId) => {
+    const result = await getEmailAddresses(events.PAYMENT_PROCESSING_FAILED, schemeId)
+    expect(result).toEqual([])
+    expect(mockDb.tables.contact).not.toHaveBeenCalled()
+  })
+
   test('queries contacts with correct predicates based on event and schemeId', async () => {
     const eventType = events.PAYMENT_REJECTED
     const schemeId = 123

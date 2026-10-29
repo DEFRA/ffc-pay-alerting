@@ -54,6 +54,15 @@ describe('getEmailAddresses', () => {
     expect(result).toEqual(['a@test.com', 'b@test.com'])
   })
 
+  test.each([0, 5, undefined])('queries scheme added contacts subscribed to scheme 0 when schemeId is %p', async (schemeId) => {
+    mockDb.builder.resolves(mockContacts(['subscribed@test.com']))
+
+    const result = await getEmailAddresses(events.SCHEME_ADDED, schemeId)
+
+    expect(mockDb.builder.where).toHaveBeenCalledWith('scheme_added', '@>', [0])
+    expect(result).toEqual(['subscribed@test.com'])
+  })
+
   test('works correctly for different event types and schemeIds', async () => {
     const testCases = [
       { event: events.BATCH_REJECTED, key: 'batch_rejected', schemeId: 1, emails: ['x@example.com'] },

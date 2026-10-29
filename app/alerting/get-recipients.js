@@ -16,6 +16,10 @@ const getRecipients = async (event) => {
       emailAddresses = await getEmailAddresses(event.type, schemeId)
     }
   }
+  else {
+    console.log('No SchemeId Identified')
+  }
+
   const pdsEmails = alertConfig.pdsTeamEmails
     ? alertConfig.pdsTeamEmails.split(';').map(email => email.trim()).filter(email => email.length)
     : []

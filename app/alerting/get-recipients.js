@@ -15,8 +15,7 @@ const getRecipients = async (event) => {
     if (schemeId) {
       emailAddresses = await getEmailAddresses(event.type, schemeId)
     }
-  }
-  else {
+  } else {
     console.log('No SchemeId Identified')
   }
 

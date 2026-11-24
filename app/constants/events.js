@@ -19,5 +19,7 @@ module.exports = {
   RESPONSES_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.responses.processing.failed',
   CUSTOMER_UPDATE_PROCESSING_FAILED: 'uk.gov.defra.ffc.pay.warning.customer.update.processing.failed',
   TRACKING_UPDATE_FAILURE: 'uk.gov.defra.ffc.pay.tracking.update.failure',
-  SCHEME_ADDED: 'uk.gov.defra.ffc.pay.warning.scheme.added'
+  SCHEME_ADDED: 'uk.gov.defra.ffc.pay.warning.scheme.added',
+  RETENTION_DATA_REJECTED: 'uk.gov.defra.fcp.pds.retention.data.rejected',
+  RETENTION_FILE_REJECTED: 'uk.gov.defra.fcp.pds.retention.file.rejected'
 }

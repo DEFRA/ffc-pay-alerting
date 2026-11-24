@@ -1,13 +1,22 @@
 const { contact } = require('../database')
 const events = require('../constants/events')
 
+const NON_SCHEME_EVENTS = [
+  'RETENTION_DATA_REJECTED',
+  'RETENTION_FILE_REJECTED'
+]
+
 const CONTACT_ATTRIBUTES = [
   'contactId',
   'emailAddress',
-  ...Object.keys(events).map((key) => key.toLowerCase())
+  ...Object.keys(events)
+    .filter(key => !NON_SCHEME_EVENTS.includes(key))
+    .map(key => key.toLowerCase())
 ]
 
-const ARRAY_FIELDS = CONTACT_ATTRIBUTES.filter((field) => field !== 'contactId' && field !== 'emailAddress')
+const ARRAY_FIELDS = CONTACT_ATTRIBUTES.filter(
+  field => field !== 'contactId' && field !== 'emailAddress'
+)
 
 const getContactsByScheme = async (schemeId) => {
   const query = contact()

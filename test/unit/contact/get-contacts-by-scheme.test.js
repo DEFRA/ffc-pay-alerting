@@ -12,7 +12,14 @@ jest.mock('../../../app/database', () => ({
 const events = require('../../../app/constants/events')
 const { getContactsByScheme } = require('../../../app/contact/get-contacts-by-scheme')
 
-const arrayFields = Object.keys(events).map((key) => key.toLowerCase())
+const NON_SCHEME_EVENTS = [
+  'RETENTION_DATA_REJECTED',
+  'RETENTION_FILE_REJECTED'
+]
+
+const arrayFields = Object.keys(events)
+  .filter(key => !NON_SCHEME_EVENTS.includes(key))
+  .map(key => key.toLowerCase())
 
 describe('getContactsByScheme', () => {
   beforeEach(() => {

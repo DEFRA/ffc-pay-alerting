@@ -20,6 +20,11 @@ const { SCHEME_ADDED } = require('../../../app/constants/events')
 
 const { getRecipients } = require('../../../app/alerting/get-recipients')
 
+const {
+  RETENTION_DATA_REJECTED,
+  RETENTION_FILE_REJECTED
+} = require('../../../app/constants/events')
+
 describe('getRecipients', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -195,5 +200,63 @@ describe('getRecipients', () => {
     const result = await getRecipients(event)
 
     expect(result).toEqual(['valid@example.com', 'pds@example.com', 'dev@example.com'])
+  })
+
+  describe('retention alert recipients', () => {
+    test.each([
+      RETENTION_DATA_REJECTED,
+      RETENTION_FILE_REJECTED
+    ])('should return development team recipients for %s', async (type) => {
+      alertConfig.devTeamEmails =
+        'developer1@example.com;developer2@example.com'
+
+      const event = {
+        type,
+        data: {}
+      }
+
+      const recipients = await getRecipients(event)
+
+      expect(recipients).toEqual([
+        'developer1@example.com',
+        'developer2@example.com'
+      ])
+
+      expect(getEmailAddresses).not.toHaveBeenCalled()
+      expect(getSchemeIdFromSourceSystem).not.toHaveBeenCalled()
+    })
+
+    test('should return an empty array when development team emails are not configured', async () => {
+      alertConfig.devTeamEmails = ''
+
+      const event = {
+        type: RETENTION_DATA_REJECTED,
+        data: {}
+      }
+
+      const recipients = await getRecipients(event)
+
+      expect(recipients).toEqual([])
+      expect(getEmailAddresses).not.toHaveBeenCalled()
+      expect(getSchemeIdFromSourceSystem).not.toHaveBeenCalled()
+    })
+
+    test('should trim and remove empty retention recipients', async () => {
+      alertConfig.devTeamEmails =
+        ' developer1@example.com ; ; developer2@example.com ; '
+
+      const recipients = await getRecipients({
+        type: RETENTION_FILE_REJECTED,
+        data: {}
+      })
+
+      expect(recipients).toEqual([
+        'developer1@example.com',
+        'developer2@example.com'
+      ])
+
+      expect(getEmailAddresses).not.toHaveBeenCalled()
+      expect(getSchemeIdFromSourceSystem).not.toHaveBeenCalled()
+    })
   })
 })

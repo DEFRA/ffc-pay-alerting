@@ -1,8 +1,14 @@
 const { getSchemeNameFromSchemeId } = require('ffc-pay-schemes')
 const moment = require('moment')
 const { getEnvironment } = require('./get-environment')
+const { getRetentionPersonalisation } = require('./get-retention-personalisation')
 const { DATE } = require('../constants/date-format')
 const { UNKNOWN } = require('../constants/unknown')
+
+const {
+  RETENTION_DATA_REJECTED,
+  RETENTION_FILE_REJECTED
+} = require('../constants/events')
 
 const capitalizeFirstLetter = (string) => {
   if (typeof string !== 'string') {
@@ -31,6 +37,10 @@ const formatOriginalEvent = (originalEvent) => {
 }
 
 const getPersonalisation = (event) => {
+  if (event.type === RETENTION_DATA_REJECTED || event.type === RETENTION_FILE_REJECTED) {
+    return getRetentionPersonalisation(event)
+  }
+
   return {
     ...event.data,
     environment: getEnvironment(),

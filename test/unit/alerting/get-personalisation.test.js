@@ -23,6 +23,12 @@ const schemeIds = getSchemeIds()
 const schemeNames = getSchemeNames()
 
 const { getPersonalisation } = require('../../../app/alerting/get-personalisation')
+const { getRetentionPersonalisation } = require('../../../app/alerting/get-retention-personalisation')
+
+const {
+  RETENTION_DATA_REJECTED,
+  RETENTION_FILE_REJECTED
+} = require('../../../app/constants/events')
 
 let event
 
@@ -178,5 +184,50 @@ describe('get personalisation', () => {
     delete event.data.originalEvent
     const result = getPersonalisation(event)
     expect(result.originalEvent).toBe(UNKNOWN)
+  })
+
+  describe('retention personalisation', () => {
+    test.each([
+      RETENTION_DATA_REJECTED,
+      RETENTION_FILE_REJECTED
+    ])('should use retention personalisation for %s', (type) => {
+      const event = {
+        id: 'retention-event-123',
+        type,
+        data: {
+          message: 'Retention validation failed',
+          filename: 'retention.csv'
+        }
+      }
+
+      const result = getPersonalisation(event)
+      const expected = getRetentionPersonalisation(event)
+
+      expect(result).toEqual(expected)
+      expect(result.message).toBe('Retention validation failed')
+      expect(result.filename).toBe('retention.csv')
+      expect(result.eventId).toBe('retention-event-123')
+      expect(result).toHaveProperty('data_json')
+      expect(result).toHaveProperty('data_pretty')
+      expect(result).toHaveProperty('plain_text')
+    })
+  })
+
+  test('should preserve payment personalisation for standard payment events', () => {
+    const event = {
+      id: 'payment-event-123',
+      type: 'uk.gov.defra.ffc.pay.payment.rejected',
+      data: {
+        schemeId: 1,
+        context: 'processing'
+      }
+    }
+
+    const result = getPersonalisation(event)
+
+    expect(result.context).toBe('Processing')
+    expect(result).not.toHaveProperty('data_json')
+    expect(result).not.toHaveProperty('data_pretty')
+    expect(result).not.toHaveProperty('plain_text')
   })
 })

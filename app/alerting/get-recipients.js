@@ -9,20 +9,23 @@ const { getEmailAddresses } = require('./get-email-addresses')
 
 const SCHEME_ADDED_SCHEME_ID = 0
 
-const RETENTION_EVENTS = [
+const RETENTION_EVENTS = new Set([
   RETENTION_DATA_REJECTED,
   RETENTION_FILE_REJECTED
-]
+])
+
+const getRetentionRecipients = () => {
+  return alertConfig.devTeamEmails
+    ? alertConfig.devTeamEmails
+      .split(';')
+      .map(email => email.trim())
+      .filter(email => email.length)
+    : []
+}
 
 const getRecipients = async (event) => {
-  // Retention alerts use the configured development team recipients
-  if (RETENTION_EVENTS.includes(event.type)) {
-    return alertConfig.devTeamEmails
-      ? alertConfig.devTeamEmails
-        .split(';')
-        .map(email => email.trim())
-        .filter(email => email.length)
-      : []
+  if (RETENTION_EVENTS.has(event.type)) {
+    return getRetentionRecipients()
   }
 
   const { schemeId: eventSchemeId, sourceSystem } = event.data ?? {}
